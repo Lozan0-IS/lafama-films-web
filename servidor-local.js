@@ -1,4 +1,8 @@
-// Servidor local para ver el sitio y el panel admin antes de subirlo a hosting.
+// Opcional: servidor local para previsualizar el sitio antes de subirlo a
+// hosting. El sitio y el Panel Admin ya funcionan con solo abrir
+// "La Fama Films.dc.html" con doble clic (comparten localStorage porque
+// viven en el mismo archivo) — usa este servidor solo si prefieres verlo
+// como http://localhost en vez de file://.
 // Uso: node servidor-local.js   (luego abre las URLs que imprime)
 const http = require('http');
 const fs = require('fs');
@@ -25,7 +29,7 @@ http.createServer((req, res) => {
   console.log('');
   console.log('LaFama Films — servidor local corriendo:');
   console.log('  Sitio público:  http://localhost:' + PORT + '/');
-  console.log('  Panel Admin:    http://localhost:' + PORT + '/Panel%20Admin.dc.html');
+  console.log('  Panel Admin:    http://localhost:' + PORT + '/La%20Fama%20Films.dc.html#admin');
   console.log('');
   console.log('Ctrl+C para detenerlo.');
 });
