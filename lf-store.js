@@ -40,18 +40,18 @@
       instagramUrl: 'https://www.instagram.com/imangelfilms/'
     },
     portfolio: [
-      { id: 'pf01', cat: 'MUSIC VIDEO · NYC · 2026', title: 'ARTISTA 01 — REEMPLAZAR', size: 'portrait' },
-      { id: 'pf02', cat: 'PORTRAIT · 2026', title: 'ARTISTA 02', size: 'square' },
-      { id: 'pf03', cat: 'BEHIND THE SCENES · SDQ', title: 'RODAJE 03 — REEMPLAZAR', size: 'landscape' },
-      { id: 'pf04', cat: 'LIVE · 2026', title: 'SHOW 04', size: 'square' },
-      { id: 'pf05', cat: 'STREET · NJ', title: 'FRAME 05', size: 'square' },
-      { id: 'pf06', cat: 'ARTIST VISUALS · 2026', title: 'ARTISTA 06 — REEMPLAZAR', size: 'portrait' },
-      { id: 'pf07', cat: 'STUDIO · 2025', title: 'SESIÓN 07', size: 'square' },
-      { id: 'pf08', cat: 'EVENT · BRONX', title: 'FRAME 08', size: 'square' },
-      { id: 'pf09', cat: 'COVER ART · 2026', title: 'SINGLE 09 — REEMPLAZAR', size: 'tall' },
-      { id: 'pf10', cat: 'FLASH · NIGHT', title: 'FRAME 10', size: 'square' },
-      { id: 'pf11', cat: 'LIVE PERFORMANCE · 2026', title: 'TARIMA 11 — REEMPLAZAR', size: 'wide' },
-      { id: 'pf12', cat: 'CAMPAIGN · 2026', title: 'FRAME 12', size: 'square' }
+      { id: 'pf01', cat: 'MUSIC VIDEO · NYC · 2026', title: 'ARTISTA 01 — REEMPLAZAR', size: 'large' },
+      { id: 'pf02', cat: 'PORTRAIT · 2026', title: 'ARTISTA 02', size: 'small' },
+      { id: 'pf03', cat: 'BEHIND THE SCENES · SDQ', title: 'RODAJE 03 — REEMPLAZAR', size: 'wide' },
+      { id: 'pf04', cat: 'LIVE · 2026', title: 'SHOW 04', size: 'small' },
+      { id: 'pf05', cat: 'STREET · NJ', title: 'FRAME 05', size: 'small' },
+      { id: 'pf06', cat: 'ARTIST VISUALS · 2026', title: 'ARTISTA 06 — REEMPLAZAR', size: 'large' },
+      { id: 'pf07', cat: 'STUDIO · 2025', title: 'SESIÓN 07', size: 'small' },
+      { id: 'pf08', cat: 'EVENT · BRONX', title: 'FRAME 08', size: 'small' },
+      { id: 'pf09', cat: 'COVER ART · 2026', title: 'SINGLE 09 — REEMPLAZAR', size: 'square-large' },
+      { id: 'pf10', cat: 'FLASH · NIGHT', title: 'FRAME 10', size: 'small' },
+      { id: 'pf11', cat: 'LIVE PERFORMANCE · 2026', title: 'TARIMA 11 — REEMPLAZAR', size: 'panorama' },
+      { id: 'pf12', cat: 'CAMPAIGN · 2026', title: 'FRAME 12', size: 'small' }
     ],
     reels: [
       { id: 'r1', code: 'Dc7Su26xWGA', label: 'REEL 01' },

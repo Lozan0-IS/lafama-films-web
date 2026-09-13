@@ -35,11 +35,10 @@
   .rv.in { opacity: 1; transform: none; }
   .rvx { opacity: 0; transform: translateX(-28px); transition: opacity .9s cubic-bezier(.16,1,.3,1), transform .9s cubic-bezier(.16,1,.3,1); }
   .rvx.in { opacity: 1; transform: none; }
-  .lf-archive { column-gap: 6px; }
-  .lf-archive > * { break-inside: avoid; -webkit-column-break-inside: avoid; margin: 0 0 6px; }
-  @media (max-width: 1200px) { .lf-archive { columns: 4 !important; } }
-  @media (max-width: 860px) { .lf-archive { columns: 3 !important; } }
-  @media (max-width: 560px) { .lf-archive { columns: 2 !important; } }
+  .lf-archive { display: grid; grid-template-columns: repeat(var(--lf-cols), minmax(0,1fr)); grid-auto-rows: 10px; grid-auto-flow: dense; gap: 6px; }
+  @media (max-width: 1200px) { .lf-archive { grid-template-columns: repeat(4, minmax(0,1fr)) !important; } }
+  @media (max-width: 860px) { .lf-archive { grid-template-columns: repeat(3, minmax(0,1fr)) !important; } .lf-c3 { grid-column: span 2 !important; } }
+  @media (max-width: 560px) { .lf-archive { grid-template-columns: repeat(2, minmax(0,1fr)) !important; } .lf-c3, .lf-c2 { grid-column: span 2 !important; } }
   input:focus-visible, textarea:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid var(--lf-ac); outline-offset: 2px; }
 
   /* ── Panel Admin (mismo archivo, vista alterna vía toggleMode) ────────── */
@@ -193,9 +192,9 @@
       </div>
     </div>
 
-    <div class="lf-archive" style="columns:var(--lf-cols)">
+    <div class="lf-archive">
       <sc-for list="{{ pfItems }}" as="p" hint-placeholder-count="12">
-      <div class="hovg rv" style="aspect-ratio:{{ p.ratio }};position:relative;background:var(--color-neutral-400);outline:2px solid var(--color-text)">
+      <div class="hovg rv {{ p.spanClass }}" style="grid-row:{{ p.rowSpanCss }};position:relative;background:var(--color-neutral-400);outline:2px solid var(--color-text)">
         {{ p.photo }}
         <div class="hovm" style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(0deg,rgba(32,30,29,.94) 0%,rgba(32,30,29,0) 62%);display:flex;flex-direction:column;justify-content:flex-end;gap:5px;padding:{{ p.pad }}">
           <div style="font:{{ p.catFont }};letter-spacing:.2em;text-transform:uppercase;color:var(--color-accent-400)">{{ p.cat }}</div>
@@ -204,7 +203,7 @@
         </div>
       </div>
       </sc-for>
-      <div style="aspect-ratio:1/1;background:var(--color-text);color:var(--color-bg);display:flex;flex-direction:column;justify-content:space-between;padding:14px">
+      <div class="lf-c2" style="grid-row:span 30;background:var(--color-text);color:var(--color-bg);display:flex;flex-direction:column;justify-content:space-between;padding:14px">
         <span style="font:600 10px/1 var(--font-body);letter-spacing:.2em;text-transform:uppercase;color:var(--color-neutral-400)">ARCHIVO COMPLETO</span>
         <a href="{{ c.contact.instagramUrl }}" target="_blank" rel="noopener" style="color:var(--color-bg);font:900 clamp(20px,2.4vw,34px)/0.92 var(--font-heading);letter-spacing:-.02em;text-transform:uppercase" style-hover="color:var(--color-accent-400)">VER MÁS EN<br>INSTAGRAM →</a>
       </div>
@@ -483,16 +482,19 @@
 
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#ec3013&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;#ec3013&quot;,&quot;#dd2b0f&quot;,&quot;#201e1d&quot;,&quot;#ae1800&quot;],&quot;section&quot;:&quot;Identidad&quot;},&quot;archiveColumns&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:6,&quot;min&quot;:4,&quot;max&quot;:8,&quot;step&quot;:1,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Archivo&quot;},&quot;showPricing&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Servicios&quot;},&quot;grain&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Identidad&quot;}}">
-// Estilo "Pinterest": todas las fotos tienen el mismo ancho de columna (la
-// grilla es un layout de columnas CSS, no un grid con spans), y lo único
-// que cambia por tamaño es la proporción — así cada columna se apila sin
-// huecos, sin importar qué tan alta o baja sea cada foto.
+// Estilo "Pinterest" real: cuadrícula CSS Grid con grid-auto-flow:dense y
+// filas finas (10px) — cada foto ocupa tantas "filas" como le corresponde
+// según su tamaño, y el empaquetado denso rellena los huecos que dejan las
+// piezas más chicas. A diferencia de un grid normal (donde todas las fotos
+// de una misma fila quedan forzadas a la misma altura), acá cada foto tiene
+// su propia altura real — así conviven fotos grandes y chicas sin que se
+// vea disparejo.
 const LF_PF_SIZE = {
-  square:    { ratio: '1/1',  titleFont: '900 15px/0.95 var(--font-heading)', catFont: '600 9px/1 var(--font-body)',  pad: '10px' },
-  portrait:  { ratio: '3/4',  titleFont: '900 18px/0.95 var(--font-heading)', catFont: '600 10px/1 var(--font-body)', pad: '12px' },
-  tall:      { ratio: '2/3',  titleFont: '900 18px/0.95 var(--font-heading)', catFont: '600 10px/1 var(--font-body)', pad: '12px' },
-  landscape: { ratio: '4/3',  titleFont: '900 18px/0.95 var(--font-heading)', catFont: '600 10px/1 var(--font-body)', pad: '12px' },
-  wide:      { ratio: '16/9', titleFont: '900 18px/0.95 var(--font-heading)', catFont: '600 10px/1 var(--font-body)', pad: '12px' }
+  small:          { spanClass: '',      rowSpan: 15, titleFont: '900 15px/0.95 var(--font-heading)', catFont: '600 9px/1 var(--font-body)',  pad: '10px' },
+  large:          { spanClass: 'lf-c2', rowSpan: 37, titleFont: '900 20px/0.95 var(--font-heading)', catFont: '600 10px/1 var(--font-body)', pad: '12px' },
+  wide:           { spanClass: 'lf-c3', rowSpan: 25, titleFont: '900 26px/0.92 var(--font-heading)', catFont: '600 10px/1 var(--font-body)', pad: '14px' },
+  'square-large': { spanClass: 'lf-c2', rowSpan: 30, titleFont: '900 20px/0.95 var(--font-heading)', catFont: '600 10px/1 var(--font-body)', pad: '12px' },
+  panorama:       { spanClass: 'lf-c3', rowSpan: 19, titleFont: '900 26px/0.92 var(--font-heading)', catFont: '600 10px/1 var(--font-body)', pad: '14px' }
 };
 
 const el = React.createElement;
@@ -535,11 +537,11 @@ function SectionHead(title, sub) {
 }
 
 const PF_SIZE_OPTIONS = [
-  ['square', 'Cuadrada'],
-  ['portrait', 'Vertical'],
-  ['tall', 'Vertical alta'],
-  ['landscape', 'Horizontal'],
-  ['wide', 'Horizontal ancha']
+  ['small', 'Pequeña (cuadrada)'],
+  ['large', 'Grande vertical'],
+  ['wide', 'Ancho horizontal'],
+  ['square-large', 'Cuadro grande'],
+  ['panorama', 'Panorámica']
 ];
 
 class Component extends DCLogic {
@@ -773,17 +775,17 @@ class Component extends DCLogic {
       const it = c2.portfolio.find((x) => x.id === id); if (it) it[field] = e.currentTarget.value;
     });
     const addItem = () => this.updateContent((c2) => {
-      c2.portfolio.push({ id: LFStore.uid('pf'), cat: 'NUEVA CATEGORÍA · 2026', title: 'NUEVO TÍTULO', size: 'square' });
+      c2.portfolio.push({ id: LFStore.uid('pf'), cat: 'NUEVA CATEGORÍA · 2026', title: 'NUEVO TÍTULO', size: 'small' });
     });
     return el('div', { style: S.page },
-      SectionHead('Portfolio (El Archivo)', 'La cuadrícula estilo Pinterest de fotos y videos. La forma controla la proporción de cada foto (vertical, cuadrada, horizontal) — todas ocupan el mismo ancho de columna.'),
+      SectionHead('Portfolio (El Archivo)', 'La cuadrícula estilo Pinterest de fotos y videos. El tamaño controla qué tan grande se ve cada foto — se acomodan solas sin dejar huecos.'),
       el('div', { style: S.section }, ...list.map((it, i) => el('div', { key: it.id, style: S.card },
         el('div', { style: { display: 'flex', gap: '14px', flexWrap: 'wrap' } },
           el('div', { style: { width: '140px', flex: '0 0 140px' } }, this.photoWidget(it.id, it.cat, { height: '110px' })),
           el('div', { style: { flex: '1 1 260px', display: 'flex', flexDirection: 'column', gap: '10px' } },
             Field('Etiqueta / categoría', el('input', { style: S.input, value: it.cat, onChange: setField(it.id, 'cat') })),
             Field('Título sobre la foto', el('input', { style: S.input, value: it.title, onChange: setField(it.id, 'title') })),
-            Field('Forma / proporción', el('select', { style: S.select, value: it.size, onChange: setField(it.id, 'size') },
+            Field('Tamaño en la grilla', el('select', { style: S.select, value: it.size, onChange: setField(it.id, 'size') },
               ...PF_SIZE_OPTIONS.map(([v, l]) => el('option', { key: v, value: v }, l))
             ))
           ),
@@ -1055,8 +1057,8 @@ class Component extends DCLogic {
 
     // ── datos del sitio público ─────────────────────────────────────────
     const pfItems = (c.portfolio || []).map((it) => {
-      const sz = LF_PF_SIZE[it.size] || LF_PF_SIZE.square;
-      return Object.assign({}, it, sz, { photo: this.heroPhoto(it.id, it.cat) });
+      const sz = LF_PF_SIZE[it.size] || LF_PF_SIZE.small;
+      return Object.assign({}, it, sz, { rowSpanCss: 'span ' + sz.rowSpan, photo: this.heroPhoto(it.id, it.cat) });
     });
     const reelItems = (c.reels || []).map((it) => Object.assign({}, it, { photo: this.heroPhoto(it.id, it.label) }));
     const artistItems = (c.artists || []).map((it) => Object.assign({}, it, { photo: this.heroPhoto(it.id, it.name) }));
