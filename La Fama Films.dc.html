@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LA FAMA FILMS — Visuals For The Culture · NYC / NJ / RD</title>
+<link rel="stylesheet" href="_ds/modernist-1feebbc2-e15e-41ff-baf4-84409bd79914/styles.css">
+<script src="_ds/modernist-1feebbc2-e15e-41ff-baf4-84409bd79914/_ds_bundle.js"></script>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Archivo+Narrow:wght@500;600;700&display=swap" rel="stylesheet">
+<script src="./image-slot.js"></script>
+<style>
+  :root { --lf-ac: #ec3013; --lf-cols: 6; --lf-grain: 0.055; }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--color-bg); color: var(--color-text); font-family: var(--font-body); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+  a { color: var(--color-text); text-decoration: none; }
+  a:hover { color: var(--lf-ac); }
+  @keyframes lf-mq { to { transform: translateX(-50%); } }
+  @keyframes lf-rec { 50% { opacity: .2; } }
+  .hovg { overflow: hidden; }
+  .hovg image-slot { transition: transform .6s cubic-bezier(.16,1,.3,1); }
+  .hovg:hover image-slot { transform: scale(1.05); }
+  .hovm { opacity: 0; transition: opacity .28s ease; }
+  .hovg:hover .hovm { opacity: 1; }
+  .xs { scrollbar-width: none; }
+  .xs::-webkit-scrollbar { display: none; }
+  .rv { opacity: 0; transform: translateY(20px); transition: opacity .8s cubic-bezier(.16,1,.3,1), transform .8s cubic-bezier(.16,1,.3,1); }
+  .rv.in { opacity: 1; transform: none; }
+  .rvx { opacity: 0; transform: translateX(-28px); transition: opacity .9s cubic-bezier(.16,1,.3,1), transform .9s cubic-bezier(.16,1,.3,1); }
+  .rvx.in { opacity: 1; transform: none; }
+  @media (max-width: 1200px) { .lf-archive { grid-template-columns: repeat(4, minmax(0,1fr)) !important; } }
+  @media (max-width: 860px) { .lf-archive { grid-template-columns: repeat(3, minmax(0,1fr)) !important; } .lf-a3 { grid-column: span 2 !important; } }
+  @media (max-width: 560px) { .lf-archive { grid-template-columns: repeat(2, minmax(0,1fr)) !important; } .lf-a3, .lf-a2 { grid-column: span 2 !important; } }
+  input:focus-visible, textarea:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid var(--lf-ac); outline-offset: 2px; }
+</style>
+</helmet>
+
+<div style="position:fixed;inset:0;z-index:9000;pointer-events:none;opacity:var(--lf-grain);background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E&quot;)"></div>
+
+<nav style="position:fixed;top:0;left:0;width:100%;z-index:1000;background:var(--color-bg);border-bottom:2px solid var(--color-text);display:flex;align-items:stretch;justify-content:space-between">
+  <a href="#top" style="display:flex;align-items:center;gap:10px;padding:14px clamp(16px,3vw,28px);font:900 17px/1 var(--font-heading);letter-spacing:-.02em;text-transform:uppercase;border-right:2px solid var(--color-text)">
+    <span style="width:9px;height:9px;background:var(--lf-ac);animation:lf-rec 1.4s infinite"></span>LA FAMA FILMS
+  </a>
+  <div style="display:flex;align-items:stretch;margin-left:auto">
+    <div style="display:none;align-items:stretch" data-nav-desktop="1">
+      <a href="#work" style="display:flex;align-items:center;padding:0 18px;font:700 12px/1 'Archivo Narrow',var(--font-body);letter-spacing:.2em;text-transform:uppercase;border-left:1px solid var(--color-neutral-400)">WORK</a>
+      <a href="#motion" style="display:flex;align-items:center;padding:0 18px;font:700 12px/1 'Archivo Narrow',var(--font-body);letter-spacing:.2em;text-transform:uppercase;border-left:1px solid var(--color-neutral-400)">MOTION</a>
+      <a href="#artists" style="display:flex;align-items:center;padding:0 18px;font:700 12px/1 'Archivo Narrow',var(--font-body);letter-spacing:.2em;text-transform:uppercase;border-left:1px solid var(--color-neutral-400)">ARTISTS</a>
+      <a href="#services" style="display:flex;align-items:center;padding:0 18px;font:700 12px/1 'Archivo Narrow',var(--font-body);letter-spacing:.2em;text-transform:uppercase;border-left:1px solid var(--color-neutral-400)">SERVICES</a>
+      <a href="#feed" style="display:flex;align-items:center;padding:0 18px;font:700 12px/1 'Archivo Narrow',var(--font-body);letter-spacing:.2em;text-transform:uppercase;border-left:1px solid var(--color-neutral-400)">FEED</a>
+    </div>
+    <a href="#booking" style="display:flex;align-items:center;padding:0 clamp(14px,2.5vw,24px);background:var(--lf-ac);color:#fff;font:900 13px/1 var(--font-heading);letter-spacing:.06em;text-transform:uppercase;border-left:2px solid var(--color-text)" style-hover="background:var(--color-text)">BOOK A PROJECT</a>
+    <button type="button" onClick="{{ toggleMenu }}" aria-label="Menú" style="padding:0 16px;background:var(--color-text);color:var(--color-bg);border:none;cursor:pointer;font:900 13px/1 var(--font-heading);letter-spacing:.1em" data-nav-burger="1">MENÚ</button>
+  </div>
+</nav>
+
+<sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:1200;background:var(--color-text);display:flex;flex-direction:column;justify-content:center;gap:2px;padding:clamp(20px,6vw,64px)">
+    <button type="button" onClick="{{ toggleMenu }}" style="position:absolute;top:16px;right:16px;background:none;border:2px solid var(--color-bg);color:var(--color-bg);font:900 14px/1 var(--font-heading);padding:10px 14px;cursor:pointer">CERRAR ✕</button>
+    <a href="#work" onClick="{{ toggleMenu }}" style="color:var(--color-bg);font:900 clamp(34px,10vw,72px)/0.92 var(--font-heading);text-transform:uppercase;letter-spacing:-.03em">WORK</a>
+    <a href="#motion" onClick="{{ toggleMenu }}" style="color:var(--color-bg);font:900 clamp(34px,10vw,72px)/0.92 var(--font-heading);text-transform:uppercase;letter-spacing:-.03em">MOTION</a>
+    <a href="#artists" onClick="{{ toggleMenu }}" style="color:var(--color-bg);font:900 clamp(34px,10vw,72px)/0.92 var(--font-heading);text-transform:uppercase;letter-spacing:-.03em">ARTISTS</a>
+    <a href="#services" onClick="{{ toggleMenu }}" style="color:var(--color-bg);font:900 clamp(34px,10vw,72px)/0.92 var(--font-heading);text-transform:uppercase;letter-spacing:-.03em">SERVICES</a>
+    <a href="#feed" onClick="{{ toggleMenu }}" style="color:var(--color-bg);font:900 clamp(34px,10vw,72px)/0.92 var(--font-heading);text-transform:uppercase;letter-spacing:-.03em">FEED</a>
+    <a href="#booking" onClick="{{ toggleMenu }}" style="margin-top:18px;background:var(--lf-ac);color:#fff;font:900 20px/1 var(--font-heading);padding:16px 18px;text-transform:uppercase;letter-spacing:.04em;align-self:flex-start">AGENDA TU PROYECTO →</a>
+  </div>
+</sc-if>
+
+<section id="top" data-screen-label="Hero" style="padding:calc(56px + clamp(24px,5vw,56px)) 0 0;border-bottom:2px solid var(--color-text)">
+  <div style="max-width:1600px;margin:0 auto;padding:0 clamp(16px,3vw,40px)">
+    <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:clamp(16px,2.5vw,28px)">
+      <span style="display:inline-flex;align-items:center;gap:7px;background:var(--lf-ac);color:#fff;font:900 11px/1 var(--font-heading);letter-spacing:.16em;text-transform:uppercase;padding:7px 10px;transform:rotate(-1.4deg)">
+        <span style="width:7px;height:7px;background:#fff;border-radius:50%;animation:lf-rec 1.4s infinite"></span>REC · PHOTO + VIDEO
+      </span>
+      <span style="font:600 11px/1 'Archivo Narrow',var(--font-body);letter-spacing:.24em;text-transform:uppercase;color:var(--color-neutral-700)">NYC / NJ · DOMINICAN REPUBLIC · WORLDWIDE</span>
+    </div>
+
+    <h1 class="rvx in" style="margin:0;font:900 clamp(52px,13.5vw,206px)/0.82 var(--font-heading);letter-spacing:-.045em;text-transform:uppercase">LA&nbsp;FAMA<br>FILMS</h1>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:clamp(14px,3vw,40px);align-items:end;border-top:2px solid var(--color-text);margin-top:clamp(14px,2vw,22px);padding-top:14px">
+      <h2 style="margin:0;font:700 clamp(26px,4.4vw,58px)/0.92 'Archivo Narrow',var(--font-heading);letter-spacing:-.01em;text-transform:uppercase">VISUALS<br>FOR THE <span style="color:var(--lf-ac)">CULTURE.</span></h2>
+      <p style="margin:0;max-width:46ch;font:400 15px/1.6 var(--font-body);color:var(--color-neutral-800)">Videoclips, fotografía y contenido para artistas urbanos. La calle es el set: rodamos en Nueva York, New Jersey y República Dominicana, y entregamos como se ve en la pantalla del teléfono.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:8px">
+        <a href="#work" style="padding:13px 18px;border:2px solid var(--color-text);font:900 13px/1 var(--font-heading);letter-spacing:.08em;text-transform:uppercase" style-hover="background:var(--color-text);color:var(--color-bg)">VER EL ARCHIVO →</a>
+        <a href="#booking" style="padding:13px 18px;background:var(--lf-ac);color:#fff;font:900 13px/1 var(--font-heading);letter-spacing:.08em;text-transform:uppercase" style-hover="background:var(--color-accent-600)">AGENDA TU PROYECTO</a>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:flex;align-items:stretch;gap:0;border-top:2px solid var(--color-text);margin-top:clamp(18px,3vw,34px);overflow-x:auto" class="xs">
+    <div style="flex:0 0 auto;display:flex;align-items:center;padding:0 14px;background:var(--color-text);color:var(--color-bg);font:700 11px/1 'Archivo Narrow',var(--font-body);letter-spacing:.22em;writing-mode:vertical-rl;text-transform:uppercase">ROLL 01 / 2026</div>
+    <div class="hovg" style="flex:1 1 0;min-width:150px;aspect-ratio:4/5;position:relative;border-right:1px solid var(--color-text);background:var(--color-neutral-300)">
+      <image-slot id="lf-hero-1" shape="rect" fit="cover" placeholder="FRAME 01 · suelta foto"></image-slot>
+      <span style="position:absolute;top:8px;left:8px;pointer-events:none;background:var(--color-text);color:var(--color-bg);font:600 9px/1 var(--font-body);letter-spacing:.16em;padding:4px 6px">01 · NYC</span>
+    </div>
+    <div class="hovg" style="flex:1 1 0;min-width:150px;aspect-ratio:4/5;position:relative;border-right:1px solid var(--color-text);background:var(--color-neutral-400)">
+      <image-slot id="lf-hero-2" shape="rect" fit="cover" placeholder="FRAME 02 · suelta foto"></image-slot>
+      <span style="position:absolute;top:8px;left:8px;pointer-events:none;background:var(--color-text);color:var(--color-bg);font:600 9px/1 var(--font-body);letter-spacing:.16em;padding:4px 6px">02 · SET</span>
+    </div>
+    <div class="hovg" style="flex:1 1 0;min-width:150px;aspect-ratio:4/5;position:relative;border-right:1px solid var(--color-text);background:var(--color-neutral-300)">
+      <image-slot id="lf-hero-3" shape="rect" fit="cover" placeholder="FRAME 03 · suelta foto"></image-slot>
+      <span style="position:absolute;top:8px;left:8px;pointer-events:none;background:var(--color-text);color:var(--color-bg);font:600 9px/1 var(--font-body);letter-spacing:.16em;padding:4px 6px">03 · NJ</span>
+    </div>
+    <div class="hovg" style="flex:1 1 0;min-width:150px;aspect-ratio:4/5;position:relative;border-right:1px solid var(--color-text);background:var(--color-neutral-400)">
+      <image-slot id="lf-hero-4" shape="rect" fit="cover" placeholder="FRAME 04 · suelta foto"></image-slot>
+      <span style="position:absolute;top:8px;left:8px;pointer-events:none;background:var(--color-text);color:var(--color-bg);font:600 9px/1 var(--font-body);letter-spacing:.16em;padding:4px 6px">04 · STAGE</span>
+    </div>
+    <div class="hovg" style="flex:1 1 0;min-width:150px;aspect-ratio:4/5;position:relative;background:var(--color-neutral-300)">
+      <image-slot id="lf-hero-5" shape="rect" fit="cover" placeholder="FRAME 05 · suelta foto"></image-slot>
+      <span style="position:absolute;top:8px;left:8px;pointer-events:none;background:var(--color-text);color:var(--color-bg);font:600 9px/1 var(--font-body);letter-spacing:.16em;padding:4px 6px">05 · SDQ</span>
+    </div>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:0;border-top:2px solid var(--color-text)">
+    <span style="padding:10px 14px;border-right:1px solid var(--color-neutral-400);font:600 10px/1 var(--font-body);letter-spacing:.2em;text-transform:uppercase;color:var(--color-neutral-700)">4K · 24FPS</span>
+    <span style="padding:10px 14px;border-right:1px solid var(--color-neutral-400);font:600 10px/1 var(--font-body);letter-spacing:.2em;text-transform:uppercase;color:var(--color-neutral-700)">40.7128° N / 74.0060° W</span>
+    <span style="padding:10px 14px;border-right:1px solid var(--color-neutral-400);font:600 10px/1 var(--font-body);letter-spacing:.2em;text-transform:uppercase;color:var(--color-neutral-700)">18.4861° N / 69.9312° W</span>
+    <span style="padding:10px 14px;font:600 10px/1 var(--font-body);letter-spacing:.2em;text-transform:uppercase;color:var(--color-neutral-700)">EST. WESTWOOD, NJ</span>
+  </div>
+</section>
+
+<div style="overflow:hidden;white-space:nowrap;background:var(--lf-ac);color:#fff;padding:9px 0;border-bottom:2px solid var(--color-text)">
+  <span style="display:inline-block;animation:lf-mq 26s linear infinite;font:900 17px/1 var(--font-heading);letter-spacing:.06em;text-transform:uppercase">MUSIC VIDEOS ✦ REELS ✦ ARTIST VISUALS ✦ LIVE ✦ BACKSTAGE ✦ STREET PHOTOGRAPHY ✦ SANTO DOMINGO ✦ SANTIAGO ✦ WASHINGTON HEIGHTS ✦ THE BRONX ✦ PATERSON ✦ MUSIC VIDEOS ✦ REELS ✦ ARTIST VISUALS ✦ LIVE ✦ BACKSTAGE ✦ STREET PHOTOGRAPHY ✦ SANTO DOMINGO ✦ SANTIAGO ✦ WASHINGTON HEIGHTS ✦ THE BRONX ✦ PATERSON ✦ </span>
+</div>
+
+<section data-screen-label="Sobre nosotros" style="border-bottom:2px solid var(--color-text);background:var(--color-surface)">
+  <div style="max-width:1600px;margin:0 auto;padding:clamp(36px,6vw,84px) clamp(16px,3vw,40px);display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:clamp(24px,4vw,56px)">
+    <div class="rvx">
+      <span style="display:inline-block;background:var(--color-text);color:var(--color-bg);font:900 11px/1 var(--font-heading);letter-spacing:.18em;text-transform:uppercase;padding:7px 10px;margin-bottom:16px">01 — SOBRE NOSOTROS</span>
+      <h2 style="margin:0 0 18px;font:900 clamp(34px,6vw,82px)/0.86 var(--font-heading);letter-spacing:-.04em;text-transform:uppercase">LA CALLE<br>ES EL SET.</h2>
+      <p style="margin:0 0 14px;max-width:52ch;font:400 16px/1.62 var(--font-body);color:var(--color-neutral-800)">LaFama Films trabaja con artistas urbanos dominicanos dentro y fuera de la isla. Grabamos donde pasa la cosa: la esquina, el estudio, el club, el backstage, el carro, la tarima. Sin poses de agencia.</p>
+      <p style="margin:0 0 24px;max-width:52ch;font:400 16px/1.62 var(--font-body);color:var(--color-neutral-800)">We shoot the artists, the block and the night — Dominican culture with New York speed. Photo and video, one crew, one direction.</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));border-top:2px solid var(--color-text)">
+        <div style="padding:14px 14px 14px 0;border-right:1px solid var(--color-neutral-400)">
+          <div style="font:900 38px/0.9 var(--font-heading);color:var(--lf-ac)">100+</div>
+          <div style="font:600 10px/1.3 var(--font-body);letter-spacing:.18em;text-transform:uppercase;color:var(--color-neutral-700);margin-top:6px">VIDEOCLIPS RODADOS</div>
+        </div>
+        <div style="padding:14px;border-right:1px solid var(--color-neutral-400)">
+          <div style="font:900 38px/0.9 var(--font-heading);color:var(--lf-ac)">3</div>
+          <div style="font:600 10px/1.3 var(--font-body);letter-spacing:.18em;text-transform:uppercase;color:var(--color-neutral-700);margin-top:6px">BASES: NYC · NJ · RD</div>
+        </div>
+        <div style="padding:14px">
+          <div style="font:900 38px/0.9 var(--font-heading);color:var(--lf-ac)">48H</div>
+          <div style="font:600 10px/1.3 var(--font-body);letter-spacing:.18em;text-transform:uppercase;color:var(--color-neutral-700);margin-top:6px">ENTREGA DE REELS</div>
+        </div>
+      </div>
+    </div>
+    <div class="rv" style="display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:1fr;gap:6px;align-self:start">
+      <div class="hovg" style="grid-row:span 2;position:relative;aspect-ratio:1/2.06;background:var(--color-neutral-400);outline:2px solid var(--color-text)"><image-slot id="lf-mos-1" shape="rect" placeholder="vertical"></image-slot></div>
+      <div class="hovg" style="position:relative;aspect-ratio:1/1;background:var(--color-neutral-300);outline:2px solid var(--color-text)"><image-slot id="lf-mos-2" shape="rect" placeholder="foto"></image-slot></div>
+      <div class="hovg" style="position:relative;aspect-ratio:1/1;background:var(--color-neutral-400);outline:2px solid var(--color-text)"><image-slot id="lf-mos-3" shape="rect" placeholder="foto"></image-slot></div>
+      <div class="hovg" style="grid-column:span 2;position:relative;aspect-ratio:2.06/1;background:var(--color-neutral-300);outline:2px solid var(--color-text)"><image-slot id="lf-mos-4" shape="rect" placeholder="horizontal"></image-slot></div>
+      <div class="hovg" style="position:relative;aspect-ratio:1/1;background:var(--color-neutral-400);outline:2px solid var(--color-text)"><image-slot id="lf-mos-5" shape="rect" placeholder="foto"></image-slot></div>
+      <div class="hovg" style="position:relative;aspect-ratio:1/1;background:var(--color-neutral-300);outline:2px solid var(--color-text)"><image-slot id="lf-mos-6" shape="rect" placeholder="foto"></image-slot></div>
+      <div class="hovg" style="grid-column:span 2;position:relative;aspect-ratio:2.06/1;background:var(--color-neutral-400);outline:2px solid var(--color-text)"><image-slot id="lf-mos-7" shape="rect" placeholder="horizontal"></image-slot></div>
+    </div>
+  </div>
+</section>
+
+<section id="work" data-screen-label="Portfolio" style="border-bottom:2px solid var(--color-text)">
+  <div style="max-width:1600px;margin:0 auto;padding:clamp(36px,6vw,84px) clamp(16px,3vw,40px)">
+    <div class="rv" style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:22px">
+      <div>
+        <span style="display:inline-block;background:var(--lf-ac);color:#fff;font:900 11px/1 var(--font-heading);letter-spacing:.18em;text-transform:uppercase;padding:7px 10px;margin-bottom:14px;transform:rotate(-1deg)">02 — CONTACT SHEET</span>
+        <h2 style="margin:0;font:900 clamp(38px,7.5vw,120px)/0.84 var(--font-heading);letter-spacing:-.045em;text-transform:uppercase">EL ARCHIVO</h2>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-start">
+        <span style="font:600 10px/1 var(--font-body);letter-spacing:.2em;text-transform:uppercase;color:var(--color-neutral-700)">12 FRAMES · PHOTO / VIDEO / BTS</span>
+        <span style="font:600 10px/1 var(--font-body);letter-spacing:.2em;text-transform:uppercase;color:var(--color-neutral-700)">HOVER PARA DATOS · CLICK ⤢ PARA AMPLIAR</span>
+      </div>
+    </div>
+
+    <div class="lf-archive" style="display:grid;grid-template-columns:repeat(var(--lf-cols),minmax(0,1fr));gap:6px">
+      <div class="hovg rv lf-a2" style="grid-column:span 2;aspect-ratio:4/5;position:relative;background:var(--color-neutral-400);outline:2px solid var(--color-text)">
+        <image-slot id="lf-pf-01" shape="rect" placeholder="01 · foto real"></image-slot>
+        <div class="hovm" style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(0deg,rgba(32,30,29,.94) 0%,rgba(32,30,29,0) 62%);display:flex;flex-direction:column;justify-content:flex-end;gap:5px;padding:12px">
+          <div style="font:600 10px/1 var(--font-body);letter-spacing:.2em;text-transform:uppercase;color:var(--color-accent-400)">MUSIC VIDEO · NYC · 2026</div>
+          <div style="font:900 20px/0.95 var(--font-heading);letter-spacing:-.02em;text-transform:uppercase;color:var(--color-bg)">ARTISTA 01 — REEMPLAZAR</div>
+          <button type="button" data-slot="lf-pf-01" onClick="{{ zoom }}" style="pointer-events:auto;align-self:flex-start;margin-top:4px;background:var(--lf-ac);color:#fff;border:none;padding:6px 9px;font:900 10px/1 var(--font-heading);letter-spacing:.14em;cursor:pointer">VIEW ⤢</button>
+        </div>
+      </div>
+      <div class="hovg rv" style="aspect-ratio:1/1;position:relative;background:var(--color-neutral-300);outline:2px solid var(--color-text)">
+        <image-slot id="lf-pf-02" shape="rect" placeholder="02"></image-slot>
+        <div class="hovm" style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(0deg,rgba(32,30,29,.94) 0%,rgba(32,30,29,0) 62%);display:flex;flex-direction:column;justify-content:flex-end;gap:4px;padding:10px">
+          <div style="font:600 9px/1 var(--font-body);letter-spacing:.18em;text-transform:uppercase;color:var(--color-accent-400)">PORTRAIT · 2026</div>
+          <div style="font:900 15px/0.95 var(--font-heading);text-transform:uppercase;color:var(--color-bg)">ARTISTA 02</div>
+          <button type="button" data-slot="lf-pf-02" onClick="{{ zoom }}" style="pointer-events:auto;align-self:flex-start;background:var(--lf-ac);color:#fff;border:none;padding:5px 8px;font:900 9px/1 var(--font-heading);letter-spacing:.14em;cursor:pointer">VIEW ⤢</button>
+        </div>
+      </div>
+      <div class="hovg rv lf-a3" style="grid-column:span 3;aspect-ratio:16/9;position:relative;background:var(--color-neutral-400);outline:2px solid var(--color-text)">
+        <image-slot id="lf-pf-03" shape="rect" placeholder="03 · horizontal"></image-slot>
+        <div class="hovm" style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(0deg,rgba(32,30,29,.94) 0%,rgba(32,30,29,0) 62%);display:flex;flex-direction:column;justify-content:flex-end;gap:5px;padding:14px">
+          <div style="font:600 10px/1 var(--font-body);letter-spacing:.2em;text-transform:uppercase;color:var(--color-accent-400)">BEHIND THE SCENES · SDQ</div>
+          <div style="font:900 26px/0.92 var(--font-heading);letter-spacing:-.02em;text-transform:uppercase;color:var(--color-bg)">RODAJE 03 — REEMPLAZAR</div>
+          <button type="button" data-slot="lf-pf-03" onClick="{{ zoom }}" style="pointer-events:auto;align-self:flex-start;background:var(--lf-ac);color:#fff;border:none;padding:6px 9px;font:900 10px/1 var(--font-heading);letter-spacing:.14em;cursor:pointer">VIEW ⤢</button>
+        </div>
+      </div>
+      <div class="hovg rv" style="aspect-ratio:1/1;position:relative;background:var(--color-neutral-300);outline:2px solid var(--color-text)">
+        <image-slot id="lf-pf-04" shape="rect" placeholder="04"></image-slot>
+        <div class="hovm" style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(0deg,rgba(32,30,29,.94) 0%,rgba(32,30,29,0) 62%);display:flex;flex-direction:column;justify-content:flex-end;gap:4px;padding:10px">
+          <div style="font:600 9px/1 var(--font-body);letter-spacing:.18em;text-transform:uppercase;color:var(--color-accent-400)">LIVE · 2026</div>
+          <div style="font:900 15px/0.95 var(--font-heading);text-transform:uppercase;color:var(--color-bg)">SHOW 04</div>
+          <button type="button" data-slot="lf-pf-04" onClick="{{ zoom }}" style="pointer-events:auto;align-self:flex-start;background:var(--lf-ac);color:#fff;border:none;padding:5px 8px;font:900 9px/1 var(--font-heading);letter-spacing:.14em;cursor:pointer">VIEW ⤢</button>
+        </div>
+      </div>
+      <div class="hovg rv" style="aspect-ratio:1/1;position:relative;background:var(--color-neutral-400);outline:2px solid var(--color-text)">
+        <image-slot id="lf-pf-05" shape="rect" placeholder="05"></image-slot>
+        <div class="hovm" style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(0deg,rgba(32,30,29,.94) 0%,rgba(32,30,29,0) 62%);display:flex;flex-direction:column;justify-content:flex-end;gap:4px;padding:10px">
+          <div style="font:600 9px/1 var(--font-body);letter-spacing:.18em;text-transform:uppercase;color:var(--color-accent-400)">STREET · NJ</div>
+          <div style="font:900 15px/0.95 var(--font-heading);text-transform:uppercase;color:var(--color-bg)">FRAME 05</div>
+          <button type="button" data-slot="lf-pf-05" onClick="{{ zoom }}" style="pointer-events:auto;align-self:flex-start;background:var(--lf-ac);color:#fff;border:none;padding:5px 8px;font:900 9px/1 var(--font-heading);letter-spacing:.14em;cursor:pointer">VIEW ⤢</button>
+        </div>
+      </div>
+      <div class="hovg rv lf-a2" style="grid-column:span 2;aspect-ratio:4/5;position:relative;background:var(--color-neutral-300);outline:2px solid var(--color-text)">
+        <image-slot id="lf-pf-06" shape="rect" placeholder="06 · vertical"></image-slot>
+        <div class="hovm" style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(0deg,rgba(32,30,29,.94) 0%,rgba(32,30,29,0) 62%);display:flex;flex-direction:column;justify-content:flex-end;gap:5px;padding:12px">
+          <div style="font:600 10px/1 var(--font-body);letter-spacing:.2em;text-transform:uppercase;color:var(--color-accent-400)">ARTIST VISUALS · 2026</div>
+          <div style="font:900 20px/0.95 var(--font-heading);letter-spacing:-.02em;text-transform:uppercase;color:var(--color-bg)">ARTISTA 06 — REEMPLAZAR</div>
+          <button type="button" data-slot="lf-pf-06" onClick="{{ zoom }}" style="pointer-events:auto;align-self:flex-start;background:var(--lf-ac);color:#fff;border:none;padding:6px 9px;font:900 10px/1 var(--font-heading);letter-spacing:.14em;cursor:pointer">VIEW ⤢</button>
+        </div>
+      </div>
+      <div class="hovg rv" style="aspect-ratio:1/1;position:relative;background:var(--color-neutral-400);outline:2px solid var(--color-text)">
+        <image-slot id="lf-pf-07" shape="rect" placeholder="07"></image-slot>
+        <div class="hovm" style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(0deg,rgba(32,30,29,.94) 0%,rgba(32,30,29,0) 62%);display:flex;flex-direction:column;justify-content:flex-end;gap:4px;padding:10px">
+          <div style="font:600 9px/1 var(--font-body);letter-spacing:.18em;text-transform:uppercase;color:var(--color-accent-400)">STUDIO · 2025</div>
+          <div style="font:900 15px/0.95 var(--font-heading);text-transform:uppercase;color:var(--color-bg)">SESIÓN 07</div>
+          <button type="button" data-slot="lf-pf-07" onClick="{{ zoom }}" style="pointer-events:auto;align-self:flex-start;background:var(--lf-ac);color:#fff;border:none;padding:5px 8px;font:900 9px/1 var(--font-heading);letter-spacing:.14em;cursor:pointer">VIEW ⤢</button>
+        </div>
+      </div>
+      <div class="hovg rv" style="aspect-ratio:1/1;position:relative;background:var(--color-neutral-300);outline:2px solid var(--color-text)">
+        <image-slot id="lf-pf-08" shape="rect" placeholder="08"></image-slot>
+        <div class="hovm" style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(0deg,rgba(32,30,29,.94) 0%,rgba(32,30,29,0) 62%);display:flex;flex-direction:column;justify-content:flex-end;gap:4px;padding:10px">
+          <div style="font:600 9px/1 var(--font-body);letter-spacing:.18em;text-transform:uppercase;color:var(--color-accent-400)">EVENT · BRONX</div>
+          <div style="font:900 15px/0.95 var(--font-heading);text-transform:uppercase;color:var(--color-bg)">FRAME 08</div>
+          <button type="button" data-slot="lf-pf-08" onClick="{{ zoom }}" style="pointer-events:auto;align-self:flex-start;background:var(--lf-ac);color:#fff;border:none;padding:5px 8px;font:900 9px/1 var(--font-heading);letter-spacing:.14em;cursor:pointer">VIEW ⤢</button>
+        </div>
+      </div>
+      <div class="hovg rv lf-a2" style="grid-column:span 2;aspect-ratio:1/1;position:relative;background:var(--color-neutral-400);outline:2px solid var(--color-text)">
+        <image-slot id="lf-pf-09" shape="rect" placeholder="09 · cuadrada"></image-slot>
+        <div class="hovm" style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(0deg,rgba(32,30,29,.94) 0%,rgba(32,30,29,0) 62%);display:flex;flex-direction:column;justify-content:flex-end;gap:5px;padding:12px">
+          <div style="font:600 10px/1 var(--font-body);letter-spacing:.2em;text-transform:uppercase;color:var(--color-accent-400)">COVER ART · 2026</div>
+          <div style="font:900 20px/0.95 var(--font-heading);letter-spacing:-.02em;text-transform:uppercase;color:var(--color-bg)">SINGLE 09 — REEMPLAZAR</div>
+          <button type="button" data-slot="lf-pf-09" onClick="{{ zoom }}" style="pointer-events:auto;align-self:flex-start;background:var(--lf-ac);color:#fff;border:none;padding:6px 9px;font:900 10px/1 var(--font-heading);letter-spacing:.14em;cursor:pointer">VIEW ⤢</button>
+        </div>
+      </div>
+      <div class="hovg rv" style="aspect-ratio:1/1;position:relative;background:var(--color-neutral-300);outline:2px solid var(--color-text)">
+        <image-slot id="lf-pf-10" shape="rect" placeholder="10"></image-slot>
+        <div class="hovm" style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(0deg,rgba(32,30,29,.94) 0%,rgba(32,30,29,0) 62%);display:flex;flex-direction:column;justify-content:flex-end;gap:4px;padding:10px">
+          <div style="font:600 9px/1 var(--font-body);letter-spacing:.18em;text-transform:uppercase;color:var(--color-accent-400)">FLASH · NIGHT</div>
+          <div style="font:900 15px/0.95 var(--font-heading);text-transform:uppercase;color:var(--color-bg)">FRAME 10</div>
+          <button type="button" data-slot="lf-pf-10" onClick="{{ zoom }}" style="pointer-events:auto;align-self:flex-start;background:var(--lf-ac);color:#fff;border:none;padding:5px 8px;font:900 9px/1 var(--font-heading);letter-spacing:.14em;cursor:pointer">VIEW ⤢</button>
+        </div>
+      </div>
+      <div class="hovg rv lf-a3" style="grid-column:span 3;aspect-ratio:21/9;position:relative;background:var(--color-neutral-400);outline:2px solid var(--color-text)">
+        <image-slot id="lf-pf-11" shape="rect" placeholder="11 · panorámica"></image-slot>
+        <div class="hovm" style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(0deg,rgba(32,30,29,.94) 0%,rgba(32,30,29,0) 62%);display:flex;flex-direction:column;justify-content:flex-end;gap:5px;padding:14px">
+          <div style="font:600 10px/1 var(--font-body);letter-spacing:.2em;text-transform:uppercase;color:var(--color-accent-400)">LIVE PERFORMANCE · 2026</div>
+          <div style="font:900 26px/0.92 var(--font-heading);letter-spacing:-.02em;text-transform:uppercase;color:var(--color-bg)">TARIMA 11 — REEMPLAZAR</div>
+          <button type="button" data-slot="lf-pf-11" onClick="{{ zoom }}" style="pointer-events:auto;align-self:flex-start;background:var(--lf-ac);color:#fff;border:none;padding:6px 9px;font:900 10px/1 var(--font-heading);letter-spacing:.14em;cursor:pointer">VIEW ⤢</button>
+        </div>
+      </div>
+      <div class="hovg rv" style="aspect-ratio:1/1;position:relative;background:var(--color-neutral-300);outline:2px solid var(--color-text)">
+        <image-slot id="lf-pf-12" shape="rect" placeholder="12"></image-slot>
+        <div class="hovm" style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(0deg,rgba(32,30,29,.94) 0%,rgba(32,30,29,0) 62%);display:flex;flex-direction:column;justify-content:flex-end;gap:4px;padding:10px">
+          <div style="font:600 9px/1 var(--font-body);letter-spacing:.18em;text-transform:uppercase;color:var(--color-accent-400)">CAMPAIGN · 2026</div>
+          <div style="font:900 15px/0.95 var(--font-heading);text-transform:uppercase;color:var(--color-bg)">FRAME 12</div>
+          <button type="button" data-slot="lf-pf-12" onClick="{{ zoom }}" style="pointer-events:auto;align-self:flex-start;background:var(--lf-ac);color:#fff;border:none;padding:5px 8px;font:900 9px/1 var(--font-heading);letter-spacing:.14em;cursor:pointer">VIEW ⤢</button>
+        </div>
+      </div>
+      <div class="lf-a2" style="grid-column:span 2;background:var(--color-text);color:var(--color-bg);display:flex;flex-direction:column;justify-content:space-between;padding:14px;min-height:140px">
+        <span style="font:600 10px/1 var(--font-body);letter-spacing:.2em;text-transform:uppercase;color:var(--color-neutral-400)">ARCHIVO COMPLETO</span>
+        <a href="https://www.instagram.com/imangelfilms/" target="_blank" rel="noopener" style="color:var(--color-bg);font:900 clamp(20px,2.4vw,34px)/0.92 var(--font-heading);letter-spacing:-.02em;text-transform:uppercase" style-hover="color:var(--color-accent-400)">VER MÁS EN<br>INSTAGRAM →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="motion" data-screen-label="Video" style="border-bottom:2px solid var(--color-text);background:var(--color-surface)">
+  <div style="max-width:1600px;margin:0 auto;padding:clamp(36px,6vw,84px) clamp(16px,3vw,40px)">
+    <div class="rv" style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:22px">
+      <div>
+        <span style="display:inline-block;background:var(--color-text);color:var(--color-bg);font:900 11px/1 var(--font-heading);letter-spacing:.18em;text-transform:uppercase;padding:7px 10px;margin-bottom:14px">03 — MOTION</span>
+        <h2 style="margin:0;font:900 clamp(38px,7.5vw,120px)/0.84 var(--font-heading);letter-spacing:-.045em;text-transform:uppercase">VIDEO &amp;<br>VIDEOCLIPS</h2>
+      </div>
+      <p style="margin:0;max-width:40ch;font:400 15px/1.6 var(--font-body);color:var(--color-neutral-800)">Videoclips, reels, artist visuals, live performances, content creation y behind the scenes. Dale play — se abre en grande.</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:6px">
+      <div class="hovg rv" style="aspect-ratio:9/16;position:relative;background:var(--color-neutral-400);outline:2px solid var(--color-text)">
+        <image-slot id="lf-reel-1" shape="rect" placeholder="thumb reel 01"></image-slot>
+        <div style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(0deg,rgba(32,30,29,.9) 0%,rgba(32,30,29,0) 55%);display:flex;flex-direction:column;justify-content:flex-end;padding:12px;gap:4px">
+          <div style="font:600 9px/1 var(--font-body);letter-spacing:.2em;text-transform:uppercase;color:var(--color-accent-400)">▶ REEL · INSTAGRAM</div>
+          <div style="font:900 18px/0.95 var(--font-heading);text-transform:uppercase;color:var(--color-bg)">REEL 01</div>
+        </div>
+        <button type="button" data-reel="Dc7Su26xWGA" onClick="{{ play }}" style="position:absolute;top:10px;right:10px;background:var(--lf-ac);color:#fff;border:none;font:900 10px/1 var(--font-heading);letter-spacing:.14em;padding:7px 9px;cursor:pointer" style-hover="background:var(--color-text)">▶ PLAY</button>
+      </div>
+      <div class="hovg rv" style="aspect-ratio:9/16;position:relative;background:var(--color-neutral-300);outline:2px solid var(--color-text)">
+        <image-slot id="lf-reel-2" shape="rect" placeholder="thumb reel 02"></image-slot>
+        <div style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(0deg,rgba(32,30,29,.9) 0%,rgba(32,30,29,0) 55%);display:flex;flex-direction:column;justify-content:flex-end;padding:12px;gap:4px">
+          <div style="font:600 9px/1 var(--font-body);letter-spacing:.2em;text-transform:uppercase;color:var(--color-accent-400)">▶ REEL · INSTAGRAM</div>
+          <div style="font:900 18px/0.95 var(--font-heading);text-transform:uppercase;color:var(--color-bg)">REEL 02</div>
+        </div>
+        <button type="button" data-reel="DcRxBy7ROxk" onClick="{{ play }}" style="position:absolute;top:10px;right:10px;background:var(--lf-ac);color:#fff;border:none;font:900 10px/1 var(--font-heading);letter-spacing:.14em;padding:7px 9px;cursor:pointer" style-hover="background:var(--color-text)">▶ PLAY</button>
+      </div>
+      <div class="hovg rv" style="aspect-ratio:9/16;position:relative;background:var(--color-neutral-400);outline:2px solid var(--color-text)">
+        <image-slot id="lf-reel-3" shape="rect" placeholder="thumb reel 03"></image-slot>
+        <div style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(0deg,rgba(32,30,29,.9) 0%,rgba(32,30,29,0) 55%);display:flex;flex-direction:column;justify-content:flex-end;padding:12px;gap:4px">
+          <div style="font:600 9px/1 var(--font-body);letter-spacing:.2em;text-transform:uppercase;color:var(--color-accent-400)">▶ REEL · INSTAGRAM</div>
+          <div style="font:900 18px/0.95 var(--font-heading);text-transform:uppercase;color:var(--color-bg)">REEL 03</div>
+        </div>
+        <button type="button" data-reel="Dc3qsCrRlYM" onClick="{{ play }}" style="position:absolute;top:10px;right:10px;background:var(--lf-ac);color:#fff;border:none;font:900 10px/1 var(--font-heading);letter-spacing:.14em;padding:7px 9px;cursor:pointer" style-hover="background:var(--color-text)">▶ PLAY</button>
+      </div>
+      <div class="rv" style="aspect-ratio:9/16;border:2px dashed var(--color-neutral-500);display:flex;flex-direction:column;justify-content:center;gap:8px;padding:14px">
+        <span style="font:600 10px/1 var(--font-body);letter-spacing:.2em;text-transform:uppercase;color:var(--color-neutral-700)">SLOT LIBRE 04</span>
+        <span style="font:900 17px/1 var(--font-heading);text-transform:uppercase">PEGA AQUÍ<br>OTRO REEL</span>
+        <span style="font:400 12px/1.5 var(--font-body);color:var(--color-neutral-700)">Mándame el link del reel o del video y lo conecto.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="artists" data-screen-label="Artistas" style="background:var(--color-text);color:var(--color-bg);border-bottom:2px solid var(--color-text)">
+  <div style="max-width:1600px;margin:0 auto;padding:clamp(36px,6vw,84px) 0 clamp(28px,4vw,56px)">
+    <div class="rv" style="padding:0 clamp(16px,3vw,40px);display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:24px">
+      <div>
+        <span style="display:inline-block;background:var(--lf-ac);color:#fff;font:900 11px/1 var(--font-heading);letter-spacing:.18em;text-transform:uppercase;padding:7px 10px;margin-bottom:14px;transform:rotate(-1.2deg)">04 — ARTISTS</span>
+        <h2 style="margin:0;font:900 clamp(38px,7.5vw,120px)/0.84 var(--font-heading);letter-spacing:-.045em;text-transform:uppercase">CON QUIÉN<br>TRABAJAMOS</h2>
+      </div>
+      <p style="margin:0;max-width:38ch;font:400 15px/1.6 var(--font-body);color:var(--color-neutral-400)">Artistas, productores y sellos. Los nombres van aquí: cada tarjeta lleva foto, nombre, proyecto y el link al trabajo.</p>
+    </div>
+
+    <div class="xs" style="display:flex;gap:6px;overflow-x:auto;padding:0 clamp(16px,3vw,40px);scroll-snap-type:x mandatory">
+      <div class="hovg" style="flex:0 0 clamp(220px,26vw,300px);scroll-snap-align:start;border:2px solid var(--color-neutral-800);background:var(--color-neutral-900)">
+        <div style="position:relative;aspect-ratio:3/4"><image-slot id="lf-art-1" shape="rect" placeholder="foto artista 01"></image-slot></div>
+        <div style="padding:12px;border-top:2px solid var(--color-neutral-800)">
+          <div style="font:900 22px/0.95 var(--font-heading);text-transform:uppercase;letter-spacing:-.02em">ARTISTA 01</div>
+          <div style="font:600 10px/1.4 var(--font-body);letter-spacing:.18em;text-transform:uppercase;color:var(--color-neutral-400);margin-top:6px">VIDEOCLIP · 2026 · [NOMBRE AQUÍ]</div>
+          <a href="#work" style="display:inline-block;margin-top:10px;color:var(--color-accent-400);font:900 10px/1 var(--font-heading);letter-spacing:.16em">VER TRABAJO →</a>
+        </div>
+      </div>
+      <div class="hovg" style="flex:0 0 clamp(220px,26vw,300px);scroll-snap-align:start;border:2px solid var(--color-neutral-800);background:var(--color-neutral-900)">
+        <div style="position:relative;aspect-ratio:3/4"><image-slot id="lf-art-2" shape="rect" placeholder="foto artista 02"></image-slot></div>
+        <div style="padding:12px;border-top:2px solid var(--color-neutral-800)">
+          <div style="font:900 22px/0.95 var(--font-heading);text-transform:uppercase;letter-spacing:-.02em">ARTISTA 02</div>
+          <div style="font:600 10px/1.4 var(--font-body);letter-spacing:.18em;text-transform:uppercase;color:var(--color-neutral-400);margin-top:6px">REELS · 2026 · [NOMBRE AQUÍ]</div>
+          <a href="#work" style="display:inline-block;margin-top:10px;color:var(--color-accent-400);font:900 10px/1 var(--font-heading);letter-spacing:.16em">VER TRABAJO →</a>
+        </div>
+      </div>
+      <div class="hovg" style="flex:0 0 clamp(220px,26vw,300px);scroll-snap-align:start;border:2px solid var(--color-neutral-800);background:var(--color-neutral-900)">
+        <div style="position:relative;aspect-ratio:3/4"><image-slot id="lf-art-3" shape="rect" placeholder="foto artista 03"></image-slot></div>
+        <div style="padding:12px;border-top:2px solid var(--color-neutral-800)">
+          <div style="font:900 22px/0.95 var(--font-heading);text-transform:uppercase;letter-spacing:-.02em">ARTISTA 03</div>
+          <div style="font:600 10px/1.4 var(--font-body);letter-spacing:.18em;text-transform:uppercase;color:var(--color-neutral-400);margin-top:6px">STUDIO SESSION · [NOMBRE AQUÍ]</div>
+          <a href="#work" style="display:inline-block;margin-top:10px;color:var(--color-accent-400);font:900 10px/1 var(--font-heading);letter-spacing:.16em">VER TRABAJO →</a>
+        </div>
+      </div>
+      <div class="hovg" style="flex:0 0 clamp(220px,26vw,300px);scroll-snap-align:start;border:2px solid var(--color-neutral-800);background:var(--color-neutral-900)">
+        <div style="position:relative;aspect-ratio:3/4"><image-slot id="lf-art-4" shape="rect" placeholder="foto artista 04"></image-slot></div>
+        <div style="padding:12px;border-top:2px solid var(--color-neutral-800)">
+          <div style="font:900 22px/0.95 var(--font-heading);text-transform:uppercase;letter-spacing:-.02em">ARTISTA 04</div>
+          <div style="font:600 10px/1.4 var(--font-body);letter-spacing:.18em;text-transform:uppercase;color:var(--color-neutral-400);margin-top:6px">LIVE / TOUR · [NOMBRE AQUÍ]</div>
+          <a href="#work" style="display:inline-block;margin-top:10px;color:var(--color-accent-400);font:900 10px/1 var(--font-heading);letter-spacing:.16em">VER TRABAJO →</a>
+        </div>
+      </div>
+      <div class="hovg" style="flex:0 0 clamp(220px,26vw,300px);scroll-snap-align:start;border:2px solid var(--color-neutral-800);background:var(--color-neutral-900)">
+        <div style="position:relative;aspect-ratio:3/4"><image-slot id="lf-art-5" shape="rect" placeholder="foto artista 05"></image-slot></div>
+        <div style="padding:12px;border-top:2px solid var(--color-neutral-800)">
+          <div style="font:900 22px/0.95 var(--font-heading);text-transform:uppercase;letter-spacing:-.02em">ARTISTA 05</div>
+          <div style="font:600 10px/1.4 var(--font-body);letter-spacing:.18em;text-transform:uppercase;color:var(--color-neutral-400);margin-top:6px">CAMPAÑA · [NOMBRE AQUÍ]</div>
+          <a href="#work" style="display:inline-block;margin-top:10px;color:var(--color-accent-400);font:900 10px/1 var(--font-heading);letter-spacing:.16em">VER TRABAJO →</a>
+        </div>
+      </div>
+      <div style="flex:0 0 clamp(220px,26vw,300px);scroll-snap-align:start;border:2px dashed var(--color-neutral-700);display:flex;flex-direction:column;justify-content:center;gap:8px;padding:16px">
+        <span style="font:600 10px/1 var(--font-body);letter-spacing:.2em;text-transform:uppercase;color:var(--color-neutral-500)">SLOT LIBRE 06</span>
+        <span style="font:900 20px/1 var(--font-heading);text-transform:uppercase">AÑADIR<br>ARTISTA</span>
+        <span style="font:400 12px/1.5 var(--font-body);color:var(--color-neutral-500)">Mándame nombre, proyecto y foto.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="services" data-screen-label="Servicios" style="border-bottom:2px solid var(--color-text)">
+  <div style="max-width:1600px;margin:0 auto;padding:clamp(36px,6vw,84px) clamp(16px,3vw,40px)">
+    <div class="rv" style="margin-bottom:10px">
+      <span style="display:inline-block;background:var(--color-text);color:var(--color-bg);font:900 11px/1 var(--font-heading);letter-spacing:.18em;text-transform:uppercase;padding:7px 10px;margin-bottom:14px">05 — SERVICES</span>
+      <h2 style="margin:0;font:900 clamp(38px,7.5vw,120px)/0.84 var(--font-heading);letter-spacing:-.045em;text-transform:uppercase">LO QUE HACEMOS</h2>
+    </div>
+    <div style="display:flex;flex-direction:column;border-top:2px solid var(--color-text);margin-top:18px">
+      <div class="rv" style="display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr) auto;gap:14px;align-items:center;padding:20px 0;border-bottom:1px solid var(--color-neutral-400)" style-hover="background:var(--color-accent-100)">
+        <h3 style="margin:0;font:700 clamp(24px,3.6vw,52px)/0.94 'Archivo Narrow',var(--font-heading);text-transform:uppercase;letter-spacing:-.01em">VIDEOCLIPS / MUSIC VIDEOS</h3>
+        <p style="margin:0;font:400 14px/1.55 var(--font-body);color:var(--color-neutral-800)">Concepto, rodaje 4K, dirección de arte de calle y edición al ritmo del track.</p>
+        <div style="display:flex;flex-direction:column;align-items:flex-start;gap:6px">
+          <sc-if value="{{ showPricing }}" hint-placeholder-val="{{ true }}"><span style="font:900 13px/1 var(--font-heading);letter-spacing:.06em;color:var(--color-accent-700)">DESDE $ —</span></sc-if>
+          <a href="#booking" data-svc="Videoclip" onClick="{{ pickService }}" style="font:900 11px/1 var(--font-heading);letter-spacing:.16em;color:var(--lf-ac)">COTIZAR →</a>
+        </div>
+      </div>
+      <div class="rv" style="display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr) auto;gap:14px;align-items:center;padding:20px 0;border-bottom:1px solid var(--color-neutral-400)" style-hover="background:var(--color-accent-100)">
+        <h3 style="margin:0;font:700 clamp(24px,3.6vw,52px)/0.94 'Archivo Narrow',var(--font-heading);text-transform:uppercase;letter-spacing:-.01em">FOTOGRAFÍA · STREET &amp; STUDIO</h3>
+        <p style="margin:0;font:400 14px/1.55 var(--font-body);color:var(--color-neutral-800)">Flash directo, retrato de portada, promo para prensa y sesiones en la calle.</p>
+        <div style="display:flex;flex-direction:column;align-items:flex-start;gap:6px">
+          <sc-if value="{{ showPricing }}" hint-placeholder-val="{{ true }}"><span style="font:900 13px/1 var(--font-heading);letter-spacing:.06em;color:var(--color-accent-700)">DESDE $ —</span></sc-if>
+          <a href="#booking" data-svc="Fotografía" onClick="{{ pickService }}" style="font:900 11px/1 var(--font-heading);letter-spacing:.16em;color:var(--lf-ac)">COTIZAR →</a>
+        </div>
+      </div>
+      <div class="rv" style="display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr) auto;gap:14px;align-items:center;padding:20px 0;border-bottom:1px solid var(--color-neutral-400)" style-hover="background:var(--color-accent-100)">
+        <h3 style="margin:0;font:700 clamp(24px,3.6vw,52px)/0.94 'Archivo Narrow',var(--font-heading);text-transform:uppercase;letter-spacing:-.01em">REELS &amp; CONTENT CREATION</h3>
+        <p style="margin:0;font:400 14px/1.55 var(--font-body);color:var(--color-neutral-800)">Paquetes mensuales de contenido vertical para IG y TikTok. Entrega en 48h.</p>
+        <div style="display:flex;flex-direction:column;align-items:flex-start;gap:6px">
+          <sc-if value="{{ showPricing }}" hint-placeholder-val="{{ true }}"><span style="font:900 13px/1 var(--font-heading);letter-spacing:.06em;color:var(--color-accent-700)">DESDE $ —</span></sc-if>
+          <a href="#booking" data-svc="Reel" onClick="{{ pickService }}" style="font:900 11px/1 var(--font-heading);letter-spacing:.16em;color:var(--lf-ac)">COTIZAR →</a>
+        </div>
+      </div>
+      <div class="rv" style="display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr) auto;gap:14px;align-items:center;padding:20px 0;border-bottom:1px solid var(--color-neutral-400)" style-hover="background:var(--color-accent-100)">
+        <h3 style="margin:0;font:700 clamp(24px,3.6vw,52px)/0.94 'Archivo Narrow',var(--font-heading);text-transform:uppercase;letter-spacing:-.01em">EVENTOS · LIVE &amp; BACKSTAGE</h3>
+        <p style="margin:0;font:400 14px/1.55 var(--font-body);color:var(--color-neutral-800)">Conciertos, club nights, giras y cobertura de backstage en NYC, NJ y RD.</p>
+        <div style="display:flex;flex-direction:column;align-items:flex-start;gap:6px">
+          <sc-if value="{{ showPricing }}" hint-placeholder-val="{{ true }}"><span style="font:900 13px/1 var(--font-heading);letter-spacing:.06em;color:var(--color-accent-700)">DESDE $ —</span></sc-if>
+          <a href="#booking" data-svc="Evento" onClick="{{ pickService }}" style="font:900 11px/1 var(--font-heading);letter-spacing:.16em;color:var(--lf-ac)">COTIZAR →</a>
+        </div>
+      </div>
+      <div class="rv" style="display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr) auto;gap:14px;align-items:center;padding:20px 0;border-bottom:1px solid var(--color-neutral-400)" style-hover="background:var(--color-accent-100)">
+        <h3 style="margin:0;font:700 clamp(24px,3.6vw,52px)/0.94 'Archivo Narrow',var(--font-heading);text-transform:uppercase;letter-spacing:-.01em">CAMPAÑAS DE MARCA</h3>
+        <p style="margin:0;font:400 14px/1.55 var(--font-body);color:var(--color-neutral-800)">Marcas que quieren hablarle a la cultura urbana latina sin sonar falso.</p>
+        <div style="display:flex;flex-direction:column;align-items:flex-start;gap:6px">
+          <sc-if value="{{ showPricing }}" hint-placeholder-val="{{ true }}"><span style="font:900 13px/1 var(--font-heading);letter-spacing:.06em;color:var(--color-accent-700)">DESDE $ —</span></sc-if>
+          <a href="#booking" data-svc="Campaña" onClick="{{ pickService }}" style="font:900 11px/1 var(--font-heading);letter-spacing:.16em;color:var(--lf-ac)">COTIZAR →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="feed" data-screen-label="Instagram" style="border-bottom:2px solid var(--color-text);background:var(--color-surface)">
+  <div style="max-width:1600px;margin:0 auto;padding:clamp(36px,6vw,84px) clamp(16px,3vw,40px)">
+    <div class="rv" style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:20px">
+      <div>
+        <span style="display:inline-block;background:var(--lf-ac);color:#fff;font:900 11px/1 var(--font-heading);letter-spacing:.18em;text-transform:uppercase;padding:7px 10px;margin-bottom:14px;transform:rotate(-1deg)">06 — FEED</span>
+        <h2 style="margin:0;font:900 clamp(32px,6vw,92px)/0.86 var(--font-heading);letter-spacing:-.045em;text-transform:uppercase">@IMANGELFILMS</h2>
+      </div>
+      <a href="https://www.instagram.com/imangelfilms/" target="_blank" rel="noopener" style="padding:13px 18px;border:2px solid var(--color-text);font:900 13px/1 var(--font-heading);letter-spacing:.08em;text-transform:uppercase" style-hover="background:var(--color-text);color:var(--color-bg)">SEGUIR EN INSTAGRAM →</a>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:4px">
+      <a href="https://www.instagram.com/imangelfilms/" target="_blank" rel="noopener" class="hovg" style="position:relative;aspect-ratio:1/1;background:var(--color-neutral-300);outline:2px solid var(--color-text)"><image-slot id="lf-ig-01" shape="rect" placeholder="IG 01"></image-slot></a>
+      <a href="https://www.instagram.com/imangelfilms/" target="_blank" rel="noopener" class="hovg" style="position:relative;aspect-ratio:1/1;background:var(--color-neutral-400);outline:2px solid var(--color-text)"><image-slot id="lf-ig-02" shape="rect" placeholder="IG 02"></image-slot></a>
+      <a href="https://www.instagram.com/imangelfilms/" target="_blank" rel="noopener" class="hovg" style="position:relative;aspect-ratio:1/1;background:var(--color-neutral-300);outline:2px solid var(--color-text)"><image-slot id="lf-ig-03" shape="rect" placeholder="IG 03"></image-slot></a>
+      <a href="https://www.instagram.com/imangelfilms/" target="_blank" rel="noopener" class="hovg" style="position:relative;aspect-ratio:1/1;background:var(--color-neutral-400);outline:2px solid var(--color-text)"><image-slot id="lf-ig-04" shape="rect" placeholder="IG 04"></image-slot></a>
+      <a href="https://www.instagram.com/imangelfilms/" target="_blank" rel="noopener" class="hovg" style="position:relative;aspect-ratio:1/1;background:var(--color-neutral-300);outline:2px solid var(--color-text)"><image-slot id="lf-ig-05" shape="rect" placeholder="IG 05"></image-slot></a>
+      <a href="https://www.instagram.com/imangelfilms/" target="_blank" rel="noopener" class="hovg" style="position:relative;aspect-ratio:1/1;background:var(--color-neutral-400);outline:2px solid var(--color-text)"><image-slot id="lf-ig-06" shape="rect" placeholder="IG 06"></image-slot></a>
+      <a href="https://www.instagram.com/imangelfilms/" target="_blank" rel="noopener" class="hovg" style="position:relative;aspect-ratio:1/1;background:var(--color-neutral-400);outline:2px solid var(--color-text)"><image-slot id="lf-ig-07" shape="rect" placeholder="IG 07"></image-slot></a>
+      <a href="https://www.instagram.com/imangelfilms/" target="_blank" rel="noopener" class="hovg" style="position:relative;aspect-ratio:1/1;background:var(--color-neutral-300);outline:2px solid var(--color-text)"><image-slot id="lf-ig-08" shape="rect" placeholder="IG 08"></image-slot></a>
+      <a href="https://www.instagram.com/imangelfilms/" target="_blank" rel="noopener" class="hovg" style="position:relative;aspect-ratio:1/1;background:var(--color-neutral-400);outline:2px solid var(--color-text)"><image-slot id="lf-ig-09" shape="rect" placeholder="IG 09"></image-slot></a>
+      <a href="https://www.instagram.com/imangelfilms/" target="_blank" rel="noopener" class="hovg" style="position:relative;aspect-ratio:1/1;background:var(--color-neutral-300);outline:2px solid var(--color-text)"><image-slot id="lf-ig-10" shape="rect" placeholder="IG 10"></image-slot></a>
+      <a href="https://www.instagram.com/imangelfilms/" target="_blank" rel="noopener" class="hovg" style="position:relative;aspect-ratio:1/1;background:var(--color-neutral-400);outline:2px solid var(--color-text)"><image-slot id="lf-ig-11" shape="rect" placeholder="IG 11"></image-slot></a>
+      <a href="https://www.instagram.com/imangelfilms/" target="_blank" rel="noopener" class="hovg" style="position:relative;aspect-ratio:1/1;background:var(--color-neutral-300);outline:2px solid var(--color-text)"><image-slot id="lf-ig-12" shape="rect" placeholder="IG 12"></image-slot></a>
+    </div>
+  </div>
+</section>
+
+<section style="background:var(--lf-ac);color:#fff;border-bottom:2px solid var(--color-text)">
+  <div style="max-width:1600px;margin:0 auto;padding:clamp(32px,5vw,72px) clamp(16px,3vw,40px);display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;align-items:end">
+    <h2 class="rvx" style="margin:0;font:900 clamp(34px,6.6vw,96px)/0.84 var(--font-heading);letter-spacing:-.045em;text-transform:uppercase">TU PRÓXIMO<br>VIDEO EMPIEZA<br>CON UN MENSAJE.</h2>
+    <div style="display:flex;flex-direction:column;gap:12px;align-items:flex-start">
+      <span style="font:600 11px/1.5 var(--font-body);letter-spacing:.2em;text-transform:uppercase">NYC / NJ / RD · DISPONIBILIDAD GLOBAL</span>
+      <a href="#booking" style="background:#fff;color:var(--color-text);padding:15px 20px;font:900 15px/1 var(--font-heading);letter-spacing:.06em;text-transform:uppercase" style-hover="background:var(--color-text);color:#fff">AGENDA TU PROYECTO →</a>
+    </div>
+  </div>
+</section>
+
+<section id="booking" data-screen-label="Booking" style="border-bottom:2px solid var(--color-text)">
+  <div style="max-width:1100px;margin:0 auto;padding:clamp(36px,6vw,84px) clamp(16px,3vw,40px)">
+    <div class="rv" style="margin-bottom:22px">
+      <span style="display:inline-block;background:var(--color-text);color:var(--color-bg);font:900 11px/1 var(--font-heading);letter-spacing:.18em;text-transform:uppercase;padding:7px 10px;margin-bottom:14px">07 — BOOKING</span>
+      <h2 style="margin:0;font:900 clamp(38px,7vw,104px)/0.84 var(--font-heading);letter-spacing:-.045em;text-transform:uppercase">BOOK A<br>PROJECT</h2>
+    </div>
+
+    <div style="border:2px solid var(--color-text);background:var(--color-bg)">
+      <div style="display:flex;border-bottom:2px solid var(--color-text)">
+        <span style="flex:1;padding:11px 12px;font:600 10px/1 var(--font-body);letter-spacing:.18em;text-transform:uppercase;border-right:1px solid var(--color-neutral-400);background:{{ tab1 }}">01 · SERVICIO</span>
+        <span style="flex:1;padding:11px 12px;font:600 10px/1 var(--font-body);letter-spacing:.18em;text-transform:uppercase;border-right:1px solid var(--color-neutral-400);background:{{ tab2 }}">02 · LOGÍSTICA</span>
+        <span style="flex:1;padding:11px 12px;font:600 10px/1 var(--font-body);letter-spacing:.18em;text-transform:uppercase;border-right:1px solid var(--color-neutral-400);background:{{ tab3 }}">03 · PROYECTO</span>
+        <span style="flex:1;padding:11px 12px;font:600 10px/1 var(--font-body);letter-spacing:.18em;text-transform:uppercase;background:{{ tab4 }}">04 · CONTACTO</span>
+      </div>
+
+      <div style="padding:clamp(18px,3.5vw,40px)">
+        <sc-if value="{{ isStep1 }}" hint-placeholder-val="{{ true }}">
+          <div>
+            <h3 style="margin:0 0 18px;font:900 clamp(24px,3.6vw,44px)/0.92 var(--font-heading);letter-spacing:-.03em;text-transform:uppercase">¿QUÉ NECESITAS?</h3>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:6px;margin-bottom:22px">
+              <button type="button" data-svc="Videoclip" onClick="{{ pickChoice }}" style="padding:16px 12px;border:2px solid var(--color-text);background:none;text-align:left;font:900 15px/1.1 var(--font-heading);text-transform:uppercase;cursor:pointer" style-hover="background:var(--color-accent-100)">VIDEOCLIP</button>
+              <button type="button" data-svc="Fotografía" onClick="{{ pickChoice }}" style="padding:16px 12px;border:2px solid var(--color-text);background:none;text-align:left;font:900 15px/1.1 var(--font-heading);text-transform:uppercase;cursor:pointer" style-hover="background:var(--color-accent-100)">FOTOGRAFÍA</button>
+              <button type="button" data-svc="Reel" onClick="{{ pickChoice }}" style="padding:16px 12px;border:2px solid var(--color-text);background:none;text-align:left;font:900 15px/1.1 var(--font-heading);text-transform:uppercase;cursor:pointer" style-hover="background:var(--color-accent-100)">REEL / TIKTOK</button>
+              <button type="button" data-svc="Contenido para artista" onClick="{{ pickChoice }}" style="padding:16px 12px;border:2px solid var(--color-text);background:none;text-align:left;font:900 15px/1.1 var(--font-heading);text-transform:uppercase;cursor:pointer" style-hover="background:var(--color-accent-100)">CONTENIDO ARTISTA</button>
+              <button type="button" data-svc="Evento" onClick="{{ pickChoice }}" style="padding:16px 12px;border:2px solid var(--color-text);background:none;text-align:left;font:900 15px/1.1 var(--font-heading);text-transform:uppercase;cursor:pointer" style-hover="background:var(--color-accent-100)">EVENTO</button>
+              <button type="button" data-svc="Campaña" onClick="{{ pickChoice }}" style="padding:16px 12px;border:2px solid var(--color-text);background:none;text-align:left;font:900 15px/1.1 var(--font-heading);text-transform:uppercase;cursor:pointer" style-hover="background:var(--color-accent-100)">CAMPAÑA</button>
+              <button type="button" data-svc="Otro" onClick="{{ pickChoice }}" style="padding:16px 12px;border:2px solid var(--color-text);background:none;text-align:left;font:900 15px/1.1 var(--font-heading);text-transform:uppercase;cursor:pointer" style-hover="background:var(--color-accent-100)">OTRO</button>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;border-top:2px solid var(--color-text);padding-top:16px">
+              <span style="font:600 11px/1 var(--font-body);letter-spacing:.16em;text-transform:uppercase;color:var(--color-neutral-700)">SELECCIONADO: {{ chosen }}</span>
+              <button type="button" onClick="{{ next }}" style="background:var(--lf-ac);color:#fff;border:none;padding:14px 18px;font:900 13px/1 var(--font-heading);letter-spacing:.08em;text-transform:uppercase;cursor:pointer" style-hover="background:var(--color-accent-600)">SIGUIENTE →</button>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isStep2 }}" hint-placeholder-val="{{ false }}">
+          <div>
+            <h3 style="margin:0 0 18px;font:900 clamp(24px,3.6vw,44px)/0.92 var(--font-heading);letter-spacing:-.03em;text-transform:uppercase">FECHA Y CIUDAD</h3>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px">
+              <label style="display:flex;flex-direction:column;gap:6px"><span style="font:600 10px/1 var(--font-body);letter-spacing:.18em;text-transform:uppercase;color:var(--color-neutral-700)">FECHA APROXIMADA</span><input type="text" onChange="{{ setField }}" data-k="fecha" placeholder="Ej. finales de octubre" style="border:none;border-bottom:2px solid var(--color-text);background:none;padding:10px 0;font:400 16px/1.2 var(--font-body);color:var(--color-text)"></label>
+              <label style="display:flex;flex-direction:column;gap:6px"><span style="font:600 10px/1 var(--font-body);letter-spacing:.18em;text-transform:uppercase;color:var(--color-neutral-700)">CIUDAD</span><input type="text" onChange="{{ setField }}" data-k="ciudad" placeholder="Ej. Paterson, NJ" style="border:none;border-bottom:2px solid var(--color-text);background:none;padding:10px 0;font:400 16px/1.2 var(--font-body);color:var(--color-text)"></label>
+              <label style="display:flex;flex-direction:column;gap:6px"><span style="font:600 10px/1 var(--font-body);letter-spacing:.18em;text-transform:uppercase;color:var(--color-neutral-700)">PRESUPUESTO APROX. (OPCIONAL)</span><input type="text" onChange="{{ setField }}" data-k="presupuesto" placeholder="Ej. 1.5k — 3k" style="border:none;border-bottom:2px solid var(--color-text);background:none;padding:10px 0;font:400 16px/1.2 var(--font-body);color:var(--color-text)"></label>
+            </div>
+            <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;border-top:2px solid var(--color-text);padding-top:16px;margin-top:22px">
+              <button type="button" onClick="{{ back }}" style="border:2px solid var(--color-text);background:none;padding:14px 18px;font:900 13px/1 var(--font-heading);letter-spacing:.08em;text-transform:uppercase;cursor:pointer" style-hover="background:var(--color-text);color:var(--color-bg)">← ATRÁS</button>
+              <button type="button" onClick="{{ next }}" style="background:var(--lf-ac);color:#fff;border:none;padding:14px 18px;font:900 13px/1 var(--font-heading);letter-spacing:.08em;text-transform:uppercase;cursor:pointer" style-hover="background:var(--color-accent-600)">SIGUIENTE →</button>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isStep3 }}" hint-placeholder-val="{{ false }}">
+          <div>
+            <h3 style="margin:0 0 18px;font:900 clamp(24px,3.6vw,44px)/0.92 var(--font-heading);letter-spacing:-.03em;text-transform:uppercase">EL PROYECTO</h3>
+            <label style="display:flex;flex-direction:column;gap:6px"><span style="font:600 10px/1 var(--font-body);letter-spacing:.18em;text-transform:uppercase;color:var(--color-neutral-700)">CUÉNTAME LA IDEA</span><textarea onChange="{{ setField }}" data-k="descripcion" rows="5" placeholder="Canción, referencias, locaciones, cuántos días, qué necesitas entregado..." style="border:2px solid var(--color-text);background:none;padding:12px;font:400 15px/1.5 var(--font-body);color:var(--color-text);resize:vertical"></textarea></label>
+            <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;border-top:2px solid var(--color-text);padding-top:16px;margin-top:22px">
+              <button type="button" onClick="{{ back }}" style="border:2px solid var(--color-text);background:none;padding:14px 18px;font:900 13px/1 var(--font-heading);letter-spacing:.08em;text-transform:uppercase;cursor:pointer" style-hover="background:var(--color-text);color:var(--color-bg)">← ATRÁS</button>
+              <button type="button" onClick="{{ next }}" style="background:var(--lf-ac);color:#fff;border:none;padding:14px 18px;font:900 13px/1 var(--font-heading);letter-spacing:.08em;text-transform:uppercase;cursor:pointer" style-hover="background:var(--color-accent-600)">SIGUIENTE →</button>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isStep4 }}" hint-placeholder-val="{{ false }}">
+          <div>
+            <h3 style="margin:0 0 18px;font:900 clamp(24px,3.6vw,44px)/0.92 var(--font-heading);letter-spacing:-.03em;text-transform:uppercase">TUS DATOS</h3>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px">
+              <label style="display:flex;flex-direction:column;gap:6px"><span style="font:600 10px/1 var(--font-body);letter-spacing:.18em;text-transform:uppercase;color:var(--color-neutral-700)">NOMBRE *</span><input type="text" onChange="{{ setField }}" data-k="nombre" style="border:none;border-bottom:2px solid var(--color-text);background:none;padding:10px 0;font:400 16px/1.2 var(--font-body);color:var(--color-text)"></label>
+              <label style="display:flex;flex-direction:column;gap:6px"><span style="font:600 10px/1 var(--font-body);letter-spacing:.18em;text-transform:uppercase;color:var(--color-neutral-700)">ARTISTA / COMPAÑÍA</span><input type="text" onChange="{{ setField }}" data-k="artista" style="border:none;border-bottom:2px solid var(--color-text);background:none;padding:10px 0;font:400 16px/1.2 var(--font-body);color:var(--color-text)"></label>
+              <label style="display:flex;flex-direction:column;gap:6px"><span style="font:600 10px/1 var(--font-body);letter-spacing:.18em;text-transform:uppercase;color:var(--color-neutral-700)">EMAIL *</span><input type="email" onChange="{{ setField }}" data-k="email" style="border:none;border-bottom:2px solid var(--color-text);background:none;padding:10px 0;font:400 16px/1.2 var(--font-body);color:var(--color-text)"></label>
+              <label style="display:flex;flex-direction:column;gap:6px"><span style="font:600 10px/1 var(--font-body);letter-spacing:.18em;text-transform:uppercase;color:var(--color-neutral-700)">WHATSAPP *</span><input type="tel" onChange="{{ setField }}" data-k="whatsapp" style="border:none;border-bottom:2px solid var(--color-text);background:none;padding:10px 0;font:400 16px/1.2 var(--font-body);color:var(--color-text)"></label>
+              <label style="display:flex;flex-direction:column;gap:6px"><span style="font:600 10px/1 var(--font-body);letter-spacing:.18em;text-transform:uppercase;color:var(--color-neutral-700)">INSTAGRAM</span><input type="text" onChange="{{ setField }}" data-k="instagram" placeholder="@usuario" style="border:none;border-bottom:2px solid var(--color-text);background:none;padding:10px 0;font:400 16px/1.2 var(--font-body);color:var(--color-text)"></label>
+            </div>
+            <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;border-top:2px solid var(--color-text);padding-top:16px;margin-top:22px">
+              <button type="button" onClick="{{ back }}" style="border:2px solid var(--color-text);background:none;padding:14px 18px;font:900 13px/1 var(--font-heading);letter-spacing:.08em;text-transform:uppercase;cursor:pointer" style-hover="background:var(--color-text);color:var(--color-bg)">← ATRÁS</button>
+              <button type="button" onClick="{{ send }}" style="background:var(--color-text);color:var(--color-bg);border:none;padding:14px 18px;font:900 13px/1 var(--font-heading);letter-spacing:.08em;text-transform:uppercase;cursor:pointer" style-hover="background:var(--lf-ac)">ENVIAR POR WHATSAPP →</button>
+            </div>
+            <p style="margin:12px 0 0;font:400 12px/1.5 var(--font-body);color:var(--color-neutral-700)">{{ sendNote }}</p>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer data-screen-label="Footer" style="background:var(--color-text);color:var(--color-bg)">
+  <div style="max-width:1600px;margin:0 auto;padding:clamp(32px,5vw,72px) clamp(16px,3vw,40px) 20px">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:clamp(20px,3vw,44px);border-bottom:2px solid var(--color-neutral-800);padding-bottom:28px">
+      <div>
+        <div style="font:900 clamp(28px,3.6vw,52px)/0.88 var(--font-heading);letter-spacing:-.04em;text-transform:uppercase;margin-bottom:12px">LA FAMA<br>FILMS LLC</div>
+        <p style="margin:0;font:400 14px/1.6 var(--font-body);color:var(--color-neutral-400);max-width:36ch">42 Harding Ave, Westwood, NJ. Rodamos en Nueva York, New Jersey, República Dominicana y donde haga falta.</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <span style="font:600 10px/1 var(--font-body);letter-spacing:.2em;text-transform:uppercase;color:var(--color-neutral-500)">CONTACTO</span>
+        <a href="tel:+12012961944" style="color:var(--color-bg);font:700 18px/1.3 var(--font-body)" style-hover="color:var(--color-accent-400)">+1 (201) 296-1944</a>
+        <a href="mailto:lafamafilmsllc@gmail.com" style="color:var(--color-bg);font:700 18px/1.3 var(--font-body);word-break:break-all" style-hover="color:var(--color-accent-400)">lafamafilmsllc@gmail.com</a>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <span style="font:600 10px/1 var(--font-body);letter-spacing:.2em;text-transform:uppercase;color:var(--color-neutral-500)">DIRECTO</span>
+        <a href="https://wa.me/12012961944" target="_blank" rel="noopener" style="color:var(--color-bg);font:700 18px/1.3 var(--font-body)" style-hover="color:var(--color-accent-400)">WhatsApp →</a>
+        <a href="https://www.instagram.com/imangelfilms/" target="_blank" rel="noopener" style="color:var(--color-bg);font:700 18px/1.3 var(--font-body)" style-hover="color:var(--color-accent-400)">Instagram @imangelfilms →</a>
+      </div>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;padding-top:18px;font:600 10px/1.4 var(--font-body);letter-spacing:.18em;text-transform:uppercase;color:var(--color-neutral-500)">
+      <span>© 2026 LA FAMA FILMS LLC</span>
+      <span>DOMINICAN CULTURE · NYC SPEED</span>
+      <span>NYC / NJ / RD · WORLDWIDE</span>
+    </div>
+  </div>
+</footer>
+
+<div data-lf-fixed="1" style="position:fixed;bottom:0;left:0;width:100%;z-index:900;display:flex;border-top:2px solid var(--color-text)">
+  <a href="#booking" style="flex:1;padding:14px;background:var(--lf-ac);color:#fff;text-align:center;font:900 13px/1 var(--font-heading);letter-spacing:.08em;text-transform:uppercase">AGENDA TU PROYECTO</a>
+  <a href="https://wa.me/12012961944" target="_blank" rel="noopener" style="flex:0 0 40%;padding:14px;background:var(--color-text);color:var(--color-bg);text-align:center;font:900 13px/1 var(--font-heading);letter-spacing:.08em;text-transform:uppercase">WHATSAPP</a>
+</div>
+
+<sc-if value="{{ lightbox }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ closeLightbox }}" style="position:fixed;inset:0;z-index:3000;background:rgba(32,30,29,.96);display:flex;align-items:center;justify-content:center;padding:clamp(16px,4vw,48px);cursor:zoom-out">
+    <span style="position:absolute;top:16px;right:18px;color:var(--color-bg);font:900 14px/1 var(--font-heading);letter-spacing:.14em">CERRAR ✕</span>
+    {{ lightboxBody }}
+  </div>
+</sc-if>
+
+<sc-if value="{{ reel }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:4000;background:rgba(32,30,29,.97);display:flex;align-items:center;justify-content:center;padding:clamp(12px,3vw,40px)">
+    <button type="button" onClick="{{ closeReel }}" style="position:absolute;top:14px;right:16px;background:var(--lf-ac);color:#fff;border:none;padding:10px 14px;font:900 13px/1 var(--font-heading);letter-spacing:.12em;cursor:pointer">CERRAR ✕</button>
+    {{ reelFrame }}
+  </div>
+</sc-if>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#ec3013&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;#ec3013&quot;,&quot;#dd2b0f&quot;,&quot;#201e1d&quot;,&quot;#ae1800&quot;],&quot;section&quot;:&quot;Identidad&quot;},&quot;archiveColumns&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:6,&quot;min&quot;:4,&quot;max&quot;:8,&quot;step&quot;:1,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Archivo&quot;},&quot;showPricing&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Servicios&quot;},&quot;grain&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Identidad&quot;}}">
+class Component extends DCLogic {
+  state = { menu: false, step: 1, svc: '', lb: null, reel: null, note: '' };
+  f = {};
+
+  applyVars() {
+    const r = document.documentElement.style;
+    r.setProperty('--lf-ac', this.props.accent ?? '#ec3013');
+    r.setProperty('--lf-cols', String(this.props.archiveColumns ?? 6));
+    r.setProperty('--lf-grain', (this.props.grain ?? true) ? '0.055' : '0');
+  }
+
+  componentDidMount() {
+    this.applyVars();
+    this.onScroll = () => this.observe();
+    window.addEventListener('scroll', this.onScroll, { passive: true });
+    window.addEventListener('resize', this.onScroll);
+    this.observe();
+    this.mo = new MutationObserver(() => this.observe());
+    this.mo.observe(document.body, { childList: true, subtree: true });
+    this.safety = setTimeout(() => {
+      document.querySelectorAll('.rv, .rvx').forEach((el) => el.classList.add('in'));
+    }, 6000);
+    this.mq = window.matchMedia('(min-width: 900px)');
+    this.syncNav = () => {
+      const wide = this.mq.matches;
+      document.querySelectorAll('[data-nav-desktop]').forEach((el) => { el.style.display = wide ? 'flex' : 'none'; });
+      document.querySelectorAll('[data-nav-burger]').forEach((el) => { el.style.display = wide ? 'none' : 'block'; });
+      document.querySelectorAll('[data-lf-fixed]').forEach((el) => { el.style.display = wide ? 'none' : 'flex'; });
+      document.body.style.paddingBottom = wide ? '0px' : '52px';
+    };
+    this.syncNav();
+    this.mq.addEventListener('change', this.syncNav);
+    this.onKey = (e) => { if (e.key === 'Escape') this.setState({ lb: null, reel: null, menu: false }); };
+    window.addEventListener('keydown', this.onKey);
+  }
+
+  observe() {
+    if (this.scanQueued) return;
+    this.scanQueued = true;
+    requestAnimationFrame(() => {
+      this.scanQueued = false;
+      const limit = window.innerHeight * 0.92;
+      document.querySelectorAll('.rv:not(.in), .rvx:not(.in)').forEach((el) => {
+        if (el.getBoundingClientRect().top < limit) el.classList.add('in');
+      });
+    });
+  }
+
+  componentDidUpdate() { this.applyVars(); this.observe(); }
+
+  componentWillUnmount() {
+    if (this.mo) this.mo.disconnect();
+    clearTimeout(this.safety);
+    window.removeEventListener('scroll', this.onScroll);
+    window.removeEventListener('resize', this.onScroll);
+    if (this.mq) this.mq.removeEventListener('change', this.syncNav);
+    window.removeEventListener('keydown', this.onKey);
+  }
+
+  slotSrc(id) {
+    const el = document.getElementById(id);
+    if (!el) return null;
+    const img = (el.shadowRoot && el.shadowRoot.querySelector('img')) || el.querySelector('img');
+    return img && img.src && !img.src.startsWith('data:image/svg') ? img.src : null;
+  }
+
+  renderVals() {
+    const st = this.state;
+    const tab = (n) => (st.step === n ? 'var(--lf-ac)' : 'transparent');
+    const src = st.lb ? this.slotSrc(st.lb) : null;
+    return {
+      menuOpen: st.menu,
+      toggleMenu: () => this.setState({ menu: !st.menu }),
+      showPricing: this.props.showPricing ?? true,
+      isStep1: st.step === 1, isStep2: st.step === 2, isStep3: st.step === 3, isStep4: st.step === 4,
+      tab1: tab(1), tab2: tab(2), tab3: tab(3), tab4: tab(4),
+      chosen: st.svc || 'ninguno todavía',
+      sendNote: st.note || 'Se abre WhatsApp con el mensaje ya escrito. Nombre, email y WhatsApp son obligatorios.',
+      next: () => this.setState({ step: Math.min(4, st.step + 1) }),
+      back: () => this.setState({ step: Math.max(1, st.step - 1) }),
+      pickChoice: (e) => this.setState({ svc: e.currentTarget.dataset.svc }),
+      pickService: (e) => this.setState({ svc: e.currentTarget.dataset.svc, step: 1 }),
+      setField: (e) => { this.f[e.currentTarget.dataset.k] = e.currentTarget.value; },
+      send: () => {
+        const f = this.f;
+        if (!f.nombre || !f.email || !f.whatsapp) {
+          this.setState({ note: 'Falta nombre, email o WhatsApp.' });
+          return;
+        }
+        const L = [
+          'Hola LaFama Films, quiero agendar un proyecto.', '',
+          'Nombre: ' + f.nombre,
+          'Artista / compañía: ' + (f.artista || '—'),
+          'Tipo de proyecto: ' + (st.svc || '—'),
+          'Email: ' + f.email,
+          'WhatsApp: ' + f.whatsapp,
+          'Instagram: ' + (f.instagram || '—'),
+          'Fecha aproximada: ' + (f.fecha || '—'),
+          'Ciudad: ' + (f.ciudad || '—'),
+          'Presupuesto: ' + (f.presupuesto || '—'), '',
+          'Proyecto: ' + (f.descripcion || '—')
+        ].join('\n');
+        window.open('https://wa.me/12012961944?text=' + encodeURIComponent(L), '_blank');
+        this.setState({ note: 'Abrimos WhatsApp. Si no se abrió, escríbenos a +1 (201) 296-1944.' });
+      },
+      lightbox: !!st.lb,
+      closeLightbox: () => this.setState({ lb: null }),
+      lightboxBody: src
+        ? React.createElement('img', { src, alt: '', style: { maxWidth: '92vw', maxHeight: '86vh', objectFit: 'contain', outline: '2px solid #f3f2f2' } })
+        : React.createElement('div', { style: { maxWidth: '30ch', color: '#f3f2f2', font: '900 22px/1.1 var(--font-heading)', textTransform: 'uppercase', textAlign: 'left' } }, 'Suelta una foto en ese frame y se abrirá aquí en grande.'),
+      zoom: (e) => { e.stopPropagation(); this.setState({ lb: e.currentTarget.dataset.slot }); },
+      reel: !!st.reel,
+      closeReel: () => this.setState({ reel: null }),
+      reelFrame: st.reel
+        ? React.createElement('iframe', {
+            src: 'https://www.instagram.com/reel/' + st.reel + '/embed',
+            title: 'Reel',
+            allow: 'autoplay; encrypted-media; fullscreen',
+            style: { width: 'min(420px, 92vw)', height: 'min(740px, 86vh)', border: '2px solid #f3f2f2', background: '#000' }
+          })
+        : null,
+      play: (e) => this.setState({ reel: e.currentTarget.dataset.reel })
+    };
+  }
+}
+
+</script>
+</body>
+</html>

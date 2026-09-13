@@ -1,0 +1,1823 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LA FAMA FILMS — Visuals For The Culture | NYC · NJ · DR</title>
+  <meta name="description" content="Productora audiovisual urbana especializada en videoclips, fotografía de calle, contenido para artistas y estética cinemática dominicana en NYC y New Jersey.">
+
+  <!-- Open Graph / Meta -->
+  <meta property="og:title" content="LA FAMA FILMS — Dominican Culture x NYC Energy">
+  <meta property="og:description" content="Visuals, videoclips y fotografía urbana para la cultura. NYC · NJ · RD.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&q=80&w=1200">
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22 font-weight=%22900%22 fill=%22%23e11d48%22>LF</text></svg>">
+
+  <!-- Google Fonts: Bebas Neue + Space Grotesk + Archivo Black -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Remixicons CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       1. ROOT DESIGN SYSTEM & URBAN DOMINICAN ART DIRECTION
+       Concrete Textures, Crimson Accents, Street Magazine Layouts, High Contrast
+       ========================================================================== */
+    :root {
+      --bg-concrete: #0a0a0c;
+      --bg-asphalt: #121216;
+      --bg-card: #181820;
+      --bg-surface: #22222d;
+
+      --crimson: #e11d48;
+      --crimson-glow: rgba(225, 29, 72, 0.4);
+      --gold-accent: #f59e0b;
+      --concrete-gray: #a1a1aa;
+      --paper-white: #f4f4f5;
+
+      --text-main: #f4f4f5;
+      --text-muted: #9090a0;
+      --text-dim: #555562;
+
+      --border-thin: rgba(255, 255, 255, 0.12);
+      --border-red: rgba(225, 29, 72, 0.4);
+
+      --font-display: 'Bebas Neue', sans-serif;
+      --font-heavy: 'Archivo Black', sans-serif;
+      --font-sans: 'Space Grotesk', sans-serif;
+
+      --transition-fast: 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      --transition-smooth: 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background-color: var(--bg-concrete);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      font-size: 16px;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      overflow-x: hidden;
+      line-height: 1.35;
+      background-color: var(--bg-concrete);
+      position: relative;
+    }
+
+    img, video {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      object-fit: cover;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button, input, select, textarea {
+      font-family: inherit;
+      background: none;
+      border: none;
+      color: inherit;
+    }
+
+    /* Film Grain & Street Scanlines */
+    .film-grain {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.04;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    }
+
+    .street-scanlines {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9998;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.2) 50%);
+      background-size: 100% 4px;
+      opacity: 0.35;
+    }
+
+    /* Custom Precision Cursor */
+    .custom-cursor {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 65px;
+      height: 65px;
+      border: 1px solid var(--crimson);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 10000;
+      transform: translate(-50%, -50%) scale(0.25);
+      transition: transform 0.15s cubic-bezier(0.1, 1, 0.1, 1), opacity 0.3s ease, background 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 0.9rem;
+      letter-spacing: 0.1em;
+      color: #ffffff;
+      opacity: 0;
+      background: rgba(225, 29, 72, 0.15);
+      backdrop-filter: blur(2px);
+    }
+
+    .custom-cursor.active {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    .custom-cursor.hovering {
+      transform: translate(-50%, -50%) scale(1.25);
+      background: var(--crimson);
+      color: #ffffff;
+      border-color: #ffffff;
+    }
+
+    /* Utility Styling */
+    .font-bebas { font-family: var(--font-display); }
+    .font-heavy { font-family: var(--font-heavy); }
+    .text-crimson { color: var(--crimson); }
+    .text-gold { color: var(--gold-accent); }
+
+    .container {
+      width: 100%;
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    .section-pad {
+      padding: 6rem 0;
+    }
+
+    /* Graphic Urban Badges & Stickers */
+    .urban-sticker {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--crimson);
+      color: #ffffff;
+      font-family: var(--font-heavy);
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 0.25rem 0.6rem;
+      transform: rotate(-1.5deg);
+      box-shadow: 2px 2px 0px #000;
+      margin-bottom: 0.8rem;
+    }
+
+    .tech-tag {
+      font-size: 0.7rem;
+      font-family: var(--font-sans);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--concrete-gray);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .tech-tag::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: var(--crimson);
+    }
+
+    /* Buttons */
+    .btn-street {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      padding: 0.9rem 2.2rem;
+      background: var(--crimson);
+      color: #ffffff;
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border: 1px solid var(--crimson);
+      cursor: pointer;
+      transition: var(--transition-fast);
+      position: relative;
+      clip-path: polygon(0 0, 100% 0, 100% 82%, 92% 100%, 0 100%);
+    }
+
+    .btn-street:hover {
+      background: #ffffff;
+      color: #000000;
+      border-color: #ffffff;
+      box-shadow: 0 0 20px var(--crimson-glow);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border-thin);
+      color: var(--text-main);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--crimson);
+      color: var(--crimson);
+      background: rgba(225, 29, 72, 0.08);
+    }
+
+    /* Scroll Reveal Animation */
+    .reveal {
+      opacity: 0;
+      transform: translateY(25px);
+      transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Marquee Banner Animation */
+    .marquee-wrap {
+      overflow: hidden;
+      white-space: nowrap;
+      background: var(--crimson);
+      color: #ffffff;
+      padding: 0.6rem 0;
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      border-y: 1px solid #000;
+    }
+
+    .marquee-content {
+      display: inline-block;
+      animation: marquee 20s linear infinite;
+    }
+
+    @keyframes marquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* ==========================================================================
+       2. FIXED NAVBAR & FULLSCREEN MOBILE MENU
+       ========================================================================== */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      padding: 1.2rem 2.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: var(--transition-fast);
+      background: linear-gradient(180deg, rgba(10,10,12,0.92) 0%, rgba(10,10,12,0) 100%);
+    }
+
+    .navbar.scrolled {
+      padding: 0.8rem 2.5rem;
+      background: rgba(10, 10, 12, 0.95);
+      border-bottom: 1px solid var(--border-thin);
+      backdrop-filter: blur(12px);
+    }
+
+    .brand-logo-text {
+      font-family: var(--font-heavy);
+      font-size: 1.4rem;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .brand-rec-dot {
+      width: 10px;
+      height: 10px;
+      background: var(--crimson);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--crimson);
+      animation: recPulse 1.5s infinite;
+    }
+
+    @keyframes recPulse {
+      0% { opacity: 0.3; }
+      50% { opacity: 1; }
+      100% { opacity: 0.3; }
+    }
+
+    .nav-links-desktop {
+      display: flex;
+      align-items: center;
+      gap: 2.2rem;
+      list-style: none;
+    }
+
+    .nav-link-item {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--concrete-gray);
+      transition: var(--transition-fast);
+    }
+
+    .nav-link-item:hover, .nav-link-item.active {
+      color: var(--crimson);
+    }
+
+    .hamburger-icon {
+      display: none;
+      font-size: 1.8rem;
+      cursor: pointer;
+      color: #ffffff;
+    }
+
+    .mobile-fullscreen-menu {
+      position: fixed;
+      inset: 0;
+      background: var(--bg-concrete);
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 2rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: var(--transition-smooth);
+    }
+
+    .mobile-fullscreen-menu.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .mobile-fullscreen-menu .nav-link-item {
+      font-size: 2.8rem;
+    }
+
+    /* ==========================================================================
+       3. HERO SECTION (DYNAMIC MUSIC VIDEO INTRO)
+       ========================================================================== */
+    .hero-container {
+      min-height: 92vh;
+      padding: 7.5rem 2.5rem 2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+    }
+
+    .hero-main-header {
+      z-index: 2;
+    }
+
+    .hero-title-giant {
+      font-family: var(--font-display);
+      font-size: clamp(3.8rem, 10.5vw, 11rem);
+      line-height: 0.86;
+      letter-spacing: -0.01em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .hero-title-giant span {
+      color: var(--crimson);
+      display: inline-block;
+    }
+
+    /* Contact Sheet Intro Grid (Reduced Image Size Visual Entrance) */
+    .hero-contact-sheet {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin: 1.5rem 0;
+      z-index: 2;
+    }
+
+    .sheet-frame {
+      position: relative;
+      aspect-ratio: 4/3;
+      border: 1px solid var(--border-thin);
+      overflow: hidden;
+      background: var(--bg-asphalt);
+    }
+
+    .sheet-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: grayscale(30%) contrast(1.15);
+      transition: transform 0.6s var(--transition-fast), filter 0.4s ease;
+    }
+
+    .sheet-frame:hover img {
+      transform: scale(1.08);
+      filter: grayscale(0%) contrast(1.2);
+    }
+
+    .sheet-frame-stamp {
+      position: absolute;
+      top: 0.4rem;
+      left: 0.4rem;
+      font-size: 0.6rem;
+      font-family: var(--font-sans);
+      background: rgba(0,0,0,0.85);
+      padding: 0.15rem 0.4rem;
+      color: var(--concrete-gray);
+      letter-spacing: 0.1em;
+    }
+
+    .hero-footer-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      border-top: 1px solid var(--border-thin);
+      padding-top: 1.2rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+      z-index: 2;
+    }
+
+    /* ==========================================================================
+       4. CULTURAL ROOTS & DIASPORA SECTION (DOMINICAN x NYC)
+       ========================================================================== */
+    .cultural-roots-section {
+      background: var(--bg-asphalt);
+      border-top: 1px solid var(--border-thin);
+      border-bottom: 1px solid var(--border-thin);
+      position: relative;
+    }
+
+    .cultural-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .cultural-headline {
+      font-family: var(--font-display);
+      font-size: clamp(2.8rem, 6vw, 6rem);
+      line-height: 0.92;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+
+    .cultural-body {
+      font-size: 1.05rem;
+      color: var(--concrete-gray);
+      line-height: 1.65;
+      margin-bottom: 2rem;
+    }
+
+    /* Street Magazine Mosaic (Compact Image Sizing) */
+    .street-mosaic-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.8rem;
+    }
+
+    .mosaic-item {
+      position: relative;
+      aspect-ratio: 1/1;
+      border: 1px solid var(--border-thin);
+      overflow: hidden;
+      background: var(--bg-card);
+    }
+
+    .mosaic-item.tall {
+      grid-row: span 2;
+      aspect-ratio: 1/2;
+    }
+
+    .mosaic-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: contrast(1.15) saturate(1.1);
+      transition: transform 0.6s var(--transition-fast);
+    }
+
+    .mosaic-item:hover img {
+      transform: scale(1.08);
+    }
+
+    /* ==========================================================================
+       5. PORTFOLIO — COMPACT EDITORIAL ARCHIVE (8-15 ITEMS SIMULTANEOUSLY)
+       ========================================================================== */
+    .portfolio-archive-section {
+      padding: 6rem 0;
+    }
+
+    .portfolio-header-flex {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 2.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    /* Asymmetrical Dynamic Compact Grid */
+    .compact-archive-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 1rem;
+    }
+
+    .archive-card {
+      position: relative;
+      background: var(--bg-card);
+      border: 1px solid var(--border-thin);
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .archive-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: contrast(1.1) brightness(0.9);
+      transition: transform 0.6s var(--transition-fast), filter 0.4s ease;
+    }
+
+    .archive-card:hover img {
+      transform: scale(1.08);
+      filter: contrast(1.2) brightness(1);
+    }
+
+    .archive-card-hover {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(0deg, rgba(10,10,12,0.95) 0%, rgba(10,10,12,0.1) 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 1rem;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .archive-card:hover .archive-card-hover {
+      opacity: 1;
+    }
+
+    .archive-artist-name {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      line-height: 0.95;
+      text-transform: uppercase;
+    }
+
+    .archive-work-type {
+      font-size: 0.65rem;
+      color: var(--crimson);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-top: 0.2rem;
+    }
+
+    /* Compact Grid Spans */
+    .span-2 { grid-column: span 2; aspect-ratio: 4/3; }
+    .span-3 { grid-column: span 3; aspect-ratio: 16/10; }
+    .span-1 { grid-column: span 1; aspect-ratio: 1/1; }
+
+    /* ==========================================================================
+       6. ARTISTS WE'VE WORKED WITH (PROMINENT COLLABORATORS)
+       ========================================================================== */
+    .artists-section {
+      padding: 5rem 0;
+      background: var(--bg-asphalt);
+      border-top: 1px solid var(--border-thin);
+      border-bottom: 1px solid var(--border-thin);
+    }
+
+    .artists-horizontal-scroll {
+      display: flex;
+      gap: 1.5rem;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding-bottom: 1.5rem;
+      scroll-snap-type: x mandatory;
+    }
+
+    .artists-horizontal-scroll::-webkit-scrollbar { display: none; }
+
+    .artist-profile-card {
+      flex: 0 0 280px;
+      scroll-snap-align: start;
+      background: var(--bg-card);
+      border: 1px solid var(--border-thin);
+      padding: 1.2rem;
+      cursor: pointer;
+      transition: var(--transition-fast);
+    }
+
+    .artist-profile-card:hover {
+      border-color: var(--crimson);
+      transform: translateY(-4px);
+    }
+
+    .artist-avatar-wrap {
+      width: 100%;
+      aspect-ratio: 1/1;
+      overflow: hidden;
+      margin-bottom: 1rem;
+      filter: grayscale(50%) contrast(1.1);
+      transition: filter 0.4s ease;
+    }
+
+    .artist-profile-card:hover .artist-avatar-wrap {
+      filter: grayscale(0%) contrast(1.2);
+    }
+
+    .artist-card-title {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      line-height: 1;
+    }
+
+    .artist-card-sub {
+      font-size: 0.7rem;
+      color: var(--concrete-gray);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    /* ==========================================================================
+       7. MOTION / VIDEO REELS SECTION
+       ========================================================================== */
+    .motion-section {
+      padding: 6rem 0;
+    }
+
+    .motion-grid-compact {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .motion-reel-card {
+      position: relative;
+      aspect-ratio: 9/16;
+      background: #000;
+      border: 1px solid var(--border-thin);
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .motion-reel-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(0.85);
+      transition: transform 0.6s var(--transition-fast);
+    }
+
+    .motion-reel-card:hover img {
+      transform: scale(1.05);
+      filter: brightness(1);
+    }
+
+    .play-badge-icon {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 55px;
+      height: 55px;
+      background: var(--crimson);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      color: #ffffff;
+      box-shadow: 0 0 20px var(--crimson-glow);
+      transition: var(--transition-fast);
+      z-index: 3;
+    }
+
+    .motion-reel-card:hover .play-badge-icon {
+      transform: translate(-50%, -50%) scale(1.15);
+      background: #ffffff;
+      color: #000000;
+    }
+
+    .motion-reel-meta {
+      position: absolute;
+      bottom: 0;
+      inset-x: 0;
+      padding: 1.2rem;
+      background: linear-gradient(0deg, rgba(10,10,12,0.95) 0%, rgba(10,10,12,0) 100%);
+      z-index: 2;
+    }
+
+    /* Fullscreen Video Modal */
+    .video-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.96);
+      z-index: 4000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .video-modal-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .video-modal-box {
+      width: 100%;
+      max-width: 950px;
+      aspect-ratio: 16/9;
+      background: #000;
+      border: 1px solid var(--border-red);
+    }
+
+    .video-modal-box iframe {
+      width: 100%;
+      height: 100%;
+    }
+
+    .modal-close-trigger {
+      position: absolute;
+      top: 2rem;
+      right: 2rem;
+      font-size: 2.5rem;
+      color: #ffffff;
+      cursor: pointer;
+      z-index: 4001;
+    }
+
+    /* ==========================================================================
+       8. DYNAMIC SERVICES LIST (LARGE EDITORIAL LINES)
+       ========================================================================== */
+    .services-section {
+      padding: 6rem 0;
+      background: var(--bg-asphalt);
+      border-top: 1px solid var(--border-thin);
+      border-bottom: 1px solid var(--border-thin);
+    }
+
+    .services-editorial-list {
+      display: flex;
+      flex-direction: column;
+      margin-top: 2.5rem;
+    }
+
+    .service-line-item {
+      padding: 2rem 0;
+      border-bottom: 1px solid var(--border-thin);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      transition: padding 0.3s ease;
+    }
+
+    .service-line-item:hover {
+      padding-left: 1.2rem;
+      padding-right: 1.2rem;
+      border-bottom-color: var(--crimson);
+    }
+
+    .service-line-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.2rem, 4.5vw, 4.5rem);
+      line-height: 0.95;
+      text-transform: uppercase;
+      transition: color 0.3s ease;
+    }
+
+    .service-line-item:hover .service-line-title {
+      color: var(--crimson);
+    }
+
+    .service-line-desc {
+      font-size: 0.85rem;
+      color: var(--concrete-gray);
+      max-width: 380px;
+    }
+
+    /* Floating Image Follow Cursor for Services */
+    .service-float-preview {
+      position: fixed;
+      width: 260px;
+      height: 340px;
+      pointer-events: none;
+      z-index: 500;
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.8);
+      transition: opacity 0.3s ease, transform 0.3s var(--transition-fast);
+      overflow: hidden;
+      border: 1px solid var(--crimson);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.8);
+    }
+
+    .service-float-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* ==========================================================================
+       9. STEP-BY-STEP URBAN BOOKING PLATFORM
+       ========================================================================== */
+    .booking-section {
+      padding: 6rem 0;
+      background: var(--bg-concrete);
+    }
+
+    .booking-card-wrapper {
+      max-width: 900px;
+      margin: 0 auto;
+      background: var(--bg-card);
+      border: 1px solid var(--border-red);
+      padding: 3.5rem;
+      box-shadow: 0 0 40px rgba(225,29,72,0.08);
+    }
+
+    .booking-step-panel {
+      display: none;
+      animation: fadeIn 0.4s ease-out;
+    }
+
+    .booking-step-panel.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .step-question-title {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 3.8vw, 3.5rem);
+      line-height: 0.95;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+    }
+
+    .booking-choice-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-bottom: 2.2rem;
+    }
+
+    .choice-btn-card {
+      background: var(--bg-concrete);
+      border: 1px solid var(--border-thin);
+      padding: 1.2rem;
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--text-main);
+      cursor: pointer;
+      text-align: center;
+      transition: var(--transition-fast);
+    }
+
+    .choice-btn-card:hover, .choice-btn-card.selected {
+      border-color: var(--crimson);
+      background: rgba(225, 29, 72, 0.12);
+      color: var(--crimson);
+    }
+
+    .form-input-urban {
+      width: 100%;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid var(--border-thin);
+      padding: 1.1rem 0;
+      font-size: 1.15rem;
+      color: var(--text-main);
+      outline: none;
+      margin-bottom: 1.8rem;
+      transition: border-color 0.3s ease;
+    }
+
+    .form-input-urban:focus {
+      border-bottom-color: var(--crimson);
+    }
+
+    .booking-nav-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 1.8rem;
+    }
+
+    /* ==========================================================================
+       10. INSTAGRAM GRID (3-6 COLUMNS COMPACT)
+       ========================================================================== */
+    .insta-feed-section {
+      padding: 5rem 0;
+      background: var(--bg-asphalt);
+      border-top: 1px solid var(--border-thin);
+    }
+
+    .insta-grid-compact {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 0.8rem;
+      margin-top: 2rem;
+    }
+
+    .insta-compact-card {
+      position: relative;
+      aspect-ratio: 1/1;
+      background: var(--bg-card);
+      border: 1px solid var(--border-thin);
+      overflow: hidden;
+      display: block;
+    }
+
+    .insta-compact-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: contrast(1.1);
+      transition: transform 0.6s var(--transition-fast);
+    }
+
+    .insta-compact-card:hover img {
+      transform: scale(1.08);
+    }
+
+    /* ==========================================================================
+       11. FOOTER & FIXED ACTION BARS
+       ========================================================================== */
+    .contact-footer {
+      padding: 5rem 0 2.5rem;
+      background: #000;
+      border-top: 1px solid var(--border-thin);
+    }
+
+    .footer-top-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 3.5rem;
+      margin-bottom: 4rem;
+    }
+
+    .footer-bottom-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--border-thin);
+      padding-top: 1.8rem;
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    .desktop-fixed-book-btn {
+      position: fixed;
+      bottom: 2.2rem;
+      right: 2.2rem;
+      z-index: 900;
+    }
+
+    .mobile-bottom-bar {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: var(--bg-concrete);
+      border-top: 1px solid var(--border-thin);
+      z-index: 1000;
+      padding: 0.8rem 1rem;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.8rem;
+    }
+
+    /* Lightbox Modal */
+    .lightbox-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 3000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .lightbox-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .lightbox-img {
+      max-width: 90vw;
+      max-height: 85vh;
+      object-fit: contain;
+    }
+
+    /* ==========================================================================
+       12. RESPONSIVE BREAKPOINTS
+       ========================================================================== */
+    @media (max-width: 1200px) {
+      .compact-archive-grid { grid-template-columns: repeat(4, 1fr); }
+      .span-3 { grid-column: span 2; }
+      .insta-grid-compact { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    @media (max-width: 900px) {
+      .hero-contact-sheet { grid-template-columns: repeat(2, 1fr); }
+      .cultural-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .compact-archive-grid { grid-template-columns: repeat(2, 1fr); }
+      .span-2, .span-3, .span-1 { grid-column: span 1; aspect-ratio: 4/3; }
+      .motion-grid-compact { grid-template-columns: 1fr; }
+      .booking-choice-grid { grid-template-columns: repeat(2, 1fr); }
+      .footer-top-grid { grid-template-columns: 1fr; gap: 2rem; }
+    }
+
+    @media (max-width: 768px) {
+      .nav-links-desktop, .navbar .btn-street { display: none; }
+      .hamburger-icon { display: block; }
+      .hero-container { padding: 6rem 1.5rem 2rem; }
+      .section-pad { padding: 4rem 0; }
+      .service-line-item { flex-direction: column; align-items: flex-start; gap: 0.6rem; }
+      .booking-card-wrapper { padding: 2rem 1.2rem; }
+      .booking-choice-grid { grid-template-columns: 1fr; }
+      .desktop-fixed-book-btn { display: none; }
+      .mobile-bottom-bar { display: grid; }
+      body { padding-bottom: 60px; }
+      .custom-cursor { display: none !important; }
+      .footer-bottom-bar { flex-direction: column; gap: 1rem; text-align: center; }
+      .service-float-preview { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Street Film Textures & Scanlines -->
+  <div class="film-grain"></div>
+  <div class="street-scanlines"></div>
+
+  <!-- Custom Precision Cursor -->
+  <div class="custom-cursor" id="custom-cursor"><span id="cursor-text"></span></div>
+
+  <!-- ==========================================================================
+       1. FIXED NAVBAR
+       ========================================================================== -->
+  <nav class="navbar" id="navbar">
+    <a href="#" class="brand-logo-text">
+      <span class="brand-rec-dot"></span> LA FAMA FILMS
+    </a>
+
+    <ul class="nav-links-desktop">
+      <li><a href="#work" class="nav-link-item">WORK</a></li>
+      <li><a href="#motion" class="nav-link-item">MOTION</a></li>
+      <li><a href="#artists" class="nav-link-item">ARTISTS</a></li>
+      <li><a href="#services" class="nav-link-item">SERVICES</a></li>
+      <li><a href="#booking" class="nav-link-item">BOOK</a></li>
+    </ul>
+
+    <a href="#booking" class="btn-street" style="padding: 0.5rem 1.3rem; font-size: 1.1rem;">
+      BOOK PROJECT
+    </a>
+
+    <div class="hamburger-icon" id="hamburger-btn">
+      <i class="ri-menu-4-line"></i>
+    </div>
+  </nav>
+
+  <!-- Mobile Fullscreen Menu -->
+  <div class="mobile-fullscreen-menu" id="mobile-menu">
+    <a href="#work" class="nav-link-item mobile-item">WORK</a>
+    <a href="#motion" class="nav-link-item mobile-item">MOTION</a>
+    <a href="#artists" class="nav-link-item mobile-item">ARTISTS</a>
+    <a href="#services" class="nav-link-item mobile-item">SERVICES</a>
+    <a href="#booking" class="nav-link-item mobile-item">BOOK</a>
+    <a href="#booking" class="btn-street mobile-item" style="margin-top: 1rem;">AGENDA TU PROYECTO</a>
+  </div>
+
+  <!-- Marquee Street Banner -->
+  <div style="margin-top: 70px;">
+    <div class="marquee-wrap">
+      <div class="marquee-content">
+        LA FAMA FILMS ★ NYC · NEW JERSEY · SANTO DOMINGO · SANTIAGO ★ VISUALS FOR THE CULTURE ★ MUSIC VIDEOS ★ STREET PHOTOGRAPHY ★
+      </div>
+      <div class="marquee-content">
+        LA FAMA FILMS ★ NYC · NEW JERSEY · SANTO DOMINGO · SANTIAGO ★ VISUALS FOR THE CULTURE ★ MUSIC VIDEOS ★ STREET PHOTOGRAPHY ★
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       2. HERO SECTION — URBAN INTRO (CONTACT SHEET + MUSIC VIDEO ENERGY)
+       ========================================================================== -->
+  <section class="hero-container" id="hero">
+    <div class="hero-main-header">
+      <div class="urban-sticker">DOMINICAN CULTURE x NYC ENERGY</div>
+      <h1 class="hero-title-giant">
+        VISUALS FOR THE <span>CULTURE.</span>
+      </h1>
+      <p style="font-size: 1.1rem; color: var(--concrete-gray); max-width: 650px;">
+        Productora audiovisual especializada en videoclips de música urbana, contenido para artistas dominicanos y fotografía de calle en NYC, NJ y el mundo.
+      </p>
+    </div>
+
+    <!-- Contact Sheet Intro Grid (Reduced Image Size) -->
+    <div class="hero-contact-sheet">
+      <div class="sheet-frame" data-cursor="VIEW" onclick="openLightbox('https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&q=80&w=1200')">
+        <span class="sheet-frame-stamp">FRAME 01 — NYC</span>
+        <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&q=80&w=800" alt="Urban Artist Shoot 1">
+      </div>
+      <div class="sheet-frame" data-cursor="VIEW" onclick="openLightbox('https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=1200')">
+        <span class="sheet-frame-stamp">FRAME 02 — DRILL</span>
+        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=800" alt="Urban Artist Shoot 2">
+      </div>
+      <div class="sheet-frame" data-cursor="VIEW" onclick="openLightbox('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=1200')">
+        <span class="sheet-frame-stamp">FRAME 03 — NJ</span>
+        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=800" alt="Urban Artist Shoot 3">
+      </div>
+      <div class="sheet-frame" data-cursor="VIEW" onclick="openLightbox('https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&q=80&w=1200')">
+        <span class="sheet-frame-stamp">FRAME 04 — STAGE</span>
+        <img src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&q=80&w=800" alt="Urban Artist Shoot 4">
+      </div>
+    </div>
+
+    <div class="hero-footer-bar">
+      <div class="tech-tag">REC 4K CINEMA / 24FPS / NYC HUBS</div>
+      <div style="display: flex; gap: 1rem;">
+        <a href="#work" class="btn-street btn-outline">EXPLORAR ARCHIVO →</a>
+        <a href="#booking" class="btn-street">AGENDA TU PROYECTO</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       3. DOMINICAN ROOTS x NYC DIASPORA SECTION
+       ========================================================================== -->
+  <section class="cultural-roots-section section-pad">
+    <div class="container">
+      <div class="cultural-grid">
+        <div class="reveal">
+          <div class="urban-sticker" style="background: var(--gold-accent); color: #000;">STREET MAGAZINE EDITORIAL</div>
+          <h2 class="cultural-headline">
+            DOMINICAN ROOTS.<br>
+            <span class="text-crimson">NEW YORK ENERGY.</span>
+          </h2>
+          <p class="cultural-body">
+            LaFama Films nace del movimiento de la calle. Traemos la sazón, la vibra y el ritmo dominicano a las calles de Washington Heights, Bronx, Paterson y todo New Jersey. Documentamos a los verdaderos protagonistas de la música urbana con calidad cinematográfica.
+          </p>
+
+          <div style="display: flex; gap: 2rem; border-top: 1px solid var(--border-thin); padding-top: 1.5rem;">
+            <div>
+              <h3 class="font-bebas" style="font-size: 2.8rem; color: var(--crimson); line-height: 0.9;">100+</h3>
+              <p style="font-size: 0.7rem; color: var(--concrete-gray); letter-spacing: 0.15em;">VIDEOCLIPS RODADOS</p>
+            </div>
+            <div>
+              <h3 class="font-bebas" style="font-size: 2.8rem; color: var(--crimson); line-height: 0.9;">NYC/NJ/RD</h3>
+              <p style="font-size: 0.7rem; color: var(--concrete-gray); letter-spacing: 0.15em;">OPERACIÓN CONTINUA</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Street Magazine Mosaic (Compact Sizing) -->
+        <div class="street-mosaic-grid reveal">
+          <div class="mosaic-item tall" data-cursor="VIEW" onclick="openLightbox('https://images.unsplash.com/photo-1518173946687-a4c8a383392e?auto=format&fit=crop&q=80&w=1200')">
+            <img src="https://images.unsplash.com/photo-1518173946687-a4c8a383392e?auto=format&fit=crop&q=80&w=600" alt="Mosaic 1">
+          </div>
+          <div class="mosaic-item" data-cursor="VIEW" onclick="openLightbox('https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&q=80&w=1200')">
+            <img src="https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&q=80&w=600" alt="Mosaic 2">
+          </div>
+          <div class="mosaic-item" data-cursor="VIEW" onclick="openLightbox('https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&q=80&w=1200')">
+            <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&q=80&w=600" alt="Mosaic 3">
+          </div>
+          <div class="mosaic-item" data-cursor="VIEW" onclick="openLightbox('https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&q=80&w=1200')">
+            <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&q=80&w=600" alt="Mosaic 4">
+          </div>
+          <div class="mosaic-item" data-cursor="VIEW" onclick="openLightbox('https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&q=80&w=1200')">
+            <img src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&q=80&w=600" alt="Mosaic 5">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       4. PORTFOLIO — COMPACT EDITORIAL ARCHIVE (8-15 SIMULTANEOUS ITEMS)
+       ========================================================================== -->
+  <section class="portfolio-archive-section" id="work">
+    <div class="container">
+      <div class="portfolio-header-flex reveal">
+        <div>
+          <div class="urban-sticker">CONTACT SHEET ARCHIVE</div>
+          <h2 class="font-bebas" style="font-size: clamp(3rem, 7vw, 7rem); line-height: 0.9;">FEATURED WORK</h2>
+        </div>
+        <div class="tech-tag">8-15 VISUAL FRAMES DISPLAYED</div>
+      </div>
+
+      <!-- Asymmetrical Compact Grid -->
+      <div class="compact-archive-grid">
+        <!-- Item 1 -->
+        <div class="archive-card span-2 reveal" data-cursor="VIEW" onclick="openLightbox('https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=1200')">
+          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=600" alt="Archive 1">
+          <div class="archive-card-hover">
+            <div class="archive-artist-name">EL ALFA // DRILL</div>
+            <div class="archive-work-type">MUSIC VIDEO · NYC</div>
+          </div>
+        </div>
+
+        <!-- Item 2 -->
+        <div class="archive-card span-1 reveal" data-cursor="VIEW" onclick="openLightbox('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=1200')">
+          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=600" alt="Archive 2">
+          <div class="archive-card-hover">
+            <div class="archive-artist-name">ROCHY RD</div>
+            <div class="archive-work-type">STREET PORTRAIT</div>
+          </div>
+        </div>
+
+        <!-- Item 3 -->
+        <div class="archive-card span-3 reveal" data-cursor="VIEW" onclick="openLightbox('https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&q=80&w=1200')">
+          <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&q=80&w=800" alt="Archive 3">
+          <div class="archive-card-hover">
+            <div class="archive-artist-name">TOKISCHA // VISUALS</div>
+            <div class="archive-work-type">BEHIND THE SCENES</div>
+          </div>
+        </div>
+
+        <!-- Item 4 -->
+        <div class="archive-card span-1 reveal" data-cursor="VIEW" onclick="openLightbox('https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&q=80&w=1200')">
+          <img src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&q=80&w=600" alt="Archive 4">
+          <div class="archive-card-hover">
+            <div class="archive-artist-name">STAGE LIGHTS</div>
+            <div class="archive-work-type">LIVE CONCERT</div>
+          </div>
+        </div>
+
+        <!-- Item 5 -->
+        <div class="archive-card span-2 reveal" data-cursor="VIEW" onclick="openLightbox('https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&q=80&w=1200')">
+          <img src="https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&q=80&w=600" alt="Archive 5">
+          <div class="archive-card-hover">
+            <div class="archive-artist-name">NIGHT TAKEOVER</div>
+            <div class="archive-work-type">CINEMATIC REEL</div>
+          </div>
+        </div>
+
+        <!-- Item 6 -->
+        <div class="archive-card span-3 reveal" data-cursor="VIEW" onclick="openLightbox('https://images.unsplash.com/photo-1518173946687-a4c8a383392e?auto=format&fit=crop&q=80&w=1200')">
+          <img src="https://images.unsplash.com/photo-1518173946687-a4c8a383392e?auto=format&fit=crop&q=80&w=800" alt="Archive 6">
+          <div class="archive-card-hover">
+            <div class="archive-artist-name">BRONX BLOCK PARTY</div>
+            <div class="archive-work-type">EVENT COVERAGE</div>
+          </div>
+        </div>
+
+        <!-- Item 7 -->
+        <div class="archive-card span-1 reveal" data-cursor="VIEW" onclick="openLightbox('https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&q=80&w=1200')">
+          <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&q=80&w=600" alt="Archive 7">
+          <div class="archive-card-hover">
+            <div class="archive-artist-name">HAUTE DRIP</div>
+            <div class="archive-work-type">BRAND CONTENT</div>
+          </div>
+        </div>
+
+        <!-- Item 8 -->
+        <div class="archive-card span-2 reveal" data-cursor="VIEW" onclick="openLightbox('https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&q=80&w=1200')">
+          <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&q=80&w=600" alt="Archive 8">
+          <div class="archive-card-hover">
+            <div class="archive-artist-name">ARENA SHOW</div>
+            <div class="archive-work-type">LIVE PERFORMANCE</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       5. ARTISTS WE'VE WORKED WITH (PROMINENT COLLABORATORS)
+       ========================================================================== -->
+  <section class="artists-section" id="artists">
+    <div class="container">
+      <div class="reveal" style="margin-bottom: 2rem;">
+        <div class="urban-sticker">COLLABORATIONS</div>
+        <h2 class="font-bebas" style="font-size: clamp(3rem, 6vw, 6rem); line-height: 0.9;">ARTISTS & TALENTS</h2>
+      </div>
+
+      <div class="artists-horizontal-scroll">
+        <!-- Artist 1 -->
+        <div class="artist-profile-card">
+          <div class="artist-avatar-wrap">
+            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=500" alt="Artist 1">
+          </div>
+          <h3 class="artist-card-title">ARTISTA URBANO 01</h3>
+          <p class="artist-card-sub">MUSIC VIDEO / SINGLE COVER</p>
+        </div>
+
+        <!-- Artist 2 -->
+        <div class="artist-profile-card">
+          <div class="artist-avatar-wrap">
+            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=500" alt="Artist 2">
+          </div>
+          <h3 class="artist-card-title">TALENTO DEMBOW 02</h3>
+          <p class="artist-card-sub">PROMO TEASER / REELS</p>
+        </div>
+
+        <!-- Artist 3 -->
+        <div class="artist-profile-card">
+          <div class="artist-avatar-wrap">
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=500" alt="Artist 3">
+          </div>
+          <h3 class="artist-card-title">PRODUCTOR MUSICAL 03</h3>
+          <p class="artist-card-sub">STUDIO SESSION VISUALS</p>
+        </div>
+
+        <!-- Artist 4 -->
+        <div class="artist-profile-card">
+          <div class="artist-avatar-wrap">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=500" alt="Artist 4">
+          </div>
+          <h3 class="artist-card-title">CANTANTE LATINO 04</h3>
+          <p class="artist-card-sub">CONCERT COVERAGE</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       6. MOTION / VIDEO REELS SECTION
+       ========================================================================== -->
+  <section class="motion-section" id="motion">
+    <div class="container">
+      <div class="reveal">
+        <div class="urban-sticker">CINEMATIC VIDEO PLATFORM</div>
+        <h2 class="font-bebas" style="font-size: clamp(3rem, 7vw, 7rem); line-height: 0.9;">MOTION & VIDEOCLIPS</h2>
+      </div>
+
+      <div class="motion-grid-compact">
+        <!-- Reel 1 -->
+        <div class="motion-reel-card reveal" data-cursor="PLAY" onclick="openVideoModal('https://www.youtube.com/embed/dQw4w9WgXcQ')">
+          <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&q=80&w=800" alt="Motion Reel 1">
+          <div class="play-badge-icon"><i class="ri-play-fill"></i></div>
+          <div class="motion-reel-meta">
+            <div class="tech-tag" style="color: var(--crimson);">OFFICIAL MUSIC VIDEO</div>
+            <h3 class="font-bebas" style="font-size: 1.6rem;">DEMBOW HIT 2026</h3>
+          </div>
+        </div>
+
+        <!-- Reel 2 -->
+        <div class="motion-reel-card reveal" data-cursor="PLAY" onclick="openVideoModal('https://www.youtube.com/embed/dQw4w9WgXcQ')">
+          <img src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&q=80&w=800" alt="Motion Reel 2">
+          <div class="play-badge-icon"><i class="ri-play-fill"></i></div>
+          <div class="motion-reel-meta">
+            <div class="tech-tag" style="color: var(--crimson);">ARTIST REEL</div>
+            <h3 class="font-bebas" style="font-size: 1.6rem;">BEHIND THE SCENES NYC</h3>
+          </div>
+        </div>
+
+        <!-- Reel 3 -->
+        <div class="motion-reel-card reveal" data-cursor="PLAY" onclick="openVideoModal('https://www.youtube.com/embed/dQw4w9WgXcQ')">
+          <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&q=80&w=800" alt="Motion Reel 3">
+          <div class="play-badge-icon"><i class="ri-play-fill"></i></div>
+          <div class="motion-reel-meta">
+            <div class="tech-tag" style="color: var(--crimson);">LIVE SHOW</div>
+            <h3 class="font-bebas" style="font-size: 1.6rem;">CLUB REPERTOIRE</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Fullscreen Video Lightbox Modal -->
+  <div class="video-modal-overlay" id="video-modal">
+    <span class="modal-close-trigger" onclick="closeVideoModal()"><i class="ri-close-line"></i></span>
+    <div class="video-modal-box">
+      <iframe id="video-iframe" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       7. DYNAMIC SERVICES EDITORIAL LIST
+       ========================================================================== -->
+  <section class="services-section" id="services">
+    <div class="container">
+      <div class="reveal">
+        <div class="urban-sticker">CAPABILITIES</div>
+        <h2 class="font-bebas" style="font-size: clamp(3rem, 7vw, 7rem); line-height: 0.9;">SERVICES</h2>
+      </div>
+
+      <div class="services-editorial-list">
+        <!-- Service 1 -->
+        <div class="service-line-item reveal" 
+             data-img="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&q=80&w=600"
+             onclick="selectBookingService('Videoclip')">
+          <h3 class="service-line-title">VIDEOCLIPS / MUSIC VIDEOS</h3>
+          <p class="service-line-desc">Rodaje cinematográfico 4K, concepto creativo urbano, iluminación de show y edición rítmica avanzada.</p>
+        </div>
+
+        <!-- Service 2 -->
+        <div class="service-line-item reveal" 
+             data-img="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=600"
+             onclick="selectBookingService('Contenido para Artista')">
+          <h3 class="service-line-title">ARTIST CONTENT & REELS</h3>
+          <p class="service-line-desc">Contenido continuo para Instagram y TikTok, sesiones de estudio, lanzamientos de sencillos y BTS.</p>
+        </div>
+
+        <!-- Service 3 -->
+        <div class="service-line-item reveal" 
+             data-img="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=600"
+             onclick="selectBookingService('Fotografía')">
+          <h3 class="service-line-title">STREET & STUDIO PHOTOGRAPHY</h3>
+          <p class="service-line-desc">Fotografía con flash directo, retratos de portada, moda callejera y fotos promocionales para prensa.</p>
+        </div>
+
+        <!-- Service 4 -->
+        <div class="service-line-item reveal" 
+             data-img="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&q=80&w=600"
+             onclick="selectBookingService('Evento')">
+          <h3 class="service-line-title">EVENT & CONCERT COVERAGE</h3>
+          <p class="service-line-desc">Cobertura VIP de conciertos, presentaciones en discotecas y giras en New York, New Jersey y RD.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Service Hover Float Preview Image -->
+  <div class="service-float-preview" id="service-float">
+    <img src="" id="service-float-img" alt="Service Floating Preview">
+  </div>
+
+  <!-- ==========================================================================
+       8. STEP-BY-STEP URBAN BOOKING PLATFORM
+       ========================================================================== -->
+  <section class="booking-section" id="booking">
+    <div class="container">
+      <div class="booking-card-wrapper reveal">
+        <div class="urban-sticker">AGENDA TU PROYECTO</div>
+
+        <form id="booking-stepper-form" onsubmit="return false;">
+          <!-- STEP 1 -->
+          <div class="booking-step-panel active" id="b-step-1">
+            <div class="tech-tag" style="margin-bottom: 1rem;">PASO 01 / 04 — SERVICIO</div>
+            <h3 class="step-question-title">¿QUÉ TIPO DE PROYECTO NECESITAS?</h3>
+
+            <div class="booking-choice-grid">
+              <button type="button" class="choice-btn-card" onclick="setChoice(this, 'Videoclip')">Videoclip</button>
+              <button type="button" class="choice-btn-card" onclick="setChoice(this, 'Fotografía')">Fotografía</button>
+              <button type="button" class="choice-btn-card" onclick="setChoice(this, 'Reel')">Reel / TikTok</button>
+              <button type="button" class="choice-btn-card" onclick="setChoice(this, 'Contenido para Artista')">Contenido Artista</button>
+              <button type="button" class="choice-btn-card" onclick="setChoice(this, 'Evento')">Evento / Show</button>
+              <button type="button" class="choice-btn-card" onclick="setChoice(this, 'Campaña')">Campaña / Marca</button>
+            </div>
+
+            <div class="booking-nav-row" style="justify-content: flex-end;">
+              <button type="button" class="btn-street" onclick="nextBookingStep(2)">SIGUIENTE: DETALLES →</button>
+            </div>
+          </div>
+
+          <!-- STEP 2 -->
+          <div class="booking-step-panel" id="b-step-2">
+            <div class="tech-tag" style="margin-bottom: 1rem;">PASO 02 / 04 — LOGÍSTICA</div>
+            <h3 class="step-question-title">FECHA Y CIUDAD</h3>
+
+            <input type="text" class="form-input-urban" id="b-date" placeholder="Fecha aproximada (Ej: Próxima semana, Octubre 2026)">
+            <input type="text" class="form-input-urban" id="b-location" placeholder="Ciudad / Estado (Ej: New York, New Jersey, Miami, Santo Domingo)">
+
+            <div class="booking-nav-row">
+              <button type="button" class="btn-street btn-outline" onclick="nextBookingStep(1)">← ATRÁS</button>
+              <button type="button" class="btn-street" onclick="nextBookingStep(3)">SIGUIENTE: DESCRIPCIÓN →</button>
+            </div>
+          </div>
+
+          <!-- STEP 3 -->
+          <div class="booking-step-panel" id="b-step-3">
+            <div class="tech-tag" style="margin-bottom: 1rem;">PASO 03 / 04 — CONCEPTO</div>
+            <h3 class="step-question-title">DESCRIPCIÓN DEL PROYECTO</h3>
+
+            <input type="text" class="form-input-urban" id="b-desc" placeholder="Tell us what you are looking to create (Canción, idea visual, presupuesto)...">
+
+            <div class="booking-nav-row">
+              <button type="button" class="btn-street btn-outline" onclick="nextBookingStep(2)">← ATRÁS</button>
+              <button type="button" class="btn-street" onclick="nextBookingStep(4)">SIGUIENTE: CONTACTO →</button>
+            </div>
+          </div>
+
+          <!-- STEP 4 -->
+          <div class="booking-step-panel" id="b-step-4">
+            <div class="tech-tag" style="margin-bottom: 1rem;">PASO 04 / 04 — INFORMACIÓN</div>
+            <h3 class="step-question-title">TUS DATOS</h3>
+
+            <input type="text" class="form-input-urban" id="b-name" placeholder="Tu Nombre o Artista *" required>
+            <input type="email" class="form-input-urban" id="b-email" placeholder="Correo Electrónico *" required>
+            <input type="tel" class="form-input-urban" id="b-phone" placeholder="WhatsApp / Teléfono *" required>
+            <input type="text" class="form-input-urban" id="b-insta" placeholder="Instagram (@tu_usuario)">
+
+            <div class="booking-nav-row">
+              <button type="button" class="btn-street btn-outline" onclick="nextBookingStep(3)">← ATRÁS</button>
+              <button type="button" class="btn-street" onclick="submitBookingToWhatsApp()">ENVIAR POR WHATSAPP <i class="ri-whatsapp-line"></i></button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       9. INSTAGRAM COMPACT GRID (3-6 COLUMNS)
+       ========================================================================== -->
+  <section class="insta-feed-section">
+    <div class="container">
+      <div class="reveal" style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem;">
+        <div>
+          <div class="urban-sticker">INSTAGRAM FEED</div>
+          <h2 class="font-bebas" style="font-size: clamp(2.5rem, 5vw, 5rem); line-height: 0.9;">FOLLOW THE MOVEMENT</h2>
+        </div>
+        <a href="https://www.instagram.com/imangelfilms/" target="_blank" class="btn-street btn-outline">
+          VIEW INSTAGRAM @IMANGELFILMS <i class="ri-instagram-line"></i>
+        </a>
+      </div>
+
+      <div class="insta-grid-compact">
+        <a href="https://www.instagram.com/imangelfilms/" target="_blank" class="insta-compact-card reveal">
+          <img src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&q=80&w=400" alt="Insta 1">
+        </a>
+        <a href="https://www.instagram.com/imangelfilms/" target="_blank" class="insta-compact-card reveal">
+          <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=400" alt="Insta 2">
+        </a>
+        <a href="https://www.instagram.com/imangelfilms/" target="_blank" class="insta-compact-card reveal">
+          <img src="https://images.unsplash.com/photo-1518173946687-a4c8a383392e?auto=format&fit=crop&q=80&w=400" alt="Insta 3">
+        </a>
+        <a href="https://www.instagram.com/imangelfilms/" target="_blank" class="insta-compact-card reveal">
+          <img src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&q=80&w=400" alt="Insta 4">
+        </a>
+        <a href="https://www.instagram.com/imangelfilms/" target="_blank" class="insta-compact-card reveal">
+          <img src="https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&q=80&w=400" alt="Insta 5">
+        </a>
+        <a href="https://www.instagram.com/imangelfilms/" target="_blank" class="insta-compact-card reveal">
+          <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&q=80&w=400" alt="Insta 6">
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       10. FOOTER & ACTION BARS
+       ========================================================================== -->
+  <footer class="contact-footer">
+    <div class="container">
+      <div class="footer-top-grid">
+        <div>
+          <h2 class="font-bebas" style="font-size: 3.5rem; line-height: 0.9; margin-bottom: 0.8rem;">LA FAMA FILMS</h2>
+          <p style="color: var(--concrete-gray); font-size: 0.95rem; max-width: 420px;">
+            42 Harding Ave, Westwood, NJ<br>
+            Servicios en NYC, New Jersey, República Dominicana y disponibilidad global.
+          </p>
+        </div>
+
+        <div>
+          <div class="urban-sticker">CONTACTO</div>
+          <p style="margin-bottom: 0.4rem;"><a href="tel:2012961944">+1 (201) 296-1944</a></p>
+          <p><a href="mailto:lafamafilmsllc@gmail.com">lafamafilmsllc@gmail.com</a></p>
+        </div>
+
+        <div>
+          <div class="urban-sticker">REDES DIRECTAS</div>
+          <p style="margin-bottom: 0.4rem;"><a href="https://wa.me/12012961944" target="_blank">WhatsApp Directo</a></p>
+          <p><a href="https://www.instagram.com/imangelfilms/" target="_blank">Instagram @imangelfilms</a></p>
+        </div>
+      </div>
+
+      <div class="footer-bottom-bar">
+        <div>© 2026 LA FAMA FILMS LLC. TODOS LOS DERECHOS RESERVADOS.</div>
+        <div>DOMINICAN CULTURE · NYC ENERGY</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Desktop Fixed Booking CTA -->
+  <div class="desktop-fixed-book-btn">
+    <a href="#booking" class="btn-street">
+      <i class="ri-calendar-check-line"></i> AGENDA TU PROYECTO
+    </a>
+  </div>
+
+  <!-- Mobile Fixed Bottom Bar -->
+  <div class="mobile-bottom-bar">
+    <a href="#booking" class="btn-street" style="font-size: 0.95rem; padding: 0.7rem;">AGENDA TU PROYECTO</a>
+    <a href="https://wa.me/12012961944" target="_blank" class="btn-street btn-outline" style="font-size: 0.95rem; padding: 0.7rem;">WHATSAPP</a>
+  </div>
+
+  <!-- Lightbox Overlay -->
+  <div class="lightbox-overlay" id="lightbox" onclick="closeLightbox()">
+    <img src="" class="lightbox-img" id="lightbox-img" alt="Enlarged Image">
+  </div>
+
+  <!-- ==========================================================================
+       JAVASCRIPT FUNCTIONALITY & INTERACTION LOGIC
+       ========================================================================== -->
+  <script>
+    // --- 1. Custom Precision Cursor ---
+    const cursor = document.getElementById('custom-cursor');
+    const cursorText = document.getElementById('cursor-text');
+
+    if (window.innerWidth > 768) {
+      document.addEventListener('mousemove', (e) => {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+        cursor.classList.add('active');
+      });
+
+      document.addEventListener('mouseleave', () => {
+        cursor.classList.remove('active');
+      });
+
+      document.querySelectorAll('[data-cursor]').forEach(el => {
+        el.addEventListener('mouseenter', () => {
+          cursor.classList.add('hovering');
+          cursorText.textContent = el.getAttribute('data-cursor');
+        });
+        el.addEventListener('mouseleave', () => {
+          cursor.classList.remove('hovering');
+          cursorText.textContent = '';
+        });
+      });
+    }
+
+    // --- 2. Navbar Scroll Effect & Mobile Navigation ---
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 40) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+
+    const hamburgerBtn = document.getElementById('hamburger-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const mobileItems = document.querySelectorAll('.mobile-item');
+
+    hamburgerBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('active');
+    });
+
+    mobileItems.forEach(item => {
+      item.addEventListener('click', () => {
+        mobileMenu.classList.remove('active');
+      });
+    });
+
+    // --- 3. Lightbox Functionality ---
+    function openLightbox(imgSrc) {
+      document.getElementById('lightbox-img').src = imgSrc;
+      document.getElementById('lightbox').classList.add('active');
+    }
+
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.remove('active');
+    }
+
+    // --- 4. Video Modal ---
+    function openVideoModal(url) {
+      document.getElementById('video-iframe').src = url;
+      document.getElementById('video-modal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeVideoModal() {
+      document.getElementById('video-iframe').src = '';
+      document.getElementById('video-modal').classList.remove('active');
+      document.body.style.overflow = 'auto';
+    }
+
+    // --- 5. Service Float Preview Effect ---
+    const serviceLines = document.querySelectorAll('.service-line-item');
+    const serviceFloat = document.getElementById('service-float');
+    const serviceFloatImg = document.getElementById('service-float-img');
+
+    if (window.innerWidth > 768) {
+      serviceLines.forEach(line => {
+        line.addEventListener('mousemove', (e) => {
+          const imgSrc = line.getAttribute('data-img');
+          serviceFloatImg.src = imgSrc;
+          serviceFloat.style.left = e.clientX + 'px';
+          serviceFloat.style.top = e.clientY + 'px';
+          serviceFloat.style.opacity = '1';
+          serviceFloat.style.transform = 'translate(-50%, -50%) scale(1)';
+        });
+
+        line.addEventListener('mouseleave', () => {
+          serviceFloat.style.opacity = '0';
+          serviceFloat.style.transform = 'translate(-50%, -50%) scale(0.8)';
+        });
+      });
+    }
+
+    // --- 6. Booking Stepper Logic & WhatsApp Dispatch ---
+    let chosenServiceChoice = '';
+
+    function setChoice(btn, serviceVal) {
+      document.querySelectorAll('#b-step-1 .choice-btn-card').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      chosenServiceChoice = serviceVal;
+    }
+
+    function selectBookingService(serviceVal) {
+      chosenServiceChoice = serviceVal;
+      document.querySelectorAll('#b-step-1 .choice-btn-card').forEach(btn => {
+        if (btn.textContent.trim().toLowerCase().includes(serviceVal.toLowerCase())) {
+          btn.classList.add('selected');
+        } else {
+          btn.classList.remove('selected');
+        }
+      });
+      document.getElementById('booking').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function nextBookingStep(stepNum) {
+      document.querySelectorAll('.booking-step-panel').forEach(p => p.classList.remove('active'));
+      document.getElementById(`b-step-${stepNum}`).classList.add('active');
+    }
+
+    function submitBookingToWhatsApp() {
+      const name = document.getElementById('b-name').value.trim();
+      const email = document.getElementById('b-email').value.trim();
+      const phone = document.getElementById('b-phone').value.trim();
+      const insta = document.getElementById('b-insta').value.trim();
+      const date = document.getElementById('b-date').value.trim();
+      const location = document.getElementById('b-location').value.trim();
+      const desc = document.getElementById('b-desc').value.trim();
+
+      if (!name || !email || !phone) {
+        alert('Por favor ingresa tu Nombre, Email y WhatsApp para continuar.');
+        return;
+      }
+
+      let msg = `Hola LaFama Films, quiero agendar/solicitar un proyecto.\n\n`;
+      msg += `*Nombre/Artista:* ${name}\n`;
+      msg += `*Tipo de Proyecto:* ${chosenServiceChoice || 'No especificado'}\n`;
+      msg += `*Email:* ${email}\n`;
+      msg += `*WhatsApp:* ${phone}\n`;
+      if (insta) msg += `*Instagram:* ${insta}\n`;
+      if (date) msg += `*Fecha estimada:* ${date}\n`;
+      if (location) msg += `*Ubicación:* ${location}\n`;
+      if (desc) msg += `*Detalles:* ${desc}`;
+
+      const encoded = encodeURIComponent(msg);
+      window.open(`https://wa.me/12012961944?text=${encoded}`, '_blank');
+    }
+
+    // --- 7. Scroll Reveal Trigger ---
+    const revealEls = document.querySelectorAll('.reveal');
+    function checkReveal() {
+      const windowHeight = window.innerHeight;
+      revealEls.forEach(el => {
+        const top = el.getBoundingClientRect().top;
+        if (top < windowHeight - 50) {
+          el.classList.add('active');
+        }
+      });
+    }
+
+    window.addEventListener('scroll', checkReveal);
+    window.addEventListener('load', checkReveal);
+  </script>
+</body>
+</html>
