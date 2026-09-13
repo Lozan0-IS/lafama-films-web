@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LA FAMA FILMS — Panel Admin</title>
+<link rel="stylesheet" href="_ds/modernist-1feebbc2-e15e-41ff-baf4-84409bd79914/styles.css">
+<script src="_ds/modernist-1feebbc2-e15e-41ff-baf4-84409bd79914/_ds_bundle.js"></script>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Archivo+Narrow:wght@500;600;700&display=swap" rel="stylesheet">
+<script src="./lf-store.js"></script>
+<style>
+  :root { --lf-ac: #ec3013; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--color-surface); color: var(--color-text); font-family: var(--font-body); -webkit-font-smoothing: antialiased; }
+  a { color: inherit; }
+  input, textarea, select { font-family: var(--font-body); }
+  input:focus-visible, textarea:focus-visible, button:focus-visible, select:focus-visible, a:focus-visible { outline: 2px solid var(--lf-ac); outline-offset: 1px; }
+  .pa-shell { display: flex; min-height: 100vh; }
+  .pa-sidebar { width: 236px; flex: 0 0 236px; border-right: 2px solid var(--color-text); background: var(--color-bg); display: flex; flex-direction: column; }
+  .pa-main { flex: 1 1 0; min-width: 0; }
+  .pa-topbar { border-bottom: 2px solid var(--color-text); background: var(--color-bg); padding: 16px clamp(16px,3vw,32px); display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .pa-chipbar { display: none; }
+  .pa-content { padding: clamp(16px,3vw,32px); max-width: 1100px; }
+  .pa-navitem { display: block; width: 100%; text-align: left; background: none; border: none; border-left: 3px solid transparent; padding: 12px 18px; font: 700 12px/1 var(--font-body); letter-spacing: .1em; text-transform: uppercase; color: var(--color-neutral-700); cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .pa-navitem.active { border-left-color: var(--lf-ac); color: var(--color-text); background: var(--color-surface); font-weight: 900; }
+  .pa-chip { flex: 0 0 auto; padding: 9px 13px; border-radius: 20px; border: 1px solid var(--color-divider); background: var(--color-bg); font: 700 11px/1 var(--font-body); letter-spacing: .08em; text-transform: uppercase; cursor: pointer; white-space: nowrap; }
+  .pa-chip.active { background: var(--color-text); color: var(--color-bg); border-color: var(--color-text); }
+  @media (max-width: 900px) {
+    .pa-sidebar { display: none; }
+    .pa-chipbar { display: flex; gap: 8px; overflow-x: auto; padding: 10px clamp(16px,3vw,32px); border-bottom: 2px solid var(--color-text); background: var(--color-bg); scrollbar-width: none; }
+    .pa-chipbar::-webkit-scrollbar { display: none; }
+  }
+</style>
+</helmet>
+
+<div class="pa-shell">
+  <aside class="pa-sidebar">
+    <div style="padding:18px;border-bottom:2px solid var(--color-text)">
+      <div style="font:900 18px/1 var(--font-heading);letter-spacing:-.02em;text-transform:uppercase">LA FAMA FILMS</div>
+      <div style="font:600 10px/1.4 var(--font-body);letter-spacing:.14em;text-transform:uppercase;color:var(--color-neutral-600);margin-top:4px">Panel Admin</div>
+    </div>
+    <nav style="flex:1;overflow-y:auto;padding:10px 0">
+      <sc-for list="{{ navItems }}" as="n" hint-placeholder-count="12">
+      <button type="button" class="{{ n.cls }}" onClick="{{ n.onClick }}">
+        <span>{{ n.label }}</span>
+        <sc-if value="{{ n.hasBadge }}" hint-placeholder-val="{{ false }}"><span style="background:var(--lf-ac);color:#fff;font:700 9px/1 var(--font-body);padding:2px 6px;border-radius:8px">{{ n.badge }}</span></sc-if>
+      </button>
+      </sc-for>
+    </nav>
+    <div style="padding:14px 18px;border-top:2px solid var(--color-text)">
+      <a href="La Fama Films.dc.html" target="_blank" rel="noopener" style="display:block;text-align:center;padding:10px;border:2px solid var(--color-text);font:900 11px/1 var(--font-heading);letter-spacing:.08em;text-transform:uppercase" style-hover="background:var(--color-text);color:var(--color-bg)">Ver sitio en vivo ↗</a>
+    </div>
+  </aside>
+
+  <div class="pa-main">
+    <div class="pa-topbar">
+      <div>
+        <div style="font:900 20px/1 var(--font-heading);letter-spacing:-.02em;text-transform:uppercase">{{ topTitle }}</div>
+        <div style="font:400 12px/1.4 var(--font-body);color:var(--color-neutral-600);margin-top:3px">Los cambios se guardan al instante en este navegador.</div>
+      </div>
+      <a href="La Fama Films.dc.html" target="_blank" rel="noopener" style="font:700 11px/1 var(--font-body);letter-spacing:.08em;text-transform:uppercase;color:var(--lf-ac);white-space:nowrap">Ver sitio ↗</a>
+    </div>
+
+    <nav class="pa-chipbar">
+      <sc-for list="{{ navItems }}" as="n2" hint-placeholder-count="12">
+      <button type="button" class="{{ n2.chipCls }}" onClick="{{ n2.onClick }}">{{ n2.label }}</button>
+      </sc-for>
+    </nav>
+
+    <main class="pa-content">
+      {{ tabBody }}
+    </main>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const el = React.createElement;
+
+const S = {
+  page: { display: 'flex', flexDirection: 'column', gap: '28px' },
+  h2: { margin: 0, font: '900 26px/1 var(--font-heading)', letterSpacing: '-.02em', textTransform: 'uppercase' },
+  sub: { margin: '6px 0 0', font: '400 13px/1.5 var(--font-body)', color: 'var(--color-neutral-700)', maxWidth: '62ch' },
+  section: { display: 'flex', flexDirection: 'column', gap: '14px' },
+  label: { display: 'block', font: '700 10px/1 var(--font-body)', letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--color-neutral-700)', marginBottom: '6px' },
+  input: { width: '100%', padding: '9px 10px', border: '1px solid var(--color-divider)', background: 'var(--color-bg)', fontSize: '14px', color: 'var(--color-text)' },
+  textarea: { width: '100%', padding: '9px 10px', border: '1px solid var(--color-divider)', background: 'var(--color-bg)', fontSize: '14px', color: 'var(--color-text)', resize: 'vertical', fontFamily: 'inherit' },
+  select: { width: '100%', padding: '9px 10px', border: '1px solid var(--color-divider)', background: 'var(--color-bg)', fontSize: '14px', color: 'var(--color-text)' },
+  card: { border: '1px solid var(--color-divider)', background: 'var(--color-bg)', padding: '16px', display: 'flex', flexDirection: 'column', gap: '12px' },
+  grid2: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))', gap: '14px' },
+  btnPrimary: { background: 'var(--lf-ac)', color: '#fff', border: 'none', padding: '11px 16px', font: '900 11px/1 var(--font-heading)', letterSpacing: '.1em', textTransform: 'uppercase', cursor: 'pointer' },
+  btnSecondary: { background: 'none', border: '1px solid var(--color-text)', color: 'var(--color-text)', padding: '9px 13px', font: '700 10px/1 var(--font-body)', letterSpacing: '.08em', textTransform: 'uppercase', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' },
+  btnGhost: { background: 'none', border: '1px solid #c0392b', color: '#c0392b', padding: '9px 13px', font: '700 10px/1 var(--font-body)', letterSpacing: '.08em', textTransform: 'uppercase', cursor: 'pointer' },
+  btnIcon: { width: '32px', height: '32px', flex: '0 0 32px', border: '1px solid var(--color-divider)', background: 'var(--color-bg)', cursor: 'pointer', font: '700 14px/1 var(--font-body)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' },
+  row: { display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' },
+  hint: { margin: 0, font: '400 11px/1.5 var(--font-body)', color: 'var(--color-neutral-600)' },
+  statPill: { border: '1px solid var(--color-divider)', background: 'var(--color-bg)', padding: '12px', display: 'flex', flexDirection: 'column', gap: '4px' },
+  statN: { font: '900 26px/1 var(--font-heading)', color: 'var(--lf-ac)' },
+  statL: { font: '700 10px/1.3 var(--font-body)', letterSpacing: '.1em', textTransform: 'uppercase', color: 'var(--color-neutral-700)' }
+};
+
+function Field(label, node, hint) {
+  return el('div', { style: { display: 'flex', flexDirection: 'column' } },
+    el('label', { style: S.label }, label),
+    node,
+    hint ? el('p', { style: S.hint }, hint) : null
+  );
+}
+
+function SectionHead(title, sub) {
+  return el('div', null,
+    el('h2', { style: S.h2 }, title),
+    sub ? el('p', { style: S.sub }, sub) : null
+  );
+}
+
+const PF_SIZE_OPTIONS = [
+  ['small', 'Pequeño (cuadrado)'],
+  ['large', 'Grande vertical'],
+  ['wide', 'Ancho horizontal'],
+  ['square-large', 'Cuadro grande'],
+  ['panorama', 'Panorámica']
+];
+
+class Component extends DCLogic {
+  state = { tab: 'resumen', tick: 0 };
+
+  bump() { this.setState({ tick: this.state.tick + 1 }); }
+
+  updateContent(mutator) {
+    const c = LFStore.getContent();
+    mutator(c);
+    LFStore.setContent(c);
+    this.bump();
+  }
+
+  photoWidget(id, label, opts) {
+    opts = opts || {};
+    const height = opts.height || '110px';
+    const src = LFStore.getPhoto(id);
+    const onPick = (e) => {
+      const file = e.currentTarget.files && e.currentTarget.files[0];
+      e.currentTarget.value = '';
+      if (!file) return;
+      LFStore.readAndResizeImage(file, opts.maxW || 1400, (dataUrl) => {
+        if (dataUrl) { LFStore.savePhoto(id, dataUrl); this.bump(); }
+      });
+    };
+    const onClear = () => { LFStore.removePhoto(id); this.bump(); };
+    return el('div', { style: { display: 'flex', flexDirection: 'column', gap: '6px' } },
+      el('div', { style: { position: 'relative', width: '100%', height, background: 'var(--color-neutral-200)', border: '1px solid var(--color-divider)', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' } },
+        src
+          ? el('img', { src, style: { width: '100%', height: '100%', objectFit: 'cover' } })
+          : el('span', { style: { font: '700 10px/1.4 var(--font-body)', letterSpacing: '.1em', textTransform: 'uppercase', color: 'var(--color-neutral-600)', textAlign: 'center', padding: '6px' } }, label || 'Sin foto')
+      ),
+      el('div', { style: S.row },
+        el('label', { style: Object.assign({}, S.btnSecondary, { cursor: 'pointer' }) },
+          src ? 'Cambiar' : 'Subir foto',
+          el('input', { type: 'file', accept: 'image/png,image/jpeg,image/webp,image/avif', onChange: onPick, style: { display: 'none' } })
+        ),
+        src ? el('button', { type: 'button', onClick: onClear, style: S.btnGhost }, 'Quitar') : null
+      )
+    );
+  }
+
+  // ── RESUMEN ──────────────────────────────────────────────────────────
+  renderResumen(c, leads) {
+    const nuevos = leads.filter((l) => l.estado === 'Nuevo').length;
+    const stats = [
+      ['Fotos del portfolio', c.portfolio.length],
+      ['Reels', c.reels.length],
+      ['Artistas', c.artists.length],
+      ['Servicios', c.services.length],
+      ['Leads totales', leads.length],
+      ['Leads sin contactar', nuevos]
+    ];
+    return el('div', { style: S.page },
+      SectionHead('Resumen', 'Vista rápida de lo que hay cargado en el sitio ahora mismo.'),
+      el('div', { style: S.grid2 }, ...stats.map(([l, n]) => el('div', { style: S.statPill, key: l },
+        el('div', { style: S.statN }, String(n)),
+        el('div', { style: S.statL }, l)
+      ))),
+      el('div', { style: S.card },
+        el('h3', { style: { margin: 0, font: '900 15px/1 var(--font-heading)', textTransform: 'uppercase' } }, 'Antes de mostrárselo al cliente'),
+        el('ul', { style: { margin: 0, paddingLeft: '18px', font: '400 13px/1.7 var(--font-body)', color: 'var(--color-neutral-800)' } },
+          el('li', null, 'Sube las fotos reales en Hero, Sobre Nosotros, Portfolio, Reels, Artistas e Instagram.'),
+          el('li', null, 'Revisa nombres de artistas, servicios y precios en sus pestañas.'),
+          el('li', null, 'Confirma teléfono, WhatsApp, email e Instagram en Contacto.'),
+          el('li', null, 'Abre "Ver sitio en vivo" en otra pestaña para ver los cambios reflejados al instante.')
+        )
+      )
+    );
+  }
+
+  // ── IDENTIDAD ────────────────────────────────────────────────────────
+  renderIdentidad(c) {
+    const setAccent = (e) => this.updateContent((c2) => { c2.accent = e.currentTarget.value; });
+    const toggleShowPricing = (e) => this.updateContent((c2) => { c2.showPricing = e.currentTarget.checked; });
+    const setHeroTag = (e) => this.updateContent((c2) => { c2.hero.tag = e.currentTarget.value; });
+    const setHeroLoc = (e) => this.updateContent((c2) => { c2.hero.locations = e.currentTarget.value; });
+    return el('div', { style: S.page },
+      SectionHead('Identidad', 'Color de marca y textos pequeños que aparecen arriba del todo en el sitio.'),
+      el('div', { style: S.grid2 },
+        Field('Color de acento', el('input', { type: 'color', value: c.accent, onChange: setAccent, style: { width: '100%', height: '42px', border: '1px solid var(--color-divider)', padding: '2px', background: 'var(--color-bg)' } })),
+        Field('Mostrar precios en Servicios', el('label', { style: { display: 'flex', alignItems: 'center', gap: '8px', font: '600 13px/1 var(--font-body)' } },
+          el('input', { type: 'checkbox', checked: !!c.showPricing, onChange: toggleShowPricing }),
+          c.showPricing ? 'Visible' : 'Oculto'
+        ))
+      ),
+      el('div', { style: S.grid2 },
+        Field('Etiqueta REC (arriba del título)', el('input', { style: S.input, value: c.hero.tag, onChange: setHeroTag })),
+        Field('Línea de ubicaciones', el('input', { style: S.input, value: c.hero.locations, onChange: setHeroLoc }))
+      )
+    );
+  }
+
+  // ── HERO ─────────────────────────────────────────────────────────────
+  renderHero() {
+    const frames = [
+      ['lf-hero-1', 'Frame 01 · NYC'], ['lf-hero-2', 'Frame 02 · SET'], ['lf-hero-3', 'Frame 03 · NJ'],
+      ['lf-hero-4', 'Frame 04 · STAGE'], ['lf-hero-5', 'Frame 05 · SDQ']
+    ];
+    return el('div', { style: S.page },
+      SectionHead('Hero', 'Las 5 fotos de la franja debajo del título principal. Formato vertical (4:5) se ve mejor.'),
+      el('div', { style: S.grid2 }, ...frames.map(([id, label]) => el('div', { key: id }, this.photoWidget(id, label, { height: '150px' }))))
+    );
+  }
+
+  // ── SOBRE NOSOTROS ───────────────────────────────────────────────────
+  renderNosotros(c) {
+    const setP1 = (e) => this.updateContent((c2) => { c2.about.p1 = e.currentTarget.value; });
+    const setP2 = (e) => this.updateContent((c2) => { c2.about.p2 = e.currentTarget.value; });
+    const setStat = (i, field) => (e) => this.updateContent((c2) => { c2.about.stats[i][field] = e.currentTarget.value; });
+    const mosaic = [
+      ['lf-mos-1', 'Vertical'], ['lf-mos-2', 'Foto'], ['lf-mos-3', 'Foto'], ['lf-mos-4', 'Horizontal'],
+      ['lf-mos-5', 'Foto'], ['lf-mos-6', 'Foto'], ['lf-mos-7', 'Horizontal']
+    ];
+    return el('div', { style: S.page },
+      SectionHead('Sobre nosotros', 'Los dos párrafos, las 3 estadísticas y el mosaico de 7 fotos.'),
+      el('div', { style: S.section },
+        Field('Párrafo 1 (español)', el('textarea', { style: S.textarea, rows: 3, value: c.about.p1, onChange: setP1 })),
+        Field('Párrafo 2 (inglés)', el('textarea', { style: S.textarea, rows: 3, value: c.about.p2, onChange: setP2 }))
+      ),
+      el('div', { style: S.grid2 }, ...c.about.stats.map((s, i) => el('div', { key: i, style: S.card },
+        Field('Número', el('input', { style: S.input, value: s.n, onChange: setStat(i, 'n') })),
+        Field('Etiqueta', el('input', { style: S.input, value: s.l, onChange: setStat(i, 'l') }))
+      ))),
+      el('div', null,
+        el('div', { style: S.label }, 'Mosaico (7 fotos)'),
+        el('div', { style: S.grid2 }, ...mosaic.map(([id, label]) => el('div', { key: id }, this.photoWidget(id, label, { height: '140px' }))))
+      )
+    );
+  }
+
+  // ── PORTFOLIO ────────────────────────────────────────────────────────
+  renderPortfolio(c) {
+    const list = c.portfolio;
+    const move = (i, dir) => this.updateContent((c2) => {
+      const j = i + dir;
+      if (j < 0 || j >= c2.portfolio.length) return;
+      const tmp = c2.portfolio[i]; c2.portfolio[i] = c2.portfolio[j]; c2.portfolio[j] = tmp;
+    });
+    const remove = (id) => this.updateContent((c2) => { c2.portfolio = c2.portfolio.filter((x) => x.id !== id); LFStore.removePhoto(id); });
+    const setField = (id, field) => (e) => this.updateContent((c2) => {
+      const it = c2.portfolio.find((x) => x.id === id); if (it) it[field] = e.currentTarget.value;
+    });
+    const addItem = () => this.updateContent((c2) => {
+      c2.portfolio.push({ id: LFStore.uid('pf'), cat: 'NUEVA CATEGORÍA · 2026', title: 'NUEVO TÍTULO', size: 'small' });
+    });
+    return el('div', { style: S.page },
+      SectionHead('Portfolio (El Archivo)', 'La cuadrícula grande de fotos y videos. El tamaño controla qué tan grande se ve cada foto en la grilla.'),
+      el('div', { style: S.section }, ...list.map((it, i) => el('div', { key: it.id, style: S.card },
+        el('div', { style: { display: 'flex', gap: '14px', flexWrap: 'wrap' } },
+          el('div', { style: { width: '140px', flex: '0 0 140px' } }, this.photoWidget(it.id, it.cat, { height: '110px' })),
+          el('div', { style: { flex: '1 1 260px', display: 'flex', flexDirection: 'column', gap: '10px' } },
+            Field('Etiqueta / categoría', el('input', { style: S.input, value: it.cat, onChange: setField(it.id, 'cat') })),
+            Field('Título sobre la foto', el('input', { style: S.input, value: it.title, onChange: setField(it.id, 'title') })),
+            Field('Tamaño en la grilla', el('select', { style: S.select, value: it.size, onChange: setField(it.id, 'size') },
+              ...PF_SIZE_OPTIONS.map(([v, l]) => el('option', { key: v, value: v }, l))
+            ))
+          ),
+          el('div', { style: { display: 'flex', flexDirection: 'column', gap: '6px' } },
+            el('button', { type: 'button', style: S.btnIcon, onClick: () => move(i, -1), disabled: i === 0, title: 'Subir' }, '↑'),
+            el('button', { type: 'button', style: S.btnIcon, onClick: () => move(i, 1), disabled: i === list.length - 1, title: 'Bajar' }, '↓'),
+            el('button', { type: 'button', style: Object.assign({}, S.btnIcon, { color: '#c0392b' }), onClick: () => remove(it.id), title: 'Eliminar' }, '✕')
+          )
+        )
+      ))),
+      el('button', { type: 'button', style: S.btnPrimary, onClick: addItem }, '+ Añadir foto al portfolio')
+    );
+  }
+
+  // ── MOTION / REELS ───────────────────────────────────────────────────
+  renderMotion(c) {
+    const list = c.reels;
+    const move = (i, dir) => this.updateContent((c2) => {
+      const j = i + dir; if (j < 0 || j >= c2.reels.length) return;
+      const tmp = c2.reels[i]; c2.reels[i] = c2.reels[j]; c2.reels[j] = tmp;
+    });
+    const remove = (id) => this.updateContent((c2) => { c2.reels = c2.reels.filter((x) => x.id !== id); LFStore.removePhoto(id); });
+    const setField = (id, field) => (e) => this.updateContent((c2) => {
+      const it = c2.reels.find((x) => x.id === id); if (it) it[field] = e.currentTarget.value;
+    });
+    const addItem = () => this.updateContent((c2) => {
+      c2.reels.push({ id: LFStore.uid('r'), code: '', label: 'REEL ' + String(c2.reels.length + 1).padStart(2, '0') });
+    });
+    return el('div', { style: S.page },
+      SectionHead('Motion (Reels)', 'Videos verticales de Instagram. El código es la parte de la URL entre /reel/ y el siguiente /, por ejemplo instagram.com/reel/ABC123XYZ/ → el código es ABC123XYZ.'),
+      el('div', { style: S.section }, ...list.map((it, i) => el('div', { key: it.id, style: S.card },
+        el('div', { style: { display: 'flex', gap: '14px', flexWrap: 'wrap' } },
+          el('div', { style: { width: '110px', flex: '0 0 110px' } }, this.photoWidget(it.id, it.label, { height: '150px' })),
+          el('div', { style: { flex: '1 1 260px', display: 'flex', flexDirection: 'column', gap: '10px' } },
+            Field('Nombre / etiqueta', el('input', { style: S.input, value: it.label, onChange: setField(it.id, 'label') })),
+            Field('Código del reel de Instagram', el('input', { style: S.input, value: it.code, onChange: setField(it.id, 'code'), placeholder: 'Ej. Dc7Su26xWGA' }), 'Se usa para reproducir el reel embebido al hacer clic en PLAY.')
+          ),
+          el('div', { style: { display: 'flex', flexDirection: 'column', gap: '6px' } },
+            el('button', { type: 'button', style: S.btnIcon, onClick: () => move(i, -1), disabled: i === 0 }, '↑'),
+            el('button', { type: 'button', style: S.btnIcon, onClick: () => move(i, 1), disabled: i === list.length - 1 }, '↓'),
+            el('button', { type: 'button', style: Object.assign({}, S.btnIcon, { color: '#c0392b' }), onClick: () => remove(it.id) }, '✕')
+          )
+        )
+      ))),
+      el('button', { type: 'button', style: S.btnPrimary, onClick: addItem }, '+ Añadir reel')
+    );
+  }
+
+  // ── ARTISTAS ─────────────────────────────────────────────────────────
+  renderArtistas(c) {
+    const list = c.artists;
+    const move = (i, dir) => this.updateContent((c2) => {
+      const j = i + dir; if (j < 0 || j >= c2.artists.length) return;
+      const tmp = c2.artists[i]; c2.artists[i] = c2.artists[j]; c2.artists[j] = tmp;
+    });
+    const remove = (id) => this.updateContent((c2) => { c2.artists = c2.artists.filter((x) => x.id !== id); LFStore.removePhoto(id); });
+    const setField = (id, field) => (e) => this.updateContent((c2) => {
+      const it = c2.artists.find((x) => x.id === id); if (it) it[field] = e.currentTarget.value;
+    });
+    const addItem = () => this.updateContent((c2) => {
+      c2.artists.push({ id: LFStore.uid('a'), name: 'NUEVO ARTISTA', role: 'PROYECTO · [DETALLE]', link: '#work' });
+    });
+    return el('div', { style: S.page },
+      SectionHead('Artistas', 'La franja de tarjetas de "Con quién trabajamos".'),
+      el('div', { style: S.section }, ...list.map((it, i) => el('div', { key: it.id, style: S.card },
+        el('div', { style: { display: 'flex', gap: '14px', flexWrap: 'wrap' } },
+          el('div', { style: { width: '110px', flex: '0 0 110px' } }, this.photoWidget(it.id, it.name, { height: '140px' })),
+          el('div', { style: { flex: '1 1 260px', display: 'flex', flexDirection: 'column', gap: '10px' } },
+            Field('Nombre', el('input', { style: S.input, value: it.name, onChange: setField(it.id, 'name') })),
+            Field('Proyecto / rol', el('input', { style: S.input, value: it.role, onChange: setField(it.id, 'role') })),
+            Field('Link "Ver trabajo"', el('input', { style: S.input, value: it.link, onChange: setField(it.id, 'link') }), 'Puede ser #work (sube al portfolio) o un link externo.')
+          ),
+          el('div', { style: { display: 'flex', flexDirection: 'column', gap: '6px' } },
+            el('button', { type: 'button', style: S.btnIcon, onClick: () => move(i, -1), disabled: i === 0 }, '↑'),
+            el('button', { type: 'button', style: S.btnIcon, onClick: () => move(i, 1), disabled: i === list.length - 1 }, '↓'),
+            el('button', { type: 'button', style: Object.assign({}, S.btnIcon, { color: '#c0392b' }), onClick: () => remove(it.id) }, '✕')
+          )
+        )
+      ))),
+      el('button', { type: 'button', style: S.btnPrimary, onClick: addItem }, '+ Añadir artista')
+    );
+  }
+
+  // ── SERVICIOS ────────────────────────────────────────────────────────
+  renderServicios(c) {
+    const list = c.services;
+    const svcOptions = ['Videoclip', 'Fotografía', 'Reel', 'Evento', 'Campaña', 'Contenido para artista', 'Otro'];
+    const move = (i, dir) => this.updateContent((c2) => {
+      const j = i + dir; if (j < 0 || j >= c2.services.length) return;
+      const tmp = c2.services[i]; c2.services[i] = c2.services[j]; c2.services[j] = tmp;
+    });
+    const remove = (id) => this.updateContent((c2) => { c2.services = c2.services.filter((x) => x.id !== id); });
+    const setField = (id, field) => (e) => this.updateContent((c2) => {
+      const it = c2.services.find((x) => x.id === id); if (it) it[field] = e.currentTarget.value;
+    });
+    const addItem = () => this.updateContent((c2) => {
+      c2.services.push({ id: LFStore.uid('s'), svc: 'Otro', title: 'NUEVO SERVICIO', desc: 'Descripción del servicio.', price: '' });
+    });
+    return el('div', { style: S.page },
+      SectionHead('Servicios y precios', 'La lista de "Lo que hacemos". El precio queda vacío hasta que escribas uno (se ve "DESDE $ —" mientras tanto).'),
+      el('div', { style: S.section }, ...list.map((it, i) => el('div', { key: it.id, style: S.card },
+        Field('Título', el('input', { style: S.input, value: it.title, onChange: setField(it.id, 'title') })),
+        Field('Descripción', el('textarea', { style: S.textarea, rows: 2, value: it.desc, onChange: setField(it.id, 'desc') })),
+        el('div', { style: S.grid2 },
+          Field('Precio (opcional)', el('input', { style: S.input, value: it.price, onChange: setField(it.id, 'price'), placeholder: 'Ej. $800' })),
+          Field('Categoría de booking', el('select', { style: S.select, value: it.svc, onChange: setField(it.id, 'svc') },
+            ...svcOptions.map((v) => el('option', { key: v, value: v }, v))
+          ))
+        ),
+        el('div', { style: S.row },
+          el('button', { type: 'button', style: S.btnSecondary, onClick: () => move(i, -1), disabled: i === 0 }, '↑ Subir'),
+          el('button', { type: 'button', style: S.btnSecondary, onClick: () => move(i, 1), disabled: i === list.length - 1 }, '↓ Bajar'),
+          el('button', { type: 'button', style: S.btnGhost, onClick: () => remove(it.id) }, 'Eliminar')
+        )
+      ))),
+      el('button', { type: 'button', style: S.btnPrimary, onClick: addItem }, '+ Añadir servicio')
+    );
+  }
+
+  // ── INSTAGRAM FEED ───────────────────────────────────────────────────
+  renderFeed() {
+    const ids = Array.from({ length: 12 }, (_, i) => 'lf-ig-' + String(i + 1).padStart(2, '0'));
+    return el('div', { style: S.page },
+      SectionHead('Instagram Feed', 'La cuadrícula de 12 fotos cuadradas que enlaza al Instagram del estudio.'),
+      el('div', { style: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(130px,1fr))', gap: '10px' } },
+        ...ids.map((id, i) => el('div', { key: id }, this.photoWidget(id, 'IG ' + String(i + 1).padStart(2, '0'), { height: '110px' })))
+      )
+    );
+  }
+
+  // ── CONTACTO ─────────────────────────────────────────────────────────
+  renderContacto(c) {
+    const setField = (field) => (e) => this.updateContent((c2) => { c2.contact[field] = e.currentTarget.value; });
+    return el('div', { style: S.page },
+      SectionHead('Contacto y marca', 'Esta información aparece en el footer, la barra fija inferior y los links de WhatsApp / email.'),
+      el('div', { style: S.grid2 },
+        Field('Nombre de la empresa', el('input', { style: S.input, value: c.contact.companyName, onChange: setField('companyName') })),
+        Field('Teléfono (texto visible)', el('input', { style: S.input, value: c.contact.phone, onChange: setField('phone') })),
+        Field('WhatsApp (solo números, con código de país)', el('input', { style: S.input, value: c.contact.whatsapp, onChange: setField('whatsapp'), placeholder: 'Ej. 12012961944' }), 'Sin +, espacios ni guiones — así arma los links de wa.me.'),
+        Field('Email', el('input', { style: S.input, value: c.contact.email, onChange: setField('email'), type: 'email' })),
+        Field('Usuario de Instagram (texto)', el('input', { style: S.input, value: c.contact.instagramHandle, onChange: setField('instagramHandle'), placeholder: '@usuario' })),
+        Field('Link de Instagram', el('input', { style: S.input, value: c.contact.instagramUrl, onChange: setField('instagramUrl') }))
+      ),
+      Field('Dirección', el('input', { style: S.input, value: c.contact.address, onChange: setField('address') })),
+      Field('Nota de dirección (zonas donde ruedan)', el('input', { style: S.input, value: c.contact.addressNote, onChange: setField('addressNote') }))
+    );
+  }
+
+  // ── LEADS ────────────────────────────────────────────────────────────
+  renderLeads() {
+    const leads = LFStore.getLeads();
+    const estados = ['Nuevo', 'Contactado', 'Ganado', 'Perdido'];
+    const setEstado = (id) => (e) => {
+      const all = LFStore.getLeads();
+      const it = all.find((x) => x.id === id);
+      if (it) it.estado = e.currentTarget.value;
+      LFStore.setLeads(all);
+      this.bump();
+    };
+    const remove = (id) => {
+      LFStore.setLeads(LFStore.getLeads().filter((x) => x.id !== id));
+      this.bump();
+    };
+    if (!leads.length) {
+      return el('div', { style: S.page },
+        SectionHead('Leads', 'Cada vez que alguien completa el formulario de Booking, aparece aquí (además de abrirse WhatsApp).'),
+        el('div', { style: Object.assign({}, S.card, { alignItems: 'center', textAlign: 'center', padding: '48px 20px', border: '1px dashed var(--color-divider)' }) },
+          el('p', { style: { margin: 0, font: '700 13px/1.5 var(--font-body)', color: 'var(--color-neutral-700)' } }, 'Todavía no hay leads. Cuando alguien reserve desde el sitio, aparecerá aquí.')
+        )
+      );
+    }
+    return el('div', { style: S.page },
+      SectionHead('Leads', String(leads.length) + ' mensajes recibidos desde el formulario de Booking.'),
+      el('div', { style: S.section }, ...leads.map((l) => el('div', { key: l.id, style: S.card },
+        el('div', { style: { display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px' } },
+          el('div', null,
+            el('div', { style: { font: '900 16px/1.1 var(--font-heading)', textTransform: 'uppercase' } }, l.nombre || 'Sin nombre'),
+            el('div', { style: { font: '600 11px/1.6 var(--font-body)', color: 'var(--color-neutral-600)' } }, new Date(l.ts).toLocaleString())
+          ),
+          el('div', { style: S.row },
+            el('select', { style: Object.assign({}, S.select, { width: 'auto' }), value: l.estado, onChange: setEstado(l.id) },
+              ...estados.map((e2) => el('option', { key: e2, value: e2 }, e2))
+            ),
+            el('button', { type: 'button', style: S.btnGhost, onClick: () => remove(l.id) }, 'Eliminar')
+          )
+        ),
+        el('div', { style: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(160px,1fr))', gap: '6px', font: '400 13px/1.6 var(--font-body)' } },
+          el('div', null, el('b', null, 'Servicio: '), l.servicio || '—'),
+          el('div', null, el('b', null, 'Artista/Cía: '), l.artista || '—'),
+          el('div', null, el('b', null, 'Email: '), l.email || '—'),
+          el('div', null, el('b', null, 'WhatsApp: '), l.whatsapp || '—'),
+          el('div', null, el('b', null, 'Instagram: '), l.instagram || '—'),
+          el('div', null, el('b', null, 'Fecha: '), l.fecha || '—'),
+          el('div', null, el('b', null, 'Ciudad: '), l.ciudad || '—'),
+          el('div', null, el('b', null, 'Presupuesto: '), l.presupuesto || '—')
+        ),
+        l.descripcion ? el('p', { style: { margin: 0, font: '400 13px/1.6 var(--font-body)', borderTop: '1px solid var(--color-divider)', paddingTop: '10px' } }, l.descripcion) : null
+      )))
+    );
+  }
+
+  // ── AJUSTES ──────────────────────────────────────────────────────────
+  renderAjustes() {
+    const exportBackup = () => {
+      const data = LFStore.exportBackup();
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'lafamafilms-backup.json';
+      document.body.appendChild(a); a.click(); a.remove();
+      URL.revokeObjectURL(url);
+    };
+    const importBackup = (e) => {
+      const file = e.currentTarget.files && e.currentTarget.files[0];
+      e.currentTarget.value = '';
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const data = JSON.parse(String(reader.result));
+          if (LFStore.importBackup(data)) { this.bump(); alert('Respaldo importado.'); }
+          else alert('No se pudo importar ese archivo.');
+        } catch (err) { alert('Archivo inválido.'); }
+      };
+      reader.readAsText(file);
+    };
+    const resetAll = () => {
+      if (!confirm('Esto borra todas las fotos, textos y leads guardados en este navegador y no se puede deshacer. ¿Continuar?')) return;
+      LFStore.resetAll();
+      this.bump();
+    };
+    return el('div', { style: S.page },
+      SectionHead('Ajustes', 'Respaldo, restauración y datos de este prototipo.'),
+      el('div', { style: S.card },
+        el('h3', { style: { margin: 0, font: '900 14px/1 var(--font-heading)', textTransform: 'uppercase' } }, 'Exportar respaldo'),
+        el('p', { style: S.hint }, 'Descarga un archivo con todo el contenido y las fotos guardadas — sirve como respaldo o para pasarlo a otra computadora.'),
+        el('div', null, el('button', { type: 'button', style: S.btnPrimary, onClick: exportBackup }, 'Descargar respaldo (.json)'))
+      ),
+      el('div', { style: S.card },
+        el('h3', { style: { margin: 0, font: '900 14px/1 var(--font-heading)', textTransform: 'uppercase' } }, 'Importar respaldo'),
+        el('p', { style: S.hint }, 'Sube un archivo de respaldo exportado antes. Reemplaza el contenido actual.'),
+        el('label', { style: Object.assign({}, S.btnSecondary, { cursor: 'pointer', display: 'inline-flex', width: 'fit-content' }) },
+          'Elegir archivo .json',
+          el('input', { type: 'file', accept: 'application/json', onChange: importBackup, style: { display: 'none' } })
+        )
+      ),
+      el('div', { style: Object.assign({}, S.card, { borderColor: '#c0392b' }) },
+        el('h3', { style: { margin: 0, font: '900 14px/1 var(--font-heading)', textTransform: 'uppercase', color: '#c0392b' } }, 'Restablecer todo'),
+        el('p', { style: S.hint }, 'Borra fotos, textos y leads guardados en este navegador y vuelve a los valores originales del sitio.'),
+        el('div', null, el('button', { type: 'button', style: S.btnGhost, onClick: resetAll }, 'Borrar todo y restablecer'))
+      ),
+      el('p', { style: S.hint }, 'Nota: este panel guarda todo en el navegador (localStorage), como prototipo previo a tener hosting con backend real. Antes de publicar el sitio a producción con varias personas editando, conviene migrar este contenido a una base de datos.')
+    );
+  }
+
+  renderVals() {
+    const st = this.state;
+    const c = LFStore.getContent();
+    const leads = LFStore.getLeads();
+    const nuevos = leads.filter((l) => l.estado === 'Nuevo').length;
+
+    const TABS = [
+      ['resumen', 'Resumen', 0],
+      ['identidad', 'Identidad', 0],
+      ['hero', 'Hero', 0],
+      ['nosotros', 'Sobre nosotros', 0],
+      ['portfolio', 'Portfolio', 0],
+      ['motion', 'Reels', 0],
+      ['artistas', 'Artistas', 0],
+      ['servicios', 'Servicios', 0],
+      ['feed', 'Instagram', 0],
+      ['contacto', 'Contacto', 0],
+      ['leads', 'Leads', nuevos],
+      ['ajustes', 'Ajustes', 0]
+    ];
+    const pick = (key) => () => this.setState({ tab: key });
+    const navItems = TABS.map(([key, label, badge]) => {
+      const active = st.tab === key;
+      return {
+        key, label, badge: String(badge), hasBadge: badge > 0,
+        cls: active ? 'pa-navitem active' : 'pa-navitem',
+        chipCls: active ? 'pa-chip active' : 'pa-chip',
+        onClick: pick(key)
+      };
+    });
+
+    const bodies = {
+      resumen: () => this.renderResumen(c, leads),
+      identidad: () => this.renderIdentidad(c),
+      hero: () => this.renderHero(),
+      nosotros: () => this.renderNosotros(c),
+      portfolio: () => this.renderPortfolio(c),
+      motion: () => this.renderMotion(c),
+      artistas: () => this.renderArtistas(c),
+      servicios: () => this.renderServicios(c),
+      feed: () => this.renderFeed(),
+      contacto: () => this.renderContacto(c),
+      leads: () => this.renderLeads(),
+      ajustes: () => this.renderAjustes()
+    };
+    const tabBody = (bodies[st.tab] || bodies.resumen)();
+    const topTitle = (TABS.find((t) => t[0] === st.tab) || TABS[0])[1];
+
+    return { navItems, tabBody, topTitle };
+  }
+}
+</script>
+</body>
+</html>
