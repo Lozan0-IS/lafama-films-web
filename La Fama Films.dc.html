@@ -41,6 +41,26 @@
   @media (max-width: 560px) { .lf-archive { grid-template-columns: repeat(2, minmax(0,1fr)) !important; } .lf-c3, .lf-c2 { grid-column: span 2 !important; } }
   input:focus-visible, textarea:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid var(--lf-ac); outline-offset: 2px; }
 
+  /* ── Sello estampado del Hero ─────────────────────────────────────────── */
+  .lf-stamp-wrap { position: absolute; top: 0; right: clamp(16px,3vw,40px); width: 176px; height: 176px; z-index: 5; }
+  .lf-stamp { position: relative; width: 100%; height: 100%; opacity: 0; transform: scale(3.5); filter: blur(8px); transform-origin: 50% 50%; }
+  .lf-stamp.stamped { animation: lfStampDrop .85s cubic-bezier(.175,.885,.32,1.275) forwards; }
+  @keyframes lfStampDrop {
+    0%   { opacity: 0; transform: scale(3.5); filter: blur(8px); }
+    55%  { opacity: 1; filter: blur(0); }
+    100% { opacity: 1; transform: scale(1); filter: blur(0); }
+  }
+  .lf-stamp-flash { position: absolute; inset: 0; border-radius: 50%; background: radial-gradient(circle, rgba(220,38,38,.55) 0%, rgba(220,38,38,0) 70%); opacity: 0; transform: scale(.6); pointer-events: none; }
+  .lf-stamp.stamped .lf-stamp-flash { animation: lfStampFlash .6s ease-out .45s forwards; }
+  @keyframes lfStampFlash {
+    0%   { opacity: .8; transform: scale(.6); }
+    100% { opacity: 0; transform: scale(2.4); }
+  }
+  .lf-stamp-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; display: block; }
+  @media (max-width: 900px) { .lf-stamp-wrap { width: 128px; height: 128px; } }
+  @media (max-width: 640px) { .lf-stamp-wrap { position: static; margin: 14px auto 0; width: 118px; height: 118px; } }
+  @media (prefers-reduced-motion: reduce) { .lf-stamp, .lf-stamp-flash { animation: none !important; opacity: 1 !important; transform: none !important; filter: none !important; } }
+
   /* ── Panel Admin (mismo archivo, vista alterna vía toggleMode) ────────── */
   .pa-shell { display: flex; min-height: 100vh; background: var(--color-surface); }
   .pa-sidebar { width: 236px; flex: 0 0 236px; border-right: 2px solid var(--color-text); background: var(--color-bg); display: flex; flex-direction: column; }
@@ -98,12 +118,19 @@
 </sc-if>
 
 <section id="top" data-screen-label="Hero" style="padding:calc(56px + clamp(24px,5vw,56px)) 0 0;border-bottom:2px solid var(--color-text)">
-  <div style="max-width:1600px;margin:0 auto;padding:0 clamp(16px,3vw,40px)">
+  <div style="max-width:1600px;margin:0 auto;padding:0 clamp(16px,3vw,40px);position:relative">
     <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:clamp(16px,2.5vw,28px)">
       <span style="display:inline-flex;align-items:center;gap:7px;background:var(--lf-ac);color:#fff;font:900 11px/1 var(--font-heading);letter-spacing:.16em;text-transform:uppercase;padding:7px 10px;transform:rotate(-0.6deg)">
         <span style="width:7px;height:7px;background:#fff;border-radius:50%;animation:lf-rec 1.4s infinite"></span>{{ c.hero.tag }}
       </span>
       <span style="font:600 11px/1 'Archivo Narrow',var(--font-body);letter-spacing:.24em;text-transform:uppercase;color:var(--color-neutral-700)">{{ c.hero.locations }}</span>
+    </div>
+
+    <div class="lf-stamp-wrap">
+      <div class="{{ stampClass }}">
+        <div class="lf-stamp-flash"></div>
+        <img class="lf-stamp-img" src="sello-lafama.webp" alt="Sello La Fama Films — fotografía, video, creatividad, capturamos momentos">
+      </div>
     </div>
 
     <h1 class="rvx in" style="margin:0;font:900 clamp(52px,13.5vw,206px)/0.82 var(--font-heading);letter-spacing:-.045em;text-transform:uppercase">LA&nbsp;FAMA<br>FILMS</h1>
@@ -545,7 +572,7 @@ const PF_SIZE_OPTIONS = [
 ];
 
 class Component extends DCLogic {
-  state = { mode: 'site', menu: false, step: 1, svc: '', lb: null, reel: null, note: '', tab: 'resumen', tick: 0 };
+  state = { mode: 'site', menu: false, step: 1, svc: '', lb: null, reel: null, note: '', tab: 'resumen', tick: 0, stamped: false };
   f = {};
 
   applyVars(c) {
@@ -558,6 +585,7 @@ class Component extends DCLogic {
   componentDidMount() {
     this.applyVars(LFStore.getContent());
     if (location.hash === '#admin') this.state.mode = 'admin';
+    requestAnimationFrame(() => requestAnimationFrame(() => this.setState({ stamped: true })));
     this.onScroll = () => this.observe();
     window.addEventListener('scroll', this.onScroll, { passive: true });
     window.addEventListener('resize', this.onScroll);
@@ -1140,6 +1168,7 @@ class Component extends DCLogic {
       mailtoHref: 'mailto:' + c.contact.email,
       waHref: 'https://wa.me/' + c.contact.whatsapp,
       igLinkText: 'Instagram ' + c.contact.instagramHandle + ' →',
+      stampClass: st.stamped ? 'lf-stamp stamped' : 'lf-stamp',
       menuOpen: st.menu,
       toggleMenu: () => this.setState({ menu: !st.menu }),
       showPricing: !!c.showPricing,
