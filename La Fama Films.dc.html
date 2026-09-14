@@ -42,7 +42,7 @@
   input:focus-visible, textarea:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid var(--lf-ac); outline-offset: 2px; }
 
   /* ── Sello estampado del Hero ─────────────────────────────────────────── */
-  .lf-stamp-wrap { position: absolute; top: 0; right: clamp(16px,3vw,40px); width: 176px; height: 176px; z-index: 5; }
+  .lf-stamp-wrap { position: absolute; top: clamp(120px,15vw,240px); right: clamp(60px,11vw,190px); width: 176px; height: 176px; z-index: 5; transform: rotate(-8deg); }
   .lf-stamp { position: relative; width: 100%; height: 100%; opacity: 0; transform: scale(3.5); filter: blur(8px); transform-origin: 50% 50%; }
   .lf-stamp.stamped { animation: lfStampDrop .85s cubic-bezier(.175,.885,.32,1.275) forwards; }
   @keyframes lfStampDrop {
@@ -57,8 +57,8 @@
     100% { opacity: 0; transform: scale(2.4); }
   }
   .lf-stamp-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; display: block; }
-  @media (max-width: 900px) { .lf-stamp-wrap { width: 128px; height: 128px; } }
-  @media (max-width: 640px) { .lf-stamp-wrap { position: static; margin: 14px auto 0; width: 118px; height: 118px; } }
+  @media (max-width: 900px) { .lf-stamp-wrap { width: 128px; height: 128px; top: clamp(90px,18vw,170px); right: clamp(24px,6vw,90px); } }
+  @media (max-width: 640px) { .lf-stamp-wrap { position: static; margin: 14px auto 0; width: 118px; height: 118px; transform: rotate(-6deg); } }
   @media (prefers-reduced-motion: reduce) { .lf-stamp, .lf-stamp-flash { animation: none !important; opacity: 1 !important; transform: none !important; filter: none !important; } }
 
   /* ── Panel Admin (mismo archivo, vista alterna vía toggleMode) ────────── */
@@ -215,18 +215,19 @@
       </div>
       <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-start">
         <span style="font:600 10px/1 var(--font-body);letter-spacing:.2em;text-transform:uppercase;color:var(--color-neutral-700)">12 FRAMES · PHOTO / VIDEO / BTS</span>
-        <span style="font:600 10px/1 var(--font-body);letter-spacing:.2em;text-transform:uppercase;color:var(--color-neutral-700)">HOVER PARA DATOS · CLICK ⤢ PARA AMPLIAR</span>
+        <span style="font:600 10px/1 var(--font-body);letter-spacing:.2em;text-transform:uppercase;color:var(--color-neutral-700)">CLICK PARA AMPLIAR</span>
       </div>
     </div>
 
     <div class="lf-archive">
       <sc-for list="{{ pfItems }}" as="p" hint-placeholder-count="12">
-      <div class="hovg rv {{ p.spanClass }}" style="grid-row:{{ p.rowSpanCss }};position:relative;background:var(--color-neutral-400);outline:2px solid var(--color-text)">
-        {{ p.photo }}
-        <div class="hovm" style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(0deg,rgba(32,30,29,.94) 0%,rgba(32,30,29,0) 62%);display:flex;flex-direction:column;justify-content:flex-end;gap:5px;padding:{{ p.pad }}">
-          <div style="font:{{ p.catFont }};letter-spacing:.2em;text-transform:uppercase;color:var(--color-accent-400)">{{ p.cat }}</div>
-          <div style="font:{{ p.titleFont }};letter-spacing:-.02em;text-transform:uppercase;color:var(--color-bg)">{{ p.title }}</div>
-          <button type="button" data-slot="{{ p.id }}" onClick="{{ zoom }}" style="pointer-events:auto;align-self:flex-start;margin-top:4px;background:var(--lf-ac);color:#fff;border:none;padding:6px 9px;font:900 10px/1 var(--font-heading);letter-spacing:.14em;cursor:pointer">VIEW ⤢</button>
+      <div class="hovg rv {{ p.spanClass }}" style="grid-row:{{ p.rowSpanCss }};display:flex;flex-direction:column;outline:2px solid var(--color-text)">
+        <button type="button" data-slot="{{ p.id }}" onClick="{{ zoom }}" style="position:relative;flex:1;min-height:0;padding:0;margin:0;border:none;background:var(--color-neutral-400);cursor:zoom-in;display:block;width:100%">
+          {{ p.photo }}
+        </button>
+        <div style="padding:8px 10px;background:var(--color-bg);border-top:1px solid var(--color-text)">
+          <div style="font:{{ p.catFont }};letter-spacing:.16em;text-transform:uppercase;color:var(--lf-ac)">{{ p.cat }}</div>
+          <div style="font:{{ p.titleFont }};letter-spacing:-.01em;text-transform:uppercase;color:var(--color-text);margin-top:2px">{{ p.title }}</div>
         </div>
       </div>
       </sc-for>
@@ -1089,7 +1090,7 @@ class Component extends DCLogic {
     // ── datos del sitio público ─────────────────────────────────────────
     const pfItems = (c.portfolio || []).map((it) => {
       const sz = LF_PF_SIZE[it.size] || LF_PF_SIZE.small;
-      return Object.assign({}, it, sz, { rowSpanCss: 'span ' + sz.rowSpan, photo: this.heroPhoto(it.id, it.cat) });
+      return Object.assign({}, it, sz, { rowSpanCss: 'span ' + (sz.rowSpan + 3), photo: this.heroPhoto(it.id, it.cat) });
     });
     const reelItems = (c.reels || []).map((it) => Object.assign({}, it, { photo: this.heroPhoto(it.id, it.label) }));
     const artistItems = (c.artists || []).map((it) => Object.assign({}, it, { photo: this.heroPhoto(it.id, it.name) }));
