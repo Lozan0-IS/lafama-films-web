@@ -59,7 +59,8 @@
   .lf-stamp-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; display: block; }
   @media (max-width: 1200px) { .lf-stamp-wrap { width: 148px; height: 148px; } }
   @media (max-width: 900px) { .lf-stamp-wrap { width: 128px; height: 128px; } }
-  @media (max-width: 640px) { .lf-stamp-wrap { position: static !important; margin: 14px auto 0; width: 118px; height: 118px; top: auto !important; left: auto !important; transform: rotate(-6deg); } }
+  @media (max-width: 640px) { .lf-stamp-wrap { width: 100px; height: 100px; transform: rotate(-6deg); } }
+  @media (max-width: 420px) { .lf-stamp-wrap { width: 78px; height: 78px; } }
   @media (prefers-reduced-motion: reduce) { .lf-stamp, .lf-stamp-flash { animation: none !important; opacity: 1 !important; transform: none !important; filter: none !important; } }
 
   /* ── Panel Admin (mismo archivo, vista alterna vía toggleMode) ────────── */
@@ -628,7 +629,6 @@ class Component extends DCLogic {
     const wrap = document.querySelector('.lf-stamp-wrap');
     const h1 = document.querySelector('#top h1');
     if (!wrap || !h1) return;
-    if (!window.matchMedia('(min-width: 641px)').matches) return;
     const container = wrap.offsetParent;
     if (!container) return;
     const walker = document.createTreeWalker(h1, NodeFilter.SHOW_TEXT);
@@ -649,11 +649,13 @@ class Component extends DCLogic {
     // a la derecha de "FILMS" hasta el borde del contenedor.
     const textRight = (textRect.left - contRect.left) + textRect.width;
     const remaining = contRect.width - textRight;
-    let left = textRight + Math.max(18, (remaining - size) / 2);
-    // En pantallas medianas el título casi llena el contenedor — no dejes
-    // que el sello se salga por la derecha, pégalo al borde en su lugar.
+    let left = textRight + Math.max(10, (remaining - size) / 2);
+    // En pantallas medianas/angostas el título casi llena el contenedor —
+    // no dejes que el sello se salga por la derecha, pégalo al borde.
     const maxLeft = contRect.width - size - 4;
     if (left > maxLeft) left = maxLeft;
+    // Ni que se meta debajo del texto si el espacio es muy justo.
+    if (left < textRight + 4) left = textRight + 4;
     wrap.style.top = Math.max(0, top) + 'px';
     wrap.style.left = Math.max(0, left) + 'px';
   }
