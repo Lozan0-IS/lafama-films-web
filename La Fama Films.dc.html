@@ -645,7 +645,11 @@ class Component extends DCLogic {
     const contRect = container.getBoundingClientRect();
     const size = wrap.offsetWidth || 176;
     const top = (textRect.top - contRect.top) + textRect.height / 2 - size / 2;
-    let left = (textRect.left - contRect.left) + textRect.width + 18;
+    // No lo pegues al texto — flota centrado en el espacio vacío que queda
+    // a la derecha de "FILMS" hasta el borde del contenedor.
+    const textRight = (textRect.left - contRect.left) + textRect.width;
+    const remaining = contRect.width - textRight;
+    let left = textRight + Math.max(18, (remaining - size) / 2);
     // En pantallas medianas el título casi llena el contenedor — no dejes
     // que el sello se salga por la derecha, pégalo al borde en su lugar.
     const maxLeft = contRect.width - size - 4;
