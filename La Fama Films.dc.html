@@ -329,13 +329,13 @@
           <div>
             <h3 style="margin:0 0 18px;font:900 clamp(24px,3.6vw,44px)/0.92 var(--font-heading);letter-spacing:-.03em;text-transform:uppercase">¿QUÉ NECESITAS?</h3>
             <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:6px;margin-bottom:22px">
-              <button type="button" data-svc="Videoclip" onClick="{{ pickChoice }}" style="padding:16px 12px;border:2px solid var(--color-text);background:none;text-align:left;font:900 15px/1.1 var(--font-heading);text-transform:uppercase;cursor:pointer" style-hover="background:var(--color-accent-100)">VIDEOCLIP</button>
-              <button type="button" data-svc="Fotografía" onClick="{{ pickChoice }}" style="padding:16px 12px;border:2px solid var(--color-text);background:none;text-align:left;font:900 15px/1.1 var(--font-heading);text-transform:uppercase;cursor:pointer" style-hover="background:var(--color-accent-100)">FOTOGRAFÍA</button>
-              <button type="button" data-svc="Reel" onClick="{{ pickChoice }}" style="padding:16px 12px;border:2px solid var(--color-text);background:none;text-align:left;font:900 15px/1.1 var(--font-heading);text-transform:uppercase;cursor:pointer" style-hover="background:var(--color-accent-100)">REEL / TIKTOK</button>
-              <button type="button" data-svc="Contenido para artista" onClick="{{ pickChoice }}" style="padding:16px 12px;border:2px solid var(--color-text);background:none;text-align:left;font:900 15px/1.1 var(--font-heading);text-transform:uppercase;cursor:pointer" style-hover="background:var(--color-accent-100)">CONTENIDO ARTISTA</button>
-              <button type="button" data-svc="Evento" onClick="{{ pickChoice }}" style="padding:16px 12px;border:2px solid var(--color-text);background:none;text-align:left;font:900 15px/1.1 var(--font-heading);text-transform:uppercase;cursor:pointer" style-hover="background:var(--color-accent-100)">EVENTO</button>
-              <button type="button" data-svc="Campaña" onClick="{{ pickChoice }}" style="padding:16px 12px;border:2px solid var(--color-text);background:none;text-align:left;font:900 15px/1.1 var(--font-heading);text-transform:uppercase;cursor:pointer" style-hover="background:var(--color-accent-100)">CAMPAÑA</button>
-              <button type="button" data-svc="Otro" onClick="{{ pickChoice }}" style="padding:16px 12px;border:2px solid var(--color-text);background:none;text-align:left;font:900 15px/1.1 var(--font-heading);text-transform:uppercase;cursor:pointer" style-hover="background:var(--color-accent-100)">OTRO</button>
+              <button type="button" data-svc="Videoclip" onClick="{{ pickChoice }}" style="padding:16px 12px;border:2px solid {{ pcVideoclip.border }};background:{{ pcVideoclip.bg }};color:{{ pcVideoclip.color }};text-align:left;font:900 15px/1.1 var(--font-heading);text-transform:uppercase;cursor:pointer">VIDEOCLIP</button>
+              <button type="button" data-svc="Fotografía" onClick="{{ pickChoice }}" style="padding:16px 12px;border:2px solid {{ pcFotografia.border }};background:{{ pcFotografia.bg }};color:{{ pcFotografia.color }};text-align:left;font:900 15px/1.1 var(--font-heading);text-transform:uppercase;cursor:pointer">FOTOGRAFÍA</button>
+              <button type="button" data-svc="Reel" onClick="{{ pickChoice }}" style="padding:16px 12px;border:2px solid {{ pcReel.border }};background:{{ pcReel.bg }};color:{{ pcReel.color }};text-align:left;font:900 15px/1.1 var(--font-heading);text-transform:uppercase;cursor:pointer">REEL / TIKTOK</button>
+              <button type="button" data-svc="Contenido para artista" onClick="{{ pickChoice }}" style="padding:16px 12px;border:2px solid {{ pcArtista.border }};background:{{ pcArtista.bg }};color:{{ pcArtista.color }};text-align:left;font:900 15px/1.1 var(--font-heading);text-transform:uppercase;cursor:pointer">CONTENIDO ARTISTA</button>
+              <button type="button" data-svc="Evento" onClick="{{ pickChoice }}" style="padding:16px 12px;border:2px solid {{ pcEvento.border }};background:{{ pcEvento.bg }};color:{{ pcEvento.color }};text-align:left;font:900 15px/1.1 var(--font-heading);text-transform:uppercase;cursor:pointer">EVENTO</button>
+              <button type="button" data-svc="Campaña" onClick="{{ pickChoice }}" style="padding:16px 12px;border:2px solid {{ pcCampana.border }};background:{{ pcCampana.bg }};color:{{ pcCampana.color }};text-align:left;font:900 15px/1.1 var(--font-heading);text-transform:uppercase;cursor:pointer">CAMPAÑA</button>
+              <button type="button" data-svc="Otro" onClick="{{ pickChoice }}" style="padding:16px 12px;border:2px solid {{ pcOtro.border }};background:{{ pcOtro.bg }};color:{{ pcOtro.color }};text-align:left;font:900 15px/1.1 var(--font-heading);text-transform:uppercase;cursor:pointer">OTRO</button>
             </div>
             <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;border-top:2px solid var(--color-text);padding-top:16px">
               <span style="font:600 11px/1 var(--font-body);letter-spacing:.16em;text-transform:uppercase;color:var(--color-neutral-700)">SELECCIONADO: {{ chosen }}</span>
@@ -1045,6 +1045,9 @@ class Component extends DCLogic {
     const st = this.state;
     const c = LFStore.getContent();
     const tab = (n) => (st.step === n ? 'var(--lf-ac)' : 'transparent');
+    const svcSel = (name) => st.svc === name
+      ? { bg: 'var(--lf-ac)', border: 'var(--lf-ac)', color: '#fff' }
+      : { bg: 'transparent', border: 'var(--color-text)', color: 'var(--color-text)' };
     const src = st.lb ? this.slotSrc(st.lb) : null;
     const isAdmin = st.mode === 'admin';
     const isSite = !isAdmin;
@@ -1142,6 +1145,13 @@ class Component extends DCLogic {
       showPricing: !!c.showPricing,
       isStep1: st.step === 1, isStep2: st.step === 2, isStep3: st.step === 3, isStep4: st.step === 4,
       tab1: tab(1), tab2: tab(2), tab3: tab(3), tab4: tab(4),
+      pcVideoclip: svcSel('Videoclip'),
+      pcFotografia: svcSel('Fotografía'),
+      pcReel: svcSel('Reel'),
+      pcArtista: svcSel('Contenido para artista'),
+      pcEvento: svcSel('Evento'),
+      pcCampana: svcSel('Campaña'),
+      pcOtro: svcSel('Otro'),
       chosen: st.svc || 'ninguno todavía',
       sendNote: st.note || 'Se abre WhatsApp con el mensaje ya escrito. Nombre, email y WhatsApp son obligatorios.',
       next: () => this.setState({ step: Math.min(4, st.step + 1) }),
