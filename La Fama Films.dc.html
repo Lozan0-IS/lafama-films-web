@@ -42,7 +42,7 @@
   input:focus-visible, textarea:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid var(--lf-ac); outline-offset: 2px; }
 
   /* ── Sello estampado del Hero ─────────────────────────────────────────── */
-  .lf-stamp-wrap { position: absolute; top: clamp(120px,15vw,240px); right: clamp(60px,11vw,190px); width: 176px; height: 176px; z-index: 5; transform: rotate(-8deg); }
+  .lf-stamp-wrap { position: absolute; top: 140px; left: 260px; width: 176px; height: 176px; z-index: 5; transform: rotate(-8deg); }
   .lf-stamp { position: relative; width: 100%; height: 100%; opacity: 0; transform: scale(3.5); filter: blur(8px); transform-origin: 50% 50%; }
   .lf-stamp.stamped { animation: lfStampDrop .85s cubic-bezier(.175,.885,.32,1.275) forwards; }
   @keyframes lfStampDrop {
@@ -57,8 +57,9 @@
     100% { opacity: 0; transform: scale(2.4); }
   }
   .lf-stamp-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; display: block; }
-  @media (max-width: 900px) { .lf-stamp-wrap { width: 128px; height: 128px; top: clamp(90px,18vw,170px); right: clamp(24px,6vw,90px); } }
-  @media (max-width: 640px) { .lf-stamp-wrap { position: static; margin: 14px auto 0; width: 118px; height: 118px; transform: rotate(-6deg); } }
+  @media (max-width: 1200px) { .lf-stamp-wrap { width: 148px; height: 148px; } }
+  @media (max-width: 900px) { .lf-stamp-wrap { width: 128px; height: 128px; } }
+  @media (max-width: 640px) { .lf-stamp-wrap { position: static !important; margin: 14px auto 0; width: 118px; height: 118px; top: auto !important; left: auto !important; transform: rotate(-6deg); } }
   @media (prefers-reduced-motion: reduce) { .lf-stamp, .lf-stamp-flash { animation: none !important; opacity: 1 !important; transform: none !important; filter: none !important; } }
 
   /* ── Panel Admin (mismo archivo, vista alterna vía toggleMode) ────────── */
@@ -97,7 +98,6 @@
       <a href="#artists" style="display:flex;align-items:center;padding:0 18px;font:700 12px/1 'Archivo Narrow',var(--font-body);letter-spacing:.2em;text-transform:uppercase;border-left:1px solid var(--color-neutral-400)">ARTISTS</a>
       <a href="#services" style="display:flex;align-items:center;padding:0 18px;font:700 12px/1 'Archivo Narrow',var(--font-body);letter-spacing:.2em;text-transform:uppercase;border-left:1px solid var(--color-neutral-400)">SERVICES</a>
       <a href="#feed" style="display:flex;align-items:center;padding:0 18px;font:700 12px/1 'Archivo Narrow',var(--font-body);letter-spacing:.2em;text-transform:uppercase;border-left:1px solid var(--color-neutral-400)">FEED</a>
-      <button type="button" onClick="{{ toggleMode }}" style="display:flex;align-items:center;padding:0 18px;background:none;border:none;border-left:1px solid var(--color-neutral-400);font:700 12px/1 'Archivo Narrow',var(--font-body);letter-spacing:.2em;text-transform:uppercase;color:var(--color-neutral-700);cursor:pointer">ADMIN</button>
     </div>
     <a href="#booking" style="display:flex;align-items:center;padding:0 clamp(14px,2.5vw,24px);background:var(--lf-ac);color:#fff;font:900 13px/1 var(--font-heading);letter-spacing:.06em;text-transform:uppercase;border-left:2px solid var(--color-text)" style-hover="background:var(--color-text)">BOOK A PROJECT</a>
     <button type="button" onClick="{{ toggleMenu }}" aria-label="Menú" style="padding:0 16px;background:var(--color-text);color:var(--color-bg);border:none;cursor:pointer;font:900 13px/1 var(--font-heading);letter-spacing:.1em" data-nav-burger="1">MENÚ</button>
@@ -112,7 +112,6 @@
     <a href="#artists" onClick="{{ toggleMenu }}" style="color:var(--color-bg);font:900 clamp(34px,10vw,72px)/0.92 var(--font-heading);text-transform:uppercase;letter-spacing:-.03em">ARTISTS</a>
     <a href="#services" onClick="{{ toggleMenu }}" style="color:var(--color-bg);font:900 clamp(34px,10vw,72px)/0.92 var(--font-heading);text-transform:uppercase;letter-spacing:-.03em">SERVICES</a>
     <a href="#feed" onClick="{{ toggleMenu }}" style="color:var(--color-bg);font:900 clamp(34px,10vw,72px)/0.92 var(--font-heading);text-transform:uppercase;letter-spacing:-.03em">FEED</a>
-    <button type="button" onClick="{{ toggleMode }}" style="text-align:left;background:none;border:none;padding:0;color:var(--color-neutral-400);font:900 clamp(22px,6vw,40px)/0.92 var(--font-heading);text-transform:uppercase;letter-spacing:-.03em;cursor:pointer">PANEL ADMIN</button>
     <a href="#booking" onClick="{{ toggleMenu }}" style="margin-top:18px;background:var(--lf-ac);color:#fff;font:900 20px/1 var(--font-heading);padding:16px 18px;text-transform:uppercase;letter-spacing:.04em;align-self:flex-start">AGENDA TU PROYECTO →</a>
   </div>
 </sc-if>
@@ -587,6 +586,10 @@ class Component extends DCLogic {
     this.applyVars(LFStore.getContent());
     if (location.hash === '#admin') this.state.mode = 'admin';
     requestAnimationFrame(() => requestAnimationFrame(() => this.setState({ stamped: true })));
+    requestAnimationFrame(() => requestAnimationFrame(() => this.positionStamp()));
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => this.positionStamp());
+    this.onResizeStamp = () => this.positionStamp();
+    window.addEventListener('resize', this.onResizeStamp);
     this.onScroll = () => this.observe();
     window.addEventListener('scroll', this.onScroll, { passive: true });
     window.addEventListener('resize', this.onScroll);
@@ -616,6 +619,29 @@ class Component extends DCLogic {
     window.addEventListener('storage', this.onStorage);
   }
 
+  // Ubica el sello pegado a la derecha del título (a la altura de "FILMS")
+  // midiendo el H1 real en vez de adivinar valores fijos — así queda bien
+  // sin importar el ancho de pantalla o cuánto ocupe el título.
+  positionStamp() {
+    const wrap = document.querySelector('.lf-stamp-wrap');
+    const h1 = document.querySelector('#top h1');
+    if (!wrap || !h1) return;
+    if (!window.matchMedia('(min-width: 641px)').matches) return;
+    const container = wrap.offsetParent;
+    if (!container) return;
+    const h1Rect = h1.getBoundingClientRect();
+    const contRect = container.getBoundingClientRect();
+    const size = wrap.offsetWidth || 176;
+    const top = (h1Rect.top - contRect.top) + h1Rect.height * 0.72 - size / 2;
+    let left = (h1Rect.left - contRect.left) + h1Rect.width + 16;
+    // En pantallas medianas el título casi llena el contenedor — no dejes
+    // que el sello se salga por la derecha, pégalo al borde en su lugar.
+    const maxLeft = contRect.width - size - 4;
+    if (left > maxLeft) left = maxLeft;
+    wrap.style.top = Math.max(0, top) + 'px';
+    wrap.style.left = Math.max(0, left) + 'px';
+  }
+
   observe() {
     if (this.scanQueued) return;
     this.scanQueued = true;
@@ -631,6 +657,7 @@ class Component extends DCLogic {
   componentDidUpdate() {
     this.applyVars(LFStore.getContent());
     this.observe();
+    this.positionStamp();
     if (this.syncNav) this.syncNav();
   }
 
@@ -639,6 +666,7 @@ class Component extends DCLogic {
     clearTimeout(this.safety);
     window.removeEventListener('scroll', this.onScroll);
     window.removeEventListener('resize', this.onScroll);
+    window.removeEventListener('resize', this.onResizeStamp);
     if (this.mq) this.mq.removeEventListener('change', this.syncNav);
     window.removeEventListener('keydown', this.onKey);
     window.removeEventListener('storage', this.onStorage);
