@@ -619,9 +619,11 @@ class Component extends DCLogic {
     window.addEventListener('storage', this.onStorage);
   }
 
-  // Ubica el sello pegado a la derecha del título (a la altura de "FILMS")
-  // midiendo el H1 real en vez de adivinar valores fijos — así queda bien
-  // sin importar el ancho de pantalla o cuánto ocupe el título.
+  // Ubica el sello pegado al texto real de "FILMS". El <h1> es block-level
+  // (ocupa casi todo el ancho del contenedor aunque el texto sea angosto),
+  // así que medir h1.getBoundingClientRect() da el ancho del BLOQUE, no el
+  // del texto visible — por eso media un Range sobre el último nodo de
+  // texto (la línea "FILMS", después del <br>) para obtener su tamaño real.
   positionStamp() {
     const wrap = document.querySelector('.lf-stamp-wrap');
     const h1 = document.querySelector('#top h1');
@@ -629,11 +631,21 @@ class Component extends DCLogic {
     if (!window.matchMedia('(min-width: 641px)').matches) return;
     const container = wrap.offsetParent;
     if (!container) return;
-    const h1Rect = h1.getBoundingClientRect();
+    const walker = document.createTreeWalker(h1, NodeFilter.SHOW_TEXT);
+    let lastText = null, node;
+    while ((node = walker.nextNode())) { if (node.textContent.trim()) lastText = node; }
+    let textRect;
+    if (lastText) {
+      const range = document.createRange();
+      range.selectNodeContents(lastText);
+      textRect = range.getBoundingClientRect();
+    } else {
+      textRect = h1.getBoundingClientRect();
+    }
     const contRect = container.getBoundingClientRect();
     const size = wrap.offsetWidth || 176;
-    const top = (h1Rect.top - contRect.top) + h1Rect.height * 0.72 - size / 2;
-    let left = (h1Rect.left - contRect.left) + h1Rect.width + 16;
+    const top = (textRect.top - contRect.top) + textRect.height / 2 - size / 2;
+    let left = (textRect.left - contRect.left) + textRect.width + 18;
     // En pantallas medianas el título casi llena el contenedor — no dejes
     // que el sello se salga por la derecha, pégalo al borde en su lugar.
     const maxLeft = contRect.width - size - 4;
