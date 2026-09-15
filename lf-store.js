@@ -39,6 +39,14 @@
       instagramHandle: '@imangelfilms',
       instagramUrl: 'https://www.instagram.com/imangelfilms/'
     },
+    // No hay todavía un nombre/bio real confirmados para el fotógrafo — estos
+    // tres campos son placeholder a propósito (marcados como tal) para que el
+    // cliente los reemplace desde el panel admin; no se inventó contenido.
+    photographer: {
+      name: '[NOMBRE DEL FOTÓGRAFO]',
+      role: 'PHOTOGRAPHER / DIRECTOR',
+      bio: '[Bio pendiente — 2 a 4 líneas sobre el enfoque, el estilo y la experiencia. Reemplaza este texto desde el panel admin.]'
+    },
     portfolio: [
       { id: 'pf01', cat: 'MUSIC VIDEO · NYC · 2026', title: 'ARTISTA 01 — REEMPLAZAR', size: 'large' },
       { id: 'pf02', cat: 'PORTRAIT · 2026', title: 'ARTISTA 02', size: 'small' },

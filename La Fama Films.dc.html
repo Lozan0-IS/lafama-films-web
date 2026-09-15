@@ -88,10 +88,16 @@
 
   /* ── Sello estampado del Hero ─────────────────────────────────────────── */
   .lf-stamp-wrap { position: absolute; top: 140px; left: 260px; width: 212px; height: 212px; z-index: 5; transform: rotate(-8deg); transition: top .25s ease, left .25s ease; }
-  .lf-stamp { position: relative; width: 100%; height: 100%; opacity: 0; transform: scale(3.5); filter: blur(8px); transform-origin: 50% 50%; }
-  .lf-stamp.stamped { animation: lfStampDrop .85s cubic-bezier(.175,.885,.32,1.275) forwards; }
+  /* Antes arrancaba en scale(3.5) + blur(8px): una bola roja gigante y
+     borrosa que tapaba el título por ~150-250ms antes de asentarse — a
+     un visitante nuevo le lee como "la página cargó mal y se corrigió",
+     no como un efecto de marca. Es la MISMA idea (el sello "cae" y se
+     asienta) pero a una escala que nunca invade el texto ni parece un
+     glitch de carga. */
+  .lf-stamp { position: relative; width: 100%; height: 100%; opacity: 0; transform: scale(1.3); filter: blur(3px); transform-origin: 50% 50%; }
+  .lf-stamp.stamped { animation: lfStampDrop .7s cubic-bezier(.175,.885,.32,1.275) forwards; }
   @keyframes lfStampDrop {
-    0%   { opacity: 0; transform: scale(3.5); filter: blur(8px); }
+    0%   { opacity: 0; transform: scale(1.3); filter: blur(3px); }
     55%  { opacity: 1; filter: blur(0); }
     100% { opacity: 1; transform: scale(1); filter: blur(0); }
   }
@@ -180,7 +186,7 @@
       <a href="#motion" style="display:flex;align-items:center;padding:0 18px;font:700 12px/1 'Archivo Narrow',var(--font-body);letter-spacing:.2em;text-transform:uppercase;border-left:1px solid var(--color-neutral-400)">MOTION</a>
       <a href="#artists" style="display:flex;align-items:center;padding:0 18px;font:700 12px/1 'Archivo Narrow',var(--font-body);letter-spacing:.2em;text-transform:uppercase;border-left:1px solid var(--color-neutral-400)">ARTISTS</a>
       <a href="#services" style="display:flex;align-items:center;padding:0 18px;font:700 12px/1 'Archivo Narrow',var(--font-body);letter-spacing:.2em;text-transform:uppercase;border-left:1px solid var(--color-neutral-400)">SERVICES</a>
-      <a href="#feed" style="display:flex;align-items:center;padding:0 18px;font:700 12px/1 'Archivo Narrow',var(--font-body);letter-spacing:.2em;text-transform:uppercase;border-left:1px solid var(--color-neutral-400)">FEED</a>
+      <a href="#photographer" style="display:flex;align-items:center;padding:0 18px;font:700 12px/1 'Archivo Narrow',var(--font-body);letter-spacing:.2em;text-transform:uppercase;border-left:1px solid var(--color-neutral-400)">ABOUT</a>
     </div>
     <a href="#booking" style="display:flex;align-items:center;padding:0 clamp(14px,2.5vw,24px);background:var(--lf-ac);color:#fff;font:900 13px/1 var(--font-heading);letter-spacing:.06em;text-transform:uppercase;border-left:2px solid var(--color-text)" style-hover="background:var(--color-text)">BOOK A PROJECT</a>
     <button type="button" onClick="{{ toggleMenu }}" aria-label="Menú" style="padding:0 16px;background:var(--color-text);color:var(--color-bg);border:none;cursor:pointer;font:900 13px/1 var(--font-heading);letter-spacing:.1em" data-nav-burger="1">MENÚ</button>
@@ -194,7 +200,7 @@
     <a href="#motion" onClick="{{ toggleMenu }}" style="color:var(--color-bg);font:900 clamp(34px,10vw,72px)/0.92 var(--font-heading);text-transform:uppercase;letter-spacing:-.03em">MOTION</a>
     <a href="#artists" onClick="{{ toggleMenu }}" style="color:var(--color-bg);font:900 clamp(34px,10vw,72px)/0.92 var(--font-heading);text-transform:uppercase;letter-spacing:-.03em">ARTISTS</a>
     <a href="#services" onClick="{{ toggleMenu }}" style="color:var(--color-bg);font:900 clamp(34px,10vw,72px)/0.92 var(--font-heading);text-transform:uppercase;letter-spacing:-.03em">SERVICES</a>
-    <a href="#feed" onClick="{{ toggleMenu }}" style="color:var(--color-bg);font:900 clamp(34px,10vw,72px)/0.92 var(--font-heading);text-transform:uppercase;letter-spacing:-.03em">FEED</a>
+    <a href="#photographer" onClick="{{ toggleMenu }}" style="color:var(--color-bg);font:900 clamp(34px,10vw,72px)/0.92 var(--font-heading);text-transform:uppercase;letter-spacing:-.03em">ABOUT</a>
     <a href="#booking" onClick="{{ toggleMenu }}" style="margin-top:18px;background:var(--lf-ac);color:#fff;font:900 20px/1 var(--font-heading);padding:16px 18px;text-transform:uppercase;letter-spacing:.04em;align-self:flex-start">AGENDA TU PROYECTO →</a>
   </div>
 </sc-if>
@@ -394,19 +400,24 @@
   </div>
 </section>
 
-<section id="feed" data-screen-label="Instagram" style="border-bottom:2px solid var(--color-text);background:var(--color-surface)">
-  <div style="max-width:1600px;margin:0 auto;padding:clamp(36px,6vw,84px) clamp(16px,3vw,40px)">
-    <div class="rv" style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:20px">
-      <div>
-        <span style="display:inline-block;background:var(--lf-ac);color:#fff;font:900 11px/1 var(--font-heading);letter-spacing:.18em;text-transform:uppercase;padding:7px 10px;margin-bottom:14px;transform:rotate(-0.4deg)">06 — FEED</span>
-        <h2 style="margin:0;font:900 clamp(32px,6vw,92px)/0.86 var(--font-heading);letter-spacing:-.045em;text-transform:uppercase">{{ c.contact.instagramHandle }}</h2>
-      </div>
-      <a href="{{ c.contact.instagramUrl }}" target="_blank" rel="noopener" style="padding:13px 18px;border:2px solid var(--color-text);font:900 13px/1 var(--font-heading);letter-spacing:.08em;text-transform:uppercase" style-hover="background:var(--color-text);color:var(--color-bg)">SEGUIR EN INSTAGRAM →</a>
+<section id="photographer" data-screen-label="Sobre el fotógrafo" style="border-bottom:2px solid var(--color-text);background:var(--color-text);color:var(--color-bg)">
+  <div style="max-width:1600px;margin:0 auto;padding:clamp(36px,6vw,84px) clamp(16px,3vw,40px);display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:clamp(28px,4vw,64px);align-items:center">
+    <div class="rv" style="aspect-ratio:4/5;max-width:460px;position:relative;background:var(--color-neutral-900);outline:2px solid var(--color-neutral-800)">
+      {{ photographerPhoto }}
     </div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:4px">
-      <sc-for list="{{ igItems }}" as="ig" hint-placeholder-count="12">
-      <a href="{{ c.contact.instagramUrl }}" target="_blank" rel="noopener" class="hovg rv" style="position:relative;aspect-ratio:1/1;background:var(--color-neutral-300);outline:2px solid var(--color-text)">{{ ig.photo }}</a>
-      </sc-for>
+    <div class="rvx">
+      <span style="display:inline-block;background:var(--lf-ac);color:#fff;font:900 11px/1 var(--font-heading);letter-spacing:.18em;text-transform:uppercase;padding:7px 10px;margin-bottom:16px;transform:rotate(-0.4deg)">06 — SOBRE EL FOTÓGRAFO</span>
+      <h2 style="margin:0 0 8px;font:900 clamp(32px,5.4vw,72px)/0.9 var(--font-heading);letter-spacing:-.03em;text-transform:uppercase">{{ c.photographer.name }}</h2>
+      <div style="font:700 12px/1.4 'Archivo Narrow',var(--font-heading);letter-spacing:.18em;text-transform:uppercase;color:var(--color-neutral-400);margin-bottom:22px">{{ c.photographer.role }}</div>
+      <p style="margin:0 0 26px;max-width:50ch;font:400 16px/1.62 var(--font-body);color:var(--color-neutral-300)">{{ c.photographer.bio }}</p>
+      <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:26px">
+        <span style="font:600 10px/1 var(--font-body);letter-spacing:.2em;text-transform:uppercase;color:var(--color-neutral-500)">BASADO EN</span>
+        <span style="font:700 15px/1.3 var(--font-body);color:var(--color-bg)">{{ c.hero.locations }}</span>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px">
+        <a href="{{ c.contact.instagramUrl }}" target="_blank" rel="noopener" style="padding:13px 18px;border:2px solid var(--color-bg);color:var(--color-bg);font:900 13px/1 var(--font-heading);letter-spacing:.08em;text-transform:uppercase" style-hover="background:var(--color-bg);color:var(--color-text)">VER INSTAGRAM →</a>
+        <a href="#booking" style="padding:13px 18px;background:var(--lf-ac);color:#fff;font:900 13px/1 var(--font-heading);letter-spacing:.08em;text-transform:uppercase" style-hover="background:var(--color-accent-600)">BOOK A PROJECT</a>
+      </div>
     </div>
   </div>
 </section>
@@ -1216,6 +1227,20 @@ class Component extends DCLogic {
     );
   }
 
+  // ── SOBRE EL FOTÓGRAFO ──────────────────────────────────────────────
+  renderFotografo(c) {
+    const setField = (field) => (e) => this.updateContent((c2) => { c2.photographer[field] = e.currentTarget.value; });
+    return el('div', { style: S.page },
+      SectionHead('Sobre el fotógrafo', 'La sección "Sobre el fotógrafo" del sitio público, justo antes de Booking. Reemplaza el nombre, el rol y la bio (llegan con texto placeholder), y sube una foto real cuando la tengas.'),
+      el('div', { style: S.card },
+        this.photoWidget('lf-photographer', 'Foto del fotógrafo', { height: '220px', maxW: 1200 }),
+        Field('Nombre', el('input', { style: S.input, value: c.photographer.name, onChange: setField('name') })),
+        Field('Rol', el('input', { style: S.input, value: c.photographer.role, onChange: setField('role') })),
+        Field('Bio (2–4 líneas)', el('textarea', { style: S.textarea, rows: 4, value: c.photographer.bio, onChange: setField('bio') }))
+      )
+    );
+  }
+
   // ── CONTACTO ─────────────────────────────────────────────────────────
   renderContacto(c) {
     const setField = (field) => (e) => this.updateContent((c2) => { c2.contact[field] = e.currentTarget.value; });
@@ -1379,11 +1404,7 @@ class Component extends DCLogic {
       showPrice: !!c.showPricing,
       priceLabel: 'DESDE ' + (it.price && it.price.trim() ? it.price : '$ —')
     }));
-    // El feed reutiliza las mismas fotos ya subidas en El Archivo — no hace
-    // falta que el admin suba 12 imágenes aparte solo para esta franja.
-    const igItems = (c.portfolio || []).slice(0, 12).map((it) => {
-      return { id: it.id, photo: this.heroPhoto(it.id, it.cat) };
-    });
+    const photographerPhoto = this.heroPhoto('lf-photographer', 'Foto del fotógrafo — pendiente');
 
     // ── datos del panel admin ────────────────────────────────────────────
     const leads = LFStore.getLeads();
@@ -1397,6 +1418,7 @@ class Component extends DCLogic {
       ['motion', 'Reels', 0],
       ['artistas', 'Artistas', 0],
       ['servicios', 'Servicios', 0],
+      ['fotografo', 'Sobre el fotógrafo', 0],
       ['contacto', 'Contacto', 0],
       ['leads', 'Leads', nuevos],
       ['ajustes', 'Ajustes', 0]
@@ -1420,6 +1442,7 @@ class Component extends DCLogic {
       motion: () => this.renderMotion(c),
       artistas: () => this.renderArtistas(c),
       servicios: () => this.renderServicios(c),
+      fotografo: () => this.renderFotografo(c),
       contacto: () => this.renderContacto(c),
       leads: () => this.renderLeads(),
       ajustes: () => this.renderAjustes()
@@ -1431,7 +1454,7 @@ class Component extends DCLogic {
       isSite, isAdmin, toggleMode,
       navItems, tabBody, topTitle,
       c,
-      pfItems, reelItems, artistItems, serviceItems, igItems,
+      pfItems, reelItems, artistItems, serviceItems, photographerPhoto,
       // El motor de plantillas {{ }} solo resuelve rutas simples (a.b.c) —
       // nada de llamadas a función ni "+" — por eso cada foto y cada href
       // armado se precalculan aquí como un valor plano.
