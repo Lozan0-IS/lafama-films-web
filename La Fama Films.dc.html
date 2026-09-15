@@ -46,14 +46,21 @@
   .rv.in { opacity: 1; transform: none; }
   .rvx { opacity: 0; transform: translateX(-28px); transition: opacity .9s cubic-bezier(.16,1,.3,1), transform .9s cubic-bezier(.16,1,.3,1); }
   .rvx.in { opacity: 1; transform: none; }
-  .lf-archive { display: grid; grid-template-columns: repeat(var(--lf-cols), minmax(0,1fr)); grid-auto-rows: var(--lf-row-unit, 10px); grid-auto-flow: dense; gap: 6px; }
-  @media (max-width: 1200px) { .lf-archive { grid-template-columns: repeat(4, minmax(0,1fr)) !important; } }
-  @media (max-width: 860px) { .lf-archive { grid-template-columns: repeat(3, minmax(0,1fr)) !important; } .lf-c3 { grid-column: span 2 !important; } }
-  @media (max-width: 560px) { .lf-archive { grid-template-columns: repeat(2, minmax(0,1fr)) !important; } .lf-c3, .lf-c2 { grid-column: span 2 !important; } }
+  /* El row-gap se aplica ENTRE CADA track de grid-auto-rows (10px), no solo
+     entre piezas — un item con grid-row:span 40 arrastra 39 row-gaps internos.
+     Por eso el row-gap se queda chico (solo compensa el redondeo del +3 de
+     reserva de leyenda); el aire "editorial" entre piezas lo da el
+     margin-bottom de cada item (.lf-arch-item) y el column-gap, que sí es
+     generoso porque el span horizontal máximo es 3 columnas (no 40). */
+  .lf-archive { display: grid; grid-template-columns: repeat(var(--lf-cols), minmax(0,1fr)); grid-auto-rows: var(--lf-row-unit, 10px); grid-auto-flow: dense; gap: 2px 26px; }
+  @media (max-width: 1200px) { .lf-archive { grid-template-columns: repeat(4, minmax(0,1fr)) !important; gap: 2px 22px; } }
+  @media (max-width: 860px) { .lf-archive { grid-template-columns: repeat(3, minmax(0,1fr)) !important; gap: 2px 18px; } .lf-c3 { grid-column: span 2 !important; } }
+  @media (max-width: 560px) { .lf-archive { grid-template-columns: repeat(2, minmax(0,1fr)) !important; gap: 2px 14px; } .lf-c3, .lf-c2 { grid-column: span 2 !important; } }
+  .lf-arch-item { margin-bottom: clamp(16px, 2.6vw, 30px); }
   input:focus-visible, textarea:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid var(--lf-ac); outline-offset: 2px; }
 
   /* ── Sello estampado del Hero ─────────────────────────────────────────── */
-  .lf-stamp-wrap { position: absolute; top: 140px; left: 260px; width: 176px; height: 176px; z-index: 5; transform: rotate(-8deg); }
+  .lf-stamp-wrap { position: absolute; top: 140px; left: 260px; width: 212px; height: 212px; z-index: 5; transform: rotate(-8deg); }
   .lf-stamp { position: relative; width: 100%; height: 100%; opacity: 0; transform: scale(3.5); filter: blur(8px); transform-origin: 50% 50%; }
   .lf-stamp.stamped { animation: lfStampDrop .85s cubic-bezier(.175,.885,.32,1.275) forwards; }
   @keyframes lfStampDrop {
@@ -257,13 +264,14 @@
 
     <div class="lf-archive">
       <sc-for list="{{ pfItems }}" as="p" hint-placeholder-count="12">
-      <div class="hovg rv {{ p.spanClass }}" style="grid-row:{{ p.rowSpanCss }};display:flex;flex-direction:column;outline:2px solid var(--color-text)">
-        <button type="button" data-slot="{{ p.id }}" onClick="{{ zoom }}" style="position:relative;flex:1;min-height:0;padding:0;margin:0;border:none;background:var(--color-neutral-400);cursor:zoom-in;display:block;width:100%">
+      <div class="rv lf-arch-item {{ p.spanClass }}" style="grid-row:{{ p.rowSpanCss }};display:flex;flex-direction:column">
+        <button type="button" data-slot="{{ p.id }}" onClick="{{ zoom }}" class="hovg" style="position:relative;flex:1;min-height:0;padding:0;margin:0;border:none;background:var(--color-neutral-300);cursor:zoom-in;display:block;width:100%">
           {{ p.photo }}
+          <span class="hovm" style="position:absolute;top:10px;right:10px;background:rgba(20,19,18,.82);color:var(--color-bg);font:700 9px/1 var(--font-body);letter-spacing:.14em;padding:5px 7px;pointer-events:none">{{ p.frameNo }}</span>
         </button>
-        <div style="padding:8px 10px;background:var(--color-bg);border-top:1px solid var(--color-text)">
-          <div style="font:{{ p.catFont }};letter-spacing:.16em;text-transform:uppercase;color:var(--lf-ac)">{{ p.cat }}</div>
-          <div style="font:{{ p.titleFont }};letter-spacing:-.01em;text-transform:uppercase;color:var(--color-text);margin-top:2px">{{ p.title }}</div>
+        <div style="padding-top:11px">
+          <div style="font:{{ p.catFont }};letter-spacing:.14em;text-transform:uppercase;color:var(--color-neutral-600)">{{ p.cat }}</div>
+          <div style="font:{{ p.titleFont }};letter-spacing:-.015em;text-transform:uppercase;color:var(--color-text);margin-top:3px">{{ p.title }}</div>
         </div>
       </div>
       </sc-for>
@@ -722,7 +730,7 @@ class Component extends DCLogic {
     const cols = cs.gridTemplateColumns.split(' ').filter(Boolean).length || 1;
     const gap = parseFloat(cs.columnGap) || 6;
     const realColWidth = (grid.offsetWidth - (cols - 1) * gap) / cols;
-    const REF_COL_WIDTH = 261.7; // (1600 - 5*6) / 6 — el ancho de columna con el que se calibraron los rowSpan
+    const REF_COL_WIDTH = 245; // (1600 - 5*26) / 6 — el ancho de columna con el que se calibraron los rowSpan
     const unit = Math.max(4, 10 * (realColWidth / REF_COL_WIDTH));
     document.documentElement.style.setProperty('--lf-row-unit', unit.toFixed(2) + 'px');
   }
@@ -1202,9 +1210,10 @@ class Component extends DCLogic {
     };
 
     // ── datos del sitio público ─────────────────────────────────────────
-    const pfItems = (c.portfolio || []).map((it) => {
+    const pfItems = (c.portfolio || []).map((it, i) => {
       const sz = LF_PF_SIZE[it.size] || LF_PF_SIZE.small;
-      return Object.assign({}, it, sz, { rowSpanCss: 'span ' + (sz.rowSpan + 3), photo: this.heroPhoto(it.id, it.cat) });
+      const frameNo = 'N°' + String(i + 1).padStart(2, '0');
+      return Object.assign({}, it, sz, { rowSpanCss: 'span ' + (sz.rowSpan + 3), photo: this.heroPhoto(it.id, it.cat), frameNo });
     });
     const reelItems = (c.reels || []).map((it) => Object.assign({}, it, { photo: this.heroPhoto(it.id, it.label) }));
     const artistItems = (c.artists || []).map((it) => Object.assign({}, it, { photo: this.heroPhoto(it.id, it.name) }));
