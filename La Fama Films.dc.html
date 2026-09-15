@@ -35,7 +35,7 @@
   .rv.in { opacity: 1; transform: none; }
   .rvx { opacity: 0; transform: translateX(-28px); transition: opacity .9s cubic-bezier(.16,1,.3,1), transform .9s cubic-bezier(.16,1,.3,1); }
   .rvx.in { opacity: 1; transform: none; }
-  .lf-archive { display: grid; grid-template-columns: repeat(var(--lf-cols), minmax(0,1fr)); grid-auto-rows: 10px; grid-auto-flow: dense; gap: 6px; }
+  .lf-archive { display: grid; grid-template-columns: repeat(var(--lf-cols), minmax(0,1fr)); grid-auto-rows: var(--lf-row-unit, 10px); grid-auto-flow: dense; gap: 6px; }
   @media (max-width: 1200px) { .lf-archive { grid-template-columns: repeat(4, minmax(0,1fr)) !important; } }
   @media (max-width: 860px) { .lf-archive { grid-template-columns: repeat(3, minmax(0,1fr)) !important; } .lf-c3 { grid-column: span 2 !important; } }
   @media (max-width: 560px) { .lf-archive { grid-template-columns: repeat(2, minmax(0,1fr)) !important; } .lf-c3, .lf-c2 { grid-column: span 2 !important; } }
@@ -80,6 +80,12 @@
   }
   .lf-hero-impact { animation: lfHeroImpact .5s cubic-bezier(.36,.07,.19,.97) .42s both; }
   @media (prefers-reduced-motion: reduce) { .lf-stamp, .lf-stamp-flash, .lf-stamp-echo, .lf-hero-impact { animation: none !important; opacity: 1 !important; transform: none !important; filter: none !important; } }
+
+  /* Pestañas del Booking: en pantallas angostas "04 · CONTACTO" se salía
+     del borde de la tarjeta — con min-width:0 el flex item sí puede
+     encogerse, y el texto se recorta con "…" en vez de desbordar. */
+  .lf-booktab { flex: 1; min-width: 0; padding: 11px 12px; font: 600 10px/1 var(--font-body); letter-spacing: .18em; text-transform: uppercase; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  @media (max-width: 480px) { .lf-booktab { font-size: 8.5px; letter-spacing: .08em; padding: 10px 6px; } }
 
   /* ── Panel Admin (mismo archivo, vista alterna vía toggleMode) ────────── */
   .pa-shell { display: flex; min-height: 100vh; background: var(--color-surface); }
@@ -365,10 +371,10 @@
 
     <div style="border:2px solid var(--color-text);background:var(--color-bg)">
       <div style="display:flex;border-bottom:2px solid var(--color-text)">
-        <span style="flex:1;padding:11px 12px;font:600 10px/1 var(--font-body);letter-spacing:.18em;text-transform:uppercase;border-right:1px solid var(--color-neutral-400);background:{{ tab1 }}">01 · SERVICIO</span>
-        <span style="flex:1;padding:11px 12px;font:600 10px/1 var(--font-body);letter-spacing:.18em;text-transform:uppercase;border-right:1px solid var(--color-neutral-400);background:{{ tab2 }}">02 · LOGÍSTICA</span>
-        <span style="flex:1;padding:11px 12px;font:600 10px/1 var(--font-body);letter-spacing:.18em;text-transform:uppercase;border-right:1px solid var(--color-neutral-400);background:{{ tab3 }}">03 · PROYECTO</span>
-        <span style="flex:1;padding:11px 12px;font:600 10px/1 var(--font-body);letter-spacing:.18em;text-transform:uppercase;background:{{ tab4 }}">04 · CONTACTO</span>
+        <span class="lf-booktab" style="border-right:1px solid var(--color-neutral-400);background:{{ tab1 }}">01 · SERVICIO</span>
+        <span class="lf-booktab" style="border-right:1px solid var(--color-neutral-400);background:{{ tab2 }}">02 · LOGÍSTICA</span>
+        <span class="lf-booktab" style="border-right:1px solid var(--color-neutral-400);background:{{ tab3 }}">03 · PROYECTO</span>
+        <span class="lf-booktab" style="background:{{ tab4 }}">04 · CONTACTO</span>
       </div>
 
       <div style="padding:clamp(18px,3.5vw,40px)">
@@ -606,9 +612,9 @@ class Component extends DCLogic {
     this.applyVars(LFStore.getContent());
     if (location.hash === '#admin') this.state.mode = 'admin';
     requestAnimationFrame(() => requestAnimationFrame(() => this.setState({ stamped: true })));
-    requestAnimationFrame(() => requestAnimationFrame(() => this.positionStamp()));
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => this.positionStamp());
-    this.onResizeStamp = () => this.positionStamp();
+    requestAnimationFrame(() => requestAnimationFrame(() => { this.positionStamp(); this.syncArchiveRows(); }));
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { this.positionStamp(); this.syncArchiveRows(); });
+    this.onResizeStamp = () => { this.positionStamp(); this.syncArchiveRows(); };
     window.addEventListener('resize', this.onResizeStamp);
     this.onScroll = () => this.observe();
     window.addEventListener('scroll', this.onScroll, { passive: true });
@@ -651,32 +657,56 @@ class Component extends DCLogic {
     const container = wrap.offsetParent;
     if (!container) return;
     const walker = document.createTreeWalker(h1, NodeFilter.SHOW_TEXT);
-    let lastText = null, node;
-    while ((node = walker.nextNode())) { if (node.textContent.trim()) lastText = node; }
-    let textRect;
-    if (lastText) {
-      const range = document.createRange();
-      range.selectNodeContents(lastText);
-      textRect = range.getBoundingClientRect();
-    } else {
-      textRect = h1.getBoundingClientRect();
+    let firstText = null, lastText = null, node;
+    while ((node = walker.nextNode())) {
+      if (!node.textContent.trim()) continue;
+      if (!firstText) firstText = node;
+      lastText = node;
     }
+    const rectOf = (textNode) => {
+      const range = document.createRange();
+      range.selectNodeContents(textNode);
+      return range.getBoundingClientRect();
+    };
+    const line2Rect = lastText ? rectOf(lastText) : h1.getBoundingClientRect();
+    const line1Rect = (firstText && firstText !== lastText) ? rectOf(firstText) : null;
     const contRect = container.getBoundingClientRect();
     const size = wrap.offsetWidth || 176;
-    const top = (textRect.top - contRect.top) + textRect.height / 2 - size / 2;
-    // No lo pegues al texto — flota centrado en el espacio vacío que queda
-    // a la derecha de "FILMS" hasta el borde del contenedor.
-    const textRight = (textRect.left - contRect.left) + textRect.width;
-    const remaining = contRect.width - textRight;
-    let left = textRight + Math.max(10, (remaining - size) / 2);
+    // Centrado verticalmente en la costura entre "LA FAMA" y "FILMS" (el
+    // punto medio entre el final de la primera línea y el inicio de la
+    // segunda) — no en el medio de "FILMS" sola.
+    const seamY = line1Rect ? (line1Rect.bottom + line2Rect.top) / 2 : (line2Rect.top + line2Rect.height / 2);
+    const top = (seamY - contRect.top) - size / 2;
+    // Pegado cerca del texto (no flotando lejos en el espacio vacío).
+    const textRight = (line2Rect.left - contRect.left) + line2Rect.width;
+    let left = textRight + 14;
     // En pantallas medianas/angostas el título casi llena el contenedor —
     // no dejes que el sello se salga por la derecha, pégalo al borde.
     const maxLeft = contRect.width - size - 4;
     if (left > maxLeft) left = maxLeft;
-    // Ni que se meta debajo del texto si el espacio es muy justo.
     if (left < textRight + 4) left = textRight + 4;
     wrap.style.top = Math.max(0, top) + 'px';
     wrap.style.left = Math.max(0, left) + 'px';
+  }
+
+  // Las fotos de "El Archivo" usan grid-row:span N con un alto de fila fijo
+  // (grid-auto-rows) para lograr el efecto Pinterest — ese valor se calibró
+  // para columnas de ~262px (escritorio ancho). En pantallas angostas las
+  // columnas son mucho más finas, pero el alto de fila se quedaba igual de
+  // grande, así que cada foto salía desproporcionadamente alta (casi una
+  // pantalla completa en celular). Acá medimos el ancho REAL de columna y
+  // escalamos --lf-row-unit en la misma proporción, para que la relación
+  // alto/ancho de cada foto se mantenga consistente en cualquier pantalla.
+  syncArchiveRows() {
+    const grid = document.querySelector('.lf-archive');
+    if (!grid || !grid.offsetWidth) return;
+    const cs = getComputedStyle(grid);
+    const cols = cs.gridTemplateColumns.split(' ').filter(Boolean).length || 1;
+    const gap = parseFloat(cs.columnGap) || 6;
+    const realColWidth = (grid.offsetWidth - (cols - 1) * gap) / cols;
+    const REF_COL_WIDTH = 261.7; // (1600 - 5*6) / 6 — el ancho de columna con el que se calibraron los rowSpan
+    const unit = Math.max(4, 10 * (realColWidth / REF_COL_WIDTH));
+    document.documentElement.style.setProperty('--lf-row-unit', unit.toFixed(2) + 'px');
   }
 
   observe() {
@@ -695,6 +725,7 @@ class Component extends DCLogic {
     this.applyVars(LFStore.getContent());
     this.observe();
     this.positionStamp();
+    this.syncArchiveRows();
     if (this.syncNav) this.syncNav();
   }
 
