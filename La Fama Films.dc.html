@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -21,6 +21,19 @@
 <helmet>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LA FAMA FILMS — Visuals For The Culture · NYC / NJ / RD</title>
+<meta name="description" content="Videoclips, fotografía y contenido para artistas urbanos. La calle es el set: rodamos en Nueva York, New Jersey y República Dominicana, y entregamos como se ve en la pantalla del teléfono.">
+<link rel="canonical" href="https://lozan0-is.github.io/lafama-films-web/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="La Fama Films">
+<meta property="og:title" content="LA FAMA FILMS — Visuals For The Culture">
+<meta property="og:description" content="Videoclips, fotografía y contenido para artistas urbanos. La calle es el set: rodamos en Nueva York, New Jersey y República Dominicana.">
+<meta property="og:image" content="https://lozan0-is.github.io/lafama-films-web/sello-lafama.webp">
+<meta property="og:url" content="https://lozan0-is.github.io/lafama-films-web/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="LA FAMA FILMS — Visuals For The Culture">
+<meta name="twitter:description" content="Videoclips, fotografía y contenido para artistas urbanos. La calle es el set.">
+<meta name="twitter:image" content="https://lozan0-is.github.io/lafama-films-web/sello-lafama.webp">
+<link rel="icon" type="image/webp" href="sello-lafama.webp">
 <link rel="stylesheet" href="_ds/modernist-1feebbc2-e15e-41ff-baf4-84409bd79914/styles.css">
 <script src="_ds/modernist-1feebbc2-e15e-41ff-baf4-84409bd79914/_ds_bundle.js"></script>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -47,6 +60,8 @@
   a:hover { color: var(--lf-ac); }
   @keyframes lf-mq { to { transform: translateX(-50%); } }
   @keyframes lf-rec { 50% { opacity: .2; } }
+  .lf-marquee-track { animation: lf-mq 26s linear infinite; }
+  .lf-rec-dot { animation: lf-rec 1.4s infinite; }
   .hovg { overflow: hidden; }
   .hovg img { transition: transform .6s cubic-bezier(.16,1,.3,1); }
   .hovg:hover img { transform: scale(1.05); }
@@ -115,7 +130,14 @@
     100% { transform: translate(0,0) rotate(0deg); }
   }
   .lf-hero-impact { animation: lfHeroImpact .5s cubic-bezier(.36,.07,.19,.97) .42s both; }
-  @media (prefers-reduced-motion: reduce) { .lf-stamp, .lf-stamp-flash, .lf-stamp-echo, .lf-hero-impact { animation: none !important; opacity: 1 !important; transform: none !important; filter: none !important; } }
+  @media (prefers-reduced-motion: reduce) {
+    .lf-stamp, .lf-stamp-flash, .lf-stamp-echo, .lf-hero-impact { animation: none !important; opacity: 1 !important; transform: none !important; filter: none !important; }
+    .rv, .rvx { transition: none !important; opacity: 1 !important; transform: none !important; }
+    .hovg img { transition: none !important; }
+    .hovg:hover img { transform: none !important; }
+    .lf-marquee-track, .lf-rec-dot { animation: none !important; }
+    .lf-stamp-wrap { transition: none !important; }
+  }
 
   /* Pestañas del Booking: en pantallas angostas "04 · CONTACTO" se salía
      del borde de la tarjeta — con min-width:0 el flex item sí puede
@@ -150,7 +172,7 @@
 
 <nav style="position:fixed;top:0;left:0;width:100%;z-index:1000;background:var(--color-bg);border-bottom:2px solid var(--color-text);display:flex;align-items:stretch;justify-content:space-between">
   <a href="#top" style="display:flex;align-items:center;gap:10px;padding:14px clamp(16px,3vw,28px);font:900 17px/1 var(--font-heading);letter-spacing:-.02em;text-transform:uppercase;border-right:2px solid var(--color-text)">
-    <span style="width:9px;height:9px;background:var(--lf-ac);animation:lf-rec 1.4s infinite"></span>LA FAMA FILMS
+    <span class="lf-rec-dot" style="width:9px;height:9px;background:var(--lf-ac)"></span>LA FAMA FILMS
   </a>
   <div style="display:flex;align-items:stretch;margin-left:auto">
     <div style="display:none;align-items:stretch" data-nav-desktop="1">
@@ -181,7 +203,7 @@
   <div style="max-width:1600px;margin:0 auto;padding:0 clamp(16px,3vw,40px);position:relative">
     <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:clamp(16px,2.5vw,28px)">
       <span style="display:inline-flex;align-items:center;gap:7px;background:var(--lf-ac);color:#fff;font:900 11px/1 var(--font-heading);letter-spacing:.16em;text-transform:uppercase;padding:7px 10px;transform:rotate(-0.6deg)">
-        <span style="width:7px;height:7px;background:#fff;border-radius:50%;animation:lf-rec 1.4s infinite"></span>{{ c.hero.tag }}
+        <span class="lf-rec-dot" style="width:7px;height:7px;background:#fff;border-radius:50%"></span>{{ c.hero.tag }}
       </span>
       <span style="font:600 11px/1 'Archivo Narrow',var(--font-body);letter-spacing:.24em;text-transform:uppercase;color:var(--color-neutral-700)">{{ c.hero.locations }}</span>
     </div>
@@ -239,7 +261,7 @@
 </section>
 
 <div style="overflow:hidden;white-space:nowrap;background:var(--lf-ac);color:#fff;padding:9px 0;border-bottom:2px solid var(--color-text)">
-  <span style="display:inline-block;animation:lf-mq 26s linear infinite;font:900 17px/1 var(--font-heading);letter-spacing:.06em;text-transform:uppercase">MUSIC VIDEOS ✦ REELS ✦ ARTIST VISUALS ✦ LIVE ✦ BACKSTAGE ✦ STREET PHOTOGRAPHY ✦ SANTO DOMINGO ✦ SANTIAGO ✦ WASHINGTON HEIGHTS ✦ THE BRONX ✦ PATERSON ✦ MUSIC VIDEOS ✦ REELS ✦ ARTIST VISUALS ✦ LIVE ✦ BACKSTAGE ✦ STREET PHOTOGRAPHY ✦ SANTO DOMINGO ✦ SANTIAGO ✦ WASHINGTON HEIGHTS ✦ THE BRONX ✦ PATERSON ✦ </span>
+  <span class="lf-marquee-track" style="display:inline-block;font:900 17px/1 var(--font-heading);letter-spacing:.06em;text-transform:uppercase">MUSIC VIDEOS ✦ REELS ✦ ARTIST VISUALS ✦ LIVE ✦ BACKSTAGE ✦ STREET PHOTOGRAPHY ✦ SANTO DOMINGO ✦ SANTIAGO ✦ WASHINGTON HEIGHTS ✦ THE BRONX ✦ PATERSON ✦ MUSIC VIDEOS ✦ REELS ✦ ARTIST VISUALS ✦ LIVE ✦ BACKSTAGE ✦ STREET PHOTOGRAPHY ✦ SANTO DOMINGO ✦ SANTIAGO ✦ WASHINGTON HEIGHTS ✦ THE BRONX ✦ PATERSON ✦ </span>
 </div>
 
 <section data-screen-label="Sobre nosotros" style="border-bottom:2px solid var(--color-text);background:var(--color-surface)">
@@ -319,7 +341,7 @@
           <div style="font:600 9px/1 var(--font-body);letter-spacing:.2em;text-transform:uppercase;color:var(--color-accent-400)">{{ rl.tagLabel }}</div>
           <div style="font:900 18px/0.95 var(--font-heading);text-transform:uppercase;color:var(--color-bg)">{{ rl.label }}</div>
         </div>
-        <button type="button" data-reel-id="{{ rl.id }}" onClick="{{ play }}" style="position:absolute;top:10px;right:10px;background:var(--lf-ac);color:#fff;border:none;font:900 10px/1 var(--font-heading);letter-spacing:.14em;padding:7px 9px;cursor:pointer" style-hover="background:var(--color-text)">{{ rl.playLabel }}</button>
+        <button type="button" data-reel-id="{{ rl.id }}" onClick="{{ play }}" style="position:absolute;top:10px;right:10px;background:var(--lf-ac);color:#fff;border:none;font:900 10px/1 var(--font-heading);letter-spacing:.14em;padding:11px 12px;cursor:pointer" style-hover="background:var(--color-text)">{{ rl.playLabel }}</button>
       </div>
       </sc-for>
     </div>
@@ -343,7 +365,7 @@
         <div style="padding:12px;border-top:2px solid var(--color-neutral-800)">
           <div style="font:900 22px/0.95 var(--font-heading);text-transform:uppercase;letter-spacing:-.02em">{{ ar.name }}</div>
           <div style="font:600 10px/1.4 var(--font-body);letter-spacing:.18em;text-transform:uppercase;color:var(--color-neutral-400);margin-top:6px">{{ ar.role }}</div>
-          <a href="{{ ar.link }}" style="display:inline-block;margin-top:10px;color:var(--color-accent-400);font:900 10px/1 var(--font-heading);letter-spacing:.16em">VER TRABAJO →</a>
+          <a href="{{ ar.link }}" style="display:inline-block;margin-top:6px;padding:10px 0;color:var(--color-accent-400);font:900 10px/1 var(--font-heading);letter-spacing:.16em">VER TRABAJO →</a>
         </div>
       </div>
       </sc-for>
@@ -364,7 +386,7 @@
         <p style="margin:0;font:400 14px/1.55 var(--font-body);color:var(--color-neutral-800)">{{ sv.desc }}</p>
         <div style="display:flex;flex-direction:column;align-items:flex-start;gap:6px">
           <sc-if value="{{ sv.showPrice }}" hint-placeholder-val="{{ true }}"><span style="font:900 13px/1 var(--font-heading);letter-spacing:.06em;color:var(--color-accent-700)">{{ sv.priceLabel }}</span></sc-if>
-          <a href="#booking" data-svc="{{ sv.svc }}" onClick="{{ pickService }}" style="font:900 11px/1 var(--font-heading);letter-spacing:.16em;color:var(--lf-ac)">COTIZAR →</a>
+          <a href="#booking" data-svc="{{ sv.svc }}" onClick="{{ pickService }}" style="display:inline-block;padding:10px 0;font:900 11px/1 var(--font-heading);letter-spacing:.16em;color:var(--lf-ac)">COTIZAR →</a>
         </div>
       </div>
       </sc-for>
@@ -834,10 +856,19 @@ class Component extends DCLogic {
 
   // Placeholder de estudio: sin foto guardada, muestra un rótulo discreto
   // en vez de romper el layout. Con foto, un <img> normal a pantalla completa.
-  heroPhoto(id, label) {
+  // loading="lazy" por defecto — pero NO para las fotos del Hero (heroPh1-5),
+  // que están arriba del pliegue y son justo lo que determina el LCP; esas
+  // se piden con eager:true para que carguen de inmediato.
+  heroPhoto(id, label, opts) {
+    const eager = opts && opts.eager;
     const src = LFStore.getPhoto(id);
     if (src) {
-      return React.createElement('img', { src, alt: '', style: { width: '100%', height: '100%', objectFit: 'cover', display: 'block' } });
+      return React.createElement('img', {
+        src, alt: label || '', decoding: 'async',
+        loading: eager ? 'eager' : 'lazy',
+        fetchPriority: eager ? 'high' : undefined,
+        style: { width: '100%', height: '100%', objectFit: 'cover', display: 'block' }
+      });
     }
     return React.createElement('div', {
       style: {
@@ -1404,11 +1435,11 @@ class Component extends DCLogic {
       // El motor de plantillas {{ }} solo resuelve rutas simples (a.b.c) —
       // nada de llamadas a función ni "+" — por eso cada foto y cada href
       // armado se precalculan aquí como un valor plano.
-      heroPh1: this.heroPhoto('lf-hero-1', 'FRAME 01'),
-      heroPh2: this.heroPhoto('lf-hero-2', 'FRAME 02'),
-      heroPh3: this.heroPhoto('lf-hero-3', 'FRAME 03'),
-      heroPh4: this.heroPhoto('lf-hero-4', 'FRAME 04'),
-      heroPh5: this.heroPhoto('lf-hero-5', 'FRAME 05'),
+      heroPh1: this.heroPhoto('lf-hero-1', 'FRAME 01', { eager: true }),
+      heroPh2: this.heroPhoto('lf-hero-2', 'FRAME 02', { eager: true }),
+      heroPh3: this.heroPhoto('lf-hero-3', 'FRAME 03', { eager: true }),
+      heroPh4: this.heroPhoto('lf-hero-4', 'FRAME 04', { eager: true }),
+      heroPh5: this.heroPhoto('lf-hero-5', 'FRAME 05', { eager: true }),
       mosPh1: this.heroPhoto('lf-mos-1', 'vertical'),
       mosPh2: this.heroPhoto('lf-mos-2', 'foto'),
       mosPh3: this.heroPhoto('lf-mos-3', 'foto'),
