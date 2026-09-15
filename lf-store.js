@@ -10,6 +10,7 @@
   var CONTENT_KEY = PREFIX + 'content';
   var LEADS_KEY = PREFIX + 'leads';
   var PHOTO_PREFIX = PREFIX + 'photo_';
+  var UPDATED_KEY = PREFIX + 'updatedAt';
 
   // ── Contenido por defecto — coincide 1:1 con el texto ya escrito en la página
   // pública. Si el admin no ha tocado nada, el sitio se ve exactamente igual.
@@ -80,7 +81,10 @@
       { id: 's4', svc: 'Evento', title: 'EVENTOS · LIVE & BACKSTAGE', desc: 'Conciertos, club nights, giras y cobertura de backstage en NYC, NJ y RD.', price: '' },
       { id: 's5', svc: 'Campaña', title: 'CAMPAÑAS DE MARCA', desc: 'Marcas que quieren hablarle a la cultura urbana latina sin sonar falso.', price: '' },
       { id: 's6', svc: 'Edición de video', title: 'EDICIÓN DE VIDEO', desc: 'Edición para el material que ya tienes grabado: videoclips, reels, eventos o footage propio. Color, ritmo y entrega lista para la plataforma.', price: '' }
-    ]
+    ],
+    // Qué links del nav público están ocultos (por key). "booking" nunca se
+    // guarda acá — el CTA de conversión no se puede ocultar desde el panel.
+    navigation: { hidden: [] }
   };
 
   function isPlainObject(v) {
@@ -122,8 +126,19 @@
     // fusionado para simplificar (el tamaño es pequeño, es solo texto).
     try {
       localStorage.setItem(CONTENT_KEY, JSON.stringify(merged));
+      localStorage.setItem(UPDATED_KEY, String(Date.now()));
     } catch (e) {}
     return merged;
+  }
+
+  // Sello de tiempo de la última edición real (para el dashboard). No existe
+  // un log de actividad — esto es lo único que se puede saber honestamente:
+  // cuándo fue la última vez que se guardó contenido.
+  function getLastUpdated() {
+    try {
+      var v = localStorage.getItem(UPDATED_KEY);
+      return v ? parseInt(v, 10) : null;
+    } catch (e) { return null; }
   }
 
   function resetContent() {
@@ -140,6 +155,24 @@
   }
   function removePhoto(id) {
     try { localStorage.removeItem(PHOTO_PREFIX + id); } catch (e) {}
+  }
+  // Enumera TODAS las fotos guardadas (cualquier sección) — la Media Library
+  // no es un catálogo separado, es un inventario real de lo que ya vive en
+  // localStorage bajo lf_photo_*. approxBytes es el tamaño del dataURL en sí
+  // (base64 ~33% más grande que el archivo original, pero es lo único medible
+  // sin volver a decodificar la imagen).
+  function listPhotos() {
+    var out = [];
+    try {
+      for (var i = 0; i < localStorage.length; i++) {
+        var k = localStorage.key(i);
+        if (k && k.indexOf(PHOTO_PREFIX) === 0) {
+          var dataUrl = localStorage.getItem(k) || '';
+          out.push({ id: k.slice(PHOTO_PREFIX.length), dataUrl: dataUrl, approxBytes: dataUrl.length });
+        }
+      }
+    } catch (e) {}
+    return out;
   }
 
   // ── Videos (IndexedDB) ──────────────────────────────────────────────────
@@ -190,6 +223,29 @@
       });
     });
   }
+  // Lista los ids de video guardados, con su tamaño real en bytes (Blob.size
+  // — a diferencia de las fotos, acá sí es el tamaño exacto del archivo).
+  function listVideos() {
+    return openVideoDb().then(function (db) {
+      if (!db) return [];
+      return new Promise(function (resolve) {
+        try {
+          var tx = db.transaction(VIDEO_STORE, 'readonly');
+          var store = tx.objectStore(VIDEO_STORE);
+          var keysReq = store.getAllKeys();
+          var valuesReq = store.getAll();
+          var keys, values;
+          keysReq.onsuccess = function () { keys = keysReq.result; done(); };
+          valuesReq.onsuccess = function () { values = valuesReq.result; done(); };
+          tx.onerror = function () { resolve([]); };
+          function done() {
+            if (!keys || !values) return;
+            resolve(keys.map(function (id, i) { return { id: id, bytes: values[i] ? values[i].size : 0 }; }));
+          }
+        } catch (e) { resolve([]); }
+      });
+    });
+  }
   function removeVideo(id) {
     return openVideoDb().then(function (db) {
       if (!db) return false;
@@ -232,7 +288,7 @@
   }
   function addLead(lead) {
     var leads = getLeads();
-    leads.unshift(Object.assign({ id: 'lead_' + Date.now(), ts: Date.now(), estado: 'Nuevo' }, lead));
+    leads.unshift(Object.assign({ id: 'lead_' + Date.now(), ts: Date.now(), estado: 'NEW' }, lead));
     try { localStorage.setItem(LEADS_KEY, JSON.stringify(leads)); } catch (e) {}
     return leads;
   }
@@ -281,6 +337,11 @@
       }
       toRemove.forEach(function (k) { localStorage.removeItem(k); });
     } catch (e) {}
+    // Los videos viven en IndexedDB, no en localStorage — "restablecer todo"
+    // se quedaba corto acá desde que se agregó autoplay de reels.
+    listVideos().then(function (vids) {
+      vids.forEach(function (v) { removeVideo(v.id); });
+    });
   }
 
   global.LFStore = {
@@ -291,10 +352,13 @@
     getPhoto: getPhoto,
     savePhoto: savePhoto,
     removePhoto: removePhoto,
+    listPhotos: listPhotos,
     readAndResizeImage: readAndResizeImage,
     saveVideo: saveVideo,
     getVideo: getVideo,
     removeVideo: removeVideo,
+    listVideos: listVideos,
+    getLastUpdated: getLastUpdated,
     getLeads: getLeads,
     addLead: addLead,
     setLeads: setLeads,

@@ -151,24 +151,66 @@
   .lf-booktab { flex: 1; min-width: 0; padding: 11px 12px; font: 600 10px/1 var(--font-body); letter-spacing: .18em; text-transform: uppercase; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
   @media (max-width: 480px) { .lf-booktab { font-size: 8.5px; letter-spacing: .08em; padding: 10px 6px; } }
 
-  /* ── Panel Admin (mismo archivo, vista alterna vía toggleMode) ────────── */
-  .pa-shell { display: flex; min-height: 100vh; background: var(--color-surface); }
-  .pa-sidebar { width: 236px; flex: 0 0 236px; border-right: 2px solid var(--color-text); background: var(--color-bg); display: flex; flex-direction: column; }
+  /* ── Panel Admin (mismo archivo, vista alterna vía toggleMode) ───────────
+     Tema oscuro propio del admin: en vez de tocar cada estilo inline de los
+     editores (que usan var(--color-bg)/var(--color-text)/etc., los mismos
+     tokens del sitio público), se redefinen esos tokens SOLO dentro de
+     .pa-shell. La cascada de CSS custom properties hace que todo lo que ya
+     existe (Field, S.input, S.card...) se vea oscuro automáticamente, sin
+     tocar una sola línea del JS de cada editor. --lf-ac (el rojo de marca)
+     no se toca — así el admin comparte ADN visual con el sitio público. */
+  .pa-shell {
+    --color-bg: #131211;
+    --color-surface: #1c1a19;
+    --color-text: #f4f2f0;
+    --color-divider: color-mix(in srgb, #f4f2f0 14%, transparent);
+    --color-neutral-100: #1c1a19;
+    --color-neutral-200: #242220;
+    --color-neutral-300: #332f2d;
+    --color-neutral-400: #4c4744;
+    --color-neutral-500: #6e6a65;
+    --color-neutral-600: #928d87;
+    --color-neutral-700: #b2ada7;
+    --color-neutral-800: #d2cdc7;
+    --color-neutral-900: #f4f2f0;
+    --pa-danger: #ff6b57;
+    --pa-online: #35d07f;
+    display: flex; min-height: 100vh; background: var(--color-bg); color: var(--color-text);
+  }
+  .pa-sidebar { width: 250px; flex: 0 0 250px; position: sticky; top: 0; align-self: flex-start; height: 100vh; overflow-y: auto; border-right: 1px solid var(--color-divider); background: var(--color-surface); display: flex; flex-direction: column; }
   .pa-main { flex: 1 1 0; min-width: 0; }
-  .pa-topbar { border-bottom: 2px solid var(--color-text); background: var(--color-bg); padding: 16px clamp(16px,3vw,32px); display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
-  .pa-chipbar { display: none; }
+  .pa-brand { padding: 20px 18px; border-bottom: 1px solid var(--color-divider); }
+  .pa-brand-name { font: 900 16px/1 var(--font-heading); letter-spacing: -.02em; text-transform: uppercase; color: var(--color-text); }
+  .pa-brand-sub { font: 700 9px/1.4 var(--font-body); letter-spacing: .18em; text-transform: uppercase; color: var(--color-neutral-600); margin-top: 5px; }
+  .pa-navgroup { padding: 16px 16px 4px; font: 700 9px/1 var(--font-body); letter-spacing: .18em; text-transform: uppercase; color: var(--color-neutral-500); }
+  .pa-navitem { display: flex; align-items: center; justify-content: space-between; gap: 8px; width: 100%; text-align: left; background: none; border: none; border-left: 2px solid transparent; padding: 10px 16px; font: 700 12px/1 var(--font-body); letter-spacing: .03em; color: var(--color-neutral-600); cursor: pointer; }
+  .pa-navitem:hover { color: var(--color-text); background: var(--color-neutral-200); }
+  .pa-navitem.active { border-left-color: var(--lf-ac); color: var(--color-text); background: var(--color-neutral-200); font-weight: 900; }
+  .pa-navbadge { background: var(--lf-ac); color: #fff; font: 700 9px/1 var(--font-body); padding: 2px 6px; border-radius: 8px; }
+  .pa-sidefoot { padding: 14px; border-top: 1px solid var(--color-divider); margin-top: auto; }
+  .pa-backbtn { display: block; width: 100%; text-align: center; padding: 11px; border: 1px solid var(--color-divider); background: none; font: 900 11px/1 var(--font-heading); letter-spacing: .08em; text-transform: uppercase; cursor: pointer; color: var(--color-text); }
+  .pa-backbtn:hover { background: var(--lf-ac); border-color: var(--lf-ac); color: #fff; }
+  .pa-topbar { border-bottom: 1px solid var(--color-divider); background: var(--color-bg); padding: 16px clamp(16px,3vw,32px); display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .pa-topbar-title { font: 900 20px/1 var(--font-heading); letter-spacing: -.02em; text-transform: uppercase; color: var(--color-text); }
+  .pa-topbar-right { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .pa-status { display: inline-flex; align-items: center; gap: 6px; font: 700 10px/1 var(--font-body); letter-spacing: .14em; text-transform: uppercase; color: var(--color-neutral-600); }
+  .pa-status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--pa-online); }
+  .pa-toplink { background: none; border: none; padding: 0; font: 700 11px/1 var(--font-body); letter-spacing: .08em; text-transform: uppercase; color: var(--color-neutral-600); white-space: nowrap; cursor: pointer; }
+  .pa-toplink:hover { color: var(--lf-ac); }
+  .pa-pill { border: 1px solid var(--color-divider); padding: 5px 10px; font: 700 10px/1 var(--font-body); letter-spacing: .1em; text-transform: uppercase; color: var(--color-neutral-600); }
   .pa-content { padding: clamp(16px,3vw,32px); max-width: 1100px; }
-  .pa-navitem { display: block; width: 100%; text-align: left; background: none; border: none; border-left: 3px solid transparent; padding: 12px 18px; font: 700 12px/1 var(--font-body); letter-spacing: .1em; text-transform: uppercase; color: var(--color-neutral-700); cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-  .pa-navitem.active { border-left-color: var(--lf-ac); color: var(--color-text); background: var(--color-surface); font-weight: 900; }
-  .pa-chip { flex: 0 0 auto; padding: 9px 13px; border-radius: 20px; border: 1px solid var(--color-divider); background: var(--color-bg); font: 700 11px/1 var(--font-body); letter-spacing: .08em; text-transform: uppercase; cursor: pointer; white-space: nowrap; }
-  .pa-chip.active { background: var(--color-text); color: var(--color-bg); border-color: var(--color-text); }
-  .pa-backbtn { display: block; width: 100%; text-align: center; padding: 10px; border: 2px solid var(--color-text); background: none; font: 900 11px/1 var(--font-heading); letter-spacing: .08em; text-transform: uppercase; cursor: pointer; color: var(--color-text); }
-  .pa-backbtn:hover { background: var(--color-text); color: var(--color-bg); }
-  .pa-backlink { background: none; border: none; padding: 0; font: 700 11px/1 var(--font-body); letter-spacing: .08em; text-transform: uppercase; color: var(--lf-ac); white-space: nowrap; cursor: pointer; }
+  .pa-mobilebar { display: none; }
+  .pa-drawer-backdrop { display: none; }
+  .pa-toast { position: fixed; bottom: 18px; right: 18px; z-index: 50; background: var(--color-text); color: var(--color-bg); font: 900 11px/1 var(--font-heading); letter-spacing: .1em; text-transform: uppercase; padding: 13px 18px; display: flex; align-items: center; gap: 8px; box-shadow: 0 10px 28px rgba(0,0,0,.45); transition: opacity .25s ease, transform .25s ease; }
+  .pa-toast.hide { opacity: 0; transform: translateY(8px); pointer-events: none; }
   @media (max-width: 900px) {
     .pa-sidebar { display: none; }
-    .pa-chipbar { display: flex; gap: 8px; overflow-x: auto; padding: 10px clamp(16px,3vw,32px); border-bottom: 2px solid var(--color-text); background: var(--color-bg); scrollbar-width: none; }
-    .pa-chipbar::-webkit-scrollbar { display: none; }
+    .pa-topbar { display: none; }
+    .pa-mobilebar { display: flex; align-items: center; justify-content: space-between; padding: 12px clamp(16px,3vw,32px); border-bottom: 1px solid var(--color-divider); background: var(--color-surface); position: sticky; top: 0; z-index: 20; }
+    .pa-mobilebar-name { font: 900 14px/1 var(--font-heading); letter-spacing: -.02em; text-transform: uppercase; }
+    .pa-mobilebar-btn { background: none; border: 1px solid var(--color-divider); color: var(--color-text); padding: 9px 14px; font: 900 11px/1 var(--font-heading); letter-spacing: .08em; text-transform: uppercase; cursor: pointer; }
+    .pa-drawer-backdrop { display: block; position: fixed; inset: 0; z-index: 30; background: rgba(0,0,0,.6); }
+    .pa-drawer { position: fixed; top: 0; left: 0; bottom: 0; width: min(84vw, 300px); z-index: 31; background: var(--color-surface); display: flex; flex-direction: column; overflow-y: auto; box-shadow: 8px 0 30px rgba(0,0,0,.5); }
   }
 </style>
 </helmet>
@@ -182,11 +224,11 @@
   </a>
   <div style="display:flex;align-items:stretch;margin-left:auto">
     <div style="display:none;align-items:stretch" data-nav-desktop="1">
-      <a href="#work" style="display:flex;align-items:center;padding:0 18px;font:700 12px/1 'Archivo Narrow',var(--font-body);letter-spacing:.2em;text-transform:uppercase;border-left:1px solid var(--color-neutral-400)">WORK</a>
-      <a href="#motion" style="display:flex;align-items:center;padding:0 18px;font:700 12px/1 'Archivo Narrow',var(--font-body);letter-spacing:.2em;text-transform:uppercase;border-left:1px solid var(--color-neutral-400)">MOTION</a>
-      <a href="#artists" style="display:flex;align-items:center;padding:0 18px;font:700 12px/1 'Archivo Narrow',var(--font-body);letter-spacing:.2em;text-transform:uppercase;border-left:1px solid var(--color-neutral-400)">ARTISTS</a>
-      <a href="#services" style="display:flex;align-items:center;padding:0 18px;font:700 12px/1 'Archivo Narrow',var(--font-body);letter-spacing:.2em;text-transform:uppercase;border-left:1px solid var(--color-neutral-400)">SERVICES</a>
-      <a href="#photographer" style="display:flex;align-items:center;padding:0 18px;font:700 12px/1 'Archivo Narrow',var(--font-body);letter-spacing:.2em;text-transform:uppercase;border-left:1px solid var(--color-neutral-400)">ABOUT</a>
+      <sc-if value="{{ navShowWork }}" hint-placeholder-val="{{ true }}"><a href="#work" style="display:flex;align-items:center;padding:0 18px;font:700 12px/1 'Archivo Narrow',var(--font-body);letter-spacing:.2em;text-transform:uppercase;border-left:1px solid var(--color-neutral-400)">WORK</a></sc-if>
+      <sc-if value="{{ navShowMotion }}" hint-placeholder-val="{{ true }}"><a href="#motion" style="display:flex;align-items:center;padding:0 18px;font:700 12px/1 'Archivo Narrow',var(--font-body);letter-spacing:.2em;text-transform:uppercase;border-left:1px solid var(--color-neutral-400)">MOTION</a></sc-if>
+      <sc-if value="{{ navShowArtists }}" hint-placeholder-val="{{ true }}"><a href="#artists" style="display:flex;align-items:center;padding:0 18px;font:700 12px/1 'Archivo Narrow',var(--font-body);letter-spacing:.2em;text-transform:uppercase;border-left:1px solid var(--color-neutral-400)">ARTISTS</a></sc-if>
+      <sc-if value="{{ navShowServices }}" hint-placeholder-val="{{ true }}"><a href="#services" style="display:flex;align-items:center;padding:0 18px;font:700 12px/1 'Archivo Narrow',var(--font-body);letter-spacing:.2em;text-transform:uppercase;border-left:1px solid var(--color-neutral-400)">SERVICES</a></sc-if>
+      <sc-if value="{{ navShowPhotographer }}" hint-placeholder-val="{{ true }}"><a href="#photographer" style="display:flex;align-items:center;padding:0 18px;font:700 12px/1 'Archivo Narrow',var(--font-body);letter-spacing:.2em;text-transform:uppercase;border-left:1px solid var(--color-neutral-400)">ABOUT</a></sc-if>
     </div>
     <a href="#booking" style="display:flex;align-items:center;padding:0 clamp(14px,2.5vw,24px);background:var(--lf-ac);color:#fff;font:900 13px/1 var(--font-heading);letter-spacing:.06em;text-transform:uppercase;border-left:2px solid var(--color-text)" style-hover="background:var(--color-text)">BOOK A PROJECT</a>
     <button type="button" onClick="{{ toggleMenu }}" aria-label="Menú" style="padding:0 16px;background:var(--color-text);color:var(--color-bg);border:none;cursor:pointer;font:900 13px/1 var(--font-heading);letter-spacing:.1em" data-nav-burger="1">MENÚ</button>
@@ -196,11 +238,11 @@
 <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
   <div style="position:fixed;inset:0;z-index:1200;background:var(--color-text);display:flex;flex-direction:column;justify-content:center;gap:2px;padding:clamp(20px,6vw,64px)">
     <button type="button" onClick="{{ toggleMenu }}" style="position:absolute;top:16px;right:16px;background:none;border:2px solid var(--color-bg);color:var(--color-bg);font:900 14px/1 var(--font-heading);padding:10px 14px;cursor:pointer">CERRAR ✕</button>
-    <a href="#work" onClick="{{ toggleMenu }}" style="color:var(--color-bg);font:900 clamp(34px,10vw,72px)/0.92 var(--font-heading);text-transform:uppercase;letter-spacing:-.03em">WORK</a>
-    <a href="#motion" onClick="{{ toggleMenu }}" style="color:var(--color-bg);font:900 clamp(34px,10vw,72px)/0.92 var(--font-heading);text-transform:uppercase;letter-spacing:-.03em">MOTION</a>
-    <a href="#artists" onClick="{{ toggleMenu }}" style="color:var(--color-bg);font:900 clamp(34px,10vw,72px)/0.92 var(--font-heading);text-transform:uppercase;letter-spacing:-.03em">ARTISTS</a>
-    <a href="#services" onClick="{{ toggleMenu }}" style="color:var(--color-bg);font:900 clamp(34px,10vw,72px)/0.92 var(--font-heading);text-transform:uppercase;letter-spacing:-.03em">SERVICES</a>
-    <a href="#photographer" onClick="{{ toggleMenu }}" style="color:var(--color-bg);font:900 clamp(34px,10vw,72px)/0.92 var(--font-heading);text-transform:uppercase;letter-spacing:-.03em">ABOUT</a>
+    <sc-if value="{{ navShowWork }}" hint-placeholder-val="{{ true }}"><a href="#work" onClick="{{ toggleMenu }}" style="color:var(--color-bg);font:900 clamp(34px,10vw,72px)/0.92 var(--font-heading);text-transform:uppercase;letter-spacing:-.03em">WORK</a></sc-if>
+    <sc-if value="{{ navShowMotion }}" hint-placeholder-val="{{ true }}"><a href="#motion" onClick="{{ toggleMenu }}" style="color:var(--color-bg);font:900 clamp(34px,10vw,72px)/0.92 var(--font-heading);text-transform:uppercase;letter-spacing:-.03em">MOTION</a></sc-if>
+    <sc-if value="{{ navShowArtists }}" hint-placeholder-val="{{ true }}"><a href="#artists" onClick="{{ toggleMenu }}" style="color:var(--color-bg);font:900 clamp(34px,10vw,72px)/0.92 var(--font-heading);text-transform:uppercase;letter-spacing:-.03em">ARTISTS</a></sc-if>
+    <sc-if value="{{ navShowServices }}" hint-placeholder-val="{{ true }}"><a href="#services" onClick="{{ toggleMenu }}" style="color:var(--color-bg);font:900 clamp(34px,10vw,72px)/0.92 var(--font-heading);text-transform:uppercase;letter-spacing:-.03em">SERVICES</a></sc-if>
+    <sc-if value="{{ navShowPhotographer }}" hint-placeholder-val="{{ true }}"><a href="#photographer" onClick="{{ toggleMenu }}" style="color:var(--color-bg);font:900 clamp(34px,10vw,72px)/0.92 var(--font-heading);text-transform:uppercase;letter-spacing:-.03em">ABOUT</a></sc-if>
     <a href="#booking" onClick="{{ toggleMenu }}" style="margin-top:18px;background:var(--lf-ac);color:#fff;font:900 20px/1 var(--font-heading);padding:16px 18px;text-transform:uppercase;letter-spacing:.04em;align-self:flex-start">AGENDA TU PROYECTO →</a>
   </div>
 </sc-if>
@@ -410,13 +452,13 @@
   </div>
 </section>
 
-<section id="photographer" data-screen-label="Sobre el fotógrafo" style="border-bottom:2px solid var(--color-text);background:var(--color-text);color:var(--color-bg)">
+<section id="photographer" data-screen-label="About" style="border-bottom:2px solid var(--color-text);background:var(--color-text);color:var(--color-bg)">
   <div style="max-width:1600px;margin:0 auto;padding:clamp(36px,6vw,84px) clamp(16px,3vw,40px);display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:clamp(28px,4vw,64px);align-items:center">
     <div class="rv" style="aspect-ratio:4/5;max-width:460px;position:relative;background:var(--color-neutral-900);outline:2px solid var(--color-neutral-800)">
       {{ photographerPhoto }}
     </div>
     <div class="rvx">
-      <span style="display:inline-block;background:var(--lf-ac);color:#fff;font:900 11px/1 var(--font-heading);letter-spacing:.18em;text-transform:uppercase;padding:7px 10px;margin-bottom:16px;transform:rotate(-0.4deg)">06 — SOBRE EL FOTÓGRAFO</span>
+      <span style="display:inline-block;background:var(--lf-ac);color:#fff;font:900 11px/1 var(--font-heading);letter-spacing:.18em;text-transform:uppercase;padding:7px 10px;margin-bottom:16px;transform:rotate(-0.4deg)">06 — THE EYE BEHIND THE FRAME</span>
       <h2 style="margin:0 0 8px;font:900 clamp(32px,5.4vw,72px)/0.9 var(--font-heading);letter-spacing:-.03em;text-transform:uppercase">{{ c.photographer.name }}</h2>
       <div style="font:700 12px/1.4 'Archivo Narrow',var(--font-heading);letter-spacing:.18em;text-transform:uppercase;color:var(--color-neutral-400);margin-bottom:22px">{{ c.photographer.role }}</div>
       <p style="margin:0 0 26px;max-width:50ch;font:400 16px/1.62 var(--font-body);color:var(--color-neutral-300)">{{ c.photographer.bio }}</p>
@@ -565,42 +607,70 @@
 <sc-if value="{{ isAdmin }}" hint-placeholder-val="{{ false }}">
 <div class="pa-shell">
   <aside class="pa-sidebar">
-    <div style="padding:18px;border-bottom:2px solid var(--color-text)">
-      <div style="font:900 18px/1 var(--font-heading);letter-spacing:-.02em;text-transform:uppercase">LA FAMA FILMS</div>
-      <div style="font:600 10px/1.4 var(--font-body);letter-spacing:.14em;text-transform:uppercase;color:var(--color-neutral-600);margin-top:4px">Panel Admin</div>
+    <div class="pa-brand">
+      <div class="pa-brand-name">La Fama Films</div>
+      <div class="pa-brand-sub">Content &amp; Studio Management</div>
     </div>
-    <nav style="flex:1;overflow-y:auto;padding:10px 0">
-      <sc-for list="{{ navItems }}" as="n" hint-placeholder-count="12">
+    <nav style="flex:1;overflow-y:auto;padding:8px 0 0">
+      <sc-for list="{{ navItems }}" as="n" hint-placeholder-count="16">
+      <sc-if value="{{ n.groupLabel }}" hint-placeholder-val="{{ false }}"><div class="pa-navgroup">{{ n.groupLabel }}</div></sc-if>
       <button type="button" class="{{ n.cls }}" onClick="{{ n.onClick }}">
         <span>{{ n.label }}</span>
-        <sc-if value="{{ n.hasBadge }}" hint-placeholder-val="{{ false }}"><span style="background:var(--lf-ac);color:#fff;font:700 9px/1 var(--font-body);padding:2px 6px;border-radius:8px">{{ n.badge }}</span></sc-if>
+        <sc-if value="{{ n.hasBadge }}" hint-placeholder-val="{{ false }}"><span class="pa-navbadge">{{ n.badge }}</span></sc-if>
       </button>
       </sc-for>
     </nav>
-    <div style="padding:14px 18px;border-top:2px solid var(--color-text)">
-      <button type="button" class="pa-backbtn" onClick="{{ toggleMode }}">Ver sitio en vivo ↗</button>
+    <div class="pa-sidefoot">
+      <button type="button" class="pa-backbtn" onClick="{{ toggleMode }}">View Website ↗</button>
     </div>
   </aside>
 
-  <div class="pa-main">
-    <div class="pa-topbar">
-      <div>
-        <div style="font:900 20px/1 var(--font-heading);letter-spacing:-.02em;text-transform:uppercase">{{ topTitle }}</div>
-        <div style="font:400 12px/1.4 var(--font-body);color:var(--color-neutral-600);margin-top:3px">Los cambios se guardan al instante en este navegador.</div>
-      </div>
-      <button type="button" class="pa-backlink" onClick="{{ toggleMode }}">Ver sitio ↗</button>
+  <sc-if value="{{ paMenuOpen }}" hint-placeholder-val="{{ false }}">
+  <div class="pa-drawer-backdrop" onClick="{{ togglePaMenu }}"></div>
+  <aside class="pa-drawer">
+    <div class="pa-brand">
+      <div class="pa-brand-name">La Fama Films</div>
+      <div class="pa-brand-sub">Content &amp; Studio Management</div>
     </div>
-
-    <nav class="pa-chipbar">
-      <sc-for list="{{ navItems }}" as="n2" hint-placeholder-count="12">
-      <button type="button" class="{{ n2.chipCls }}" onClick="{{ n2.onClick }}">{{ n2.label }}</button>
+    <nav style="flex:1;overflow-y:auto;padding:8px 0 0">
+      <sc-for list="{{ navItems }}" as="n3" hint-placeholder-count="16">
+      <sc-if value="{{ n3.groupLabel }}" hint-placeholder-val="{{ false }}"><div class="pa-navgroup">{{ n3.groupLabel }}</div></sc-if>
+      <button type="button" class="{{ n3.cls }}" onClick="{{ n3.onClickMobile }}">
+        <span>{{ n3.label }}</span>
+        <sc-if value="{{ n3.hasBadge }}" hint-placeholder-val="{{ false }}"><span class="pa-navbadge">{{ n3.badge }}</span></sc-if>
+      </button>
       </sc-for>
     </nav>
+    <div class="pa-sidefoot">
+      <button type="button" class="pa-backbtn" onClick="{{ toggleMode }}">View Website ↗</button>
+    </div>
+  </aside>
+  </sc-if>
+
+  <div class="pa-main">
+    <div class="pa-mobilebar">
+      <button type="button" class="pa-mobilebar-btn" onClick="{{ togglePaMenu }}" aria-label="Abrir menú">☰ MENU</button>
+      <span class="pa-mobilebar-name">{{ topTitle }}</span>
+      <button type="button" class="pa-mobilebar-btn" onClick="{{ toggleMode }}">Site ↗</button>
+    </div>
+
+    <div class="pa-topbar">
+      <div class="pa-topbar-title">{{ topTitle }}</div>
+      <div class="pa-topbar-right">
+        <span class="pa-status"><span class="pa-status-dot"></span>ONLINE</span>
+        <button type="button" class="pa-toplink" onClick="{{ toggleMode }}">View Website ↗</button>
+        <span class="pa-pill">ADMIN</span>
+      </div>
+    </div>
 
     <main class="pa-content">
       {{ tabBody }}
     </main>
   </div>
+
+  <sc-if value="{{ savedToast }}" hint-placeholder-val="{{ false }}">
+  <div class="pa-toast">✓ CHANGES SAVED</div>
+  </sc-if>
 </div>
 </sc-if>
 
@@ -636,13 +706,15 @@ const S = {
   grid2: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))', gap: '14px' },
   btnPrimary: { background: 'var(--lf-ac)', color: '#fff', border: 'none', padding: '11px 16px', font: '900 11px/1 var(--font-heading)', letterSpacing: '.1em', textTransform: 'uppercase', cursor: 'pointer' },
   btnSecondary: { background: 'none', border: '1px solid var(--color-text)', color: 'var(--color-text)', padding: '9px 13px', font: '700 10px/1 var(--font-body)', letterSpacing: '.08em', textTransform: 'uppercase', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' },
-  btnGhost: { background: 'none', border: '1px solid #c0392b', color: '#c0392b', padding: '9px 13px', font: '700 10px/1 var(--font-body)', letterSpacing: '.08em', textTransform: 'uppercase', cursor: 'pointer' },
+  btnGhost: { background: 'none', border: '1px solid var(--pa-danger, #c0392b)', color: 'var(--pa-danger, #c0392b)', padding: '9px 13px', font: '700 10px/1 var(--font-body)', letterSpacing: '.08em', textTransform: 'uppercase', cursor: 'pointer' },
   btnIcon: { width: '32px', height: '32px', flex: '0 0 32px', border: '1px solid var(--color-divider)', background: 'var(--color-bg)', cursor: 'pointer', font: '700 14px/1 var(--font-body)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' },
   row: { display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' },
   hint: { margin: 0, font: '400 11px/1.5 var(--font-body)', color: 'var(--color-neutral-600)' },
   statPill: { border: '1px solid var(--color-divider)', background: 'var(--color-bg)', padding: '12px', display: 'flex', flexDirection: 'column', gap: '4px' },
   statN: { font: '900 26px/1 var(--font-heading)', color: 'var(--lf-ac)' },
-  statL: { font: '700 10px/1.3 var(--font-body)', letterSpacing: '.1em', textTransform: 'uppercase', color: 'var(--color-neutral-700)' }
+  statL: { font: '700 10px/1.3 var(--font-body)', letterSpacing: '.1em', textTransform: 'uppercase', color: 'var(--color-neutral-700)' },
+  status: { display: 'inline-flex', alignItems: 'center', gap: '6px', font: '700 11px/1 var(--font-body)', letterSpacing: '.1em', textTransform: 'uppercase', color: 'var(--color-neutral-700)' },
+  statusDot: { width: '7px', height: '7px', borderRadius: '50%', background: '#35d07f', display: 'inline-block' }
 };
 
 function Field(label, node, hint) {
@@ -669,7 +741,7 @@ const PF_SIZE_OPTIONS = [
 ];
 
 class Component extends DCLogic {
-  state = { mode: 'site', menu: false, step: 1, svc: '', lb: null, reel: null, note: '', tab: 'resumen', tick: 0, stamped: false };
+  state = { mode: 'site', menu: false, step: 1, svc: '', lb: null, reel: null, note: '', tab: 'resumen', tick: 0, stamped: false, paMenuOpen: false, saved: false, mediaSearch: '' };
   f = {};
   // Los videos de los reels viven en IndexedDB (ver lf-store.js), así que la
   // lectura es async — se cachean acá como object URLs una vez cargados en
@@ -758,6 +830,20 @@ class Component extends DCLogic {
     this.videoTried[id] = true;
     LFStore.getVideo(id).then((blob) => {
       if (blob) { this.videoCache[id] = URL.createObjectURL(blob); this.bump(); }
+    });
+  }
+
+  // IndexedDB es async y listVideos() no se puede leer en el mismo tick que
+  // el render — se pide una vez, se guarda en memoria de la instancia (no en
+  // el state de React, para no disparar renders extra) y se re-renderiza
+  // manualmente (bump) cuando llega.
+  ensureMediaVideos() {
+    if (this.mediaVideos || this.mediaVideosLoading) return;
+    this.mediaVideosLoading = true;
+    LFStore.listVideos().then((vids) => {
+      this.mediaVideos = vids;
+      this.mediaVideosLoading = false;
+      this.bump();
     });
   }
 
@@ -857,6 +943,7 @@ class Component extends DCLogic {
     if (this.mo) this.mo.disconnect();
     if (this.reelObserver) this.reelObserver.disconnect();
     clearTimeout(this.safety);
+    clearTimeout(this.savedTimer);
     window.removeEventListener('scroll', this.onScroll);
     window.removeEventListener('resize', this.onScroll);
     window.removeEventListener('resize', this.onResizeStamp);
@@ -914,6 +1001,11 @@ class Component extends DCLogic {
     mutator(c);
     LFStore.setContent(c);
     this.bump();
+    // Feedback de guardado compartido por TODOS los editores (cualquiera que
+    // llame a updateContent) — un solo punto, nada de repetirlo por sección.
+    clearTimeout(this.savedTimer);
+    this.setState({ saved: true });
+    this.savedTimer = setTimeout(() => this.setState({ saved: false }), 1800);
   }
 
   photoWidget(id, label, opts) {
@@ -987,79 +1079,105 @@ class Component extends DCLogic {
     );
   }
 
-  // ── RESUMEN ──────────────────────────────────────────────────────────
+  // ── OVERVIEW ─────────────────────────────────────────────────────────
+  // Todas las cifras salen de datos reales (largo de los arrays guardados,
+  // leads filtrados por estado) — nada inventado. "Last updated" sale de
+  // LFStore.getLastUpdated() (se guarda cada vez que se llama a
+  // updateContent); si todavía no se editó nada, dice "Nunca" en vez de
+  // fabricar una fecha. No existe un log de actividad real (no hay eventos
+  // guardados en ningún lado), así que Recent Activity muestra un estado
+  // vacío honesto en vez de inventar eventos — la estructura visual queda
+  // lista para cuando exista una base real para calcularla.
   renderResumen(c, leads) {
-    const nuevos = leads.filter((l) => l.estado === 'Nuevo').length;
+    const nuevos = leads.filter((l) => l.estado === 'NEW').length;
     const stats = [
-      ['Fotos del portfolio', c.portfolio.length],
-      ['Reels', c.reels.length],
-      ['Artistas', c.artists.length],
-      ['Servicios', c.services.length],
-      ['Leads totales', leads.length],
-      ['Leads sin contactar', nuevos]
+      ['PROJECTS', c.portfolio.length],
+      ['ARTISTS', c.artists.length],
+      ['SERVICES', c.services.length],
+      ['NEW REQUESTS', nuevos]
     ];
+    const lastUpdated = LFStore.getLastUpdated();
+    const lastUpdatedText = lastUpdated ? new Date(lastUpdated).toLocaleString() : 'Nunca (todavía no se edita nada)';
+    const goTo = (tab) => () => this.setState({ tab });
+    const quickAdd = (tab, arrKey, item) => () => {
+      this.updateContent((c2) => { c2[arrKey].push(item); });
+      this.setState({ tab });
+    };
     return el('div', { style: S.page },
-      SectionHead('Resumen', 'Vista rápida de lo que hay cargado en el sitio ahora mismo.'),
+      SectionHead('Overview', 'Estado real del contenido cargado en el sitio ahora mismo.'),
       el('div', { style: S.grid2 }, ...stats.map(([l, n]) => el('div', { style: S.statPill, key: l },
         el('div', { style: S.statN }, String(n)),
         el('div', { style: S.statL }, l)
       ))),
+      el('div', { style: S.grid2 },
+        el('div', { style: S.card },
+          el('h3', { style: { margin: 0, font: '900 13px/1 var(--font-heading)', letterSpacing: '.06em', textTransform: 'uppercase' } }, 'Website'),
+          el('div', { style: Object.assign({}, S.status, { marginTop: '4px' }) }, el('span', { style: S.statusDot }), 'ONLINE'),
+          el('div', { style: { font: '400 13px/1.7 var(--font-body)', color: 'var(--color-neutral-700)', marginTop: '10px' } },
+            String(c.portfolio.length) + ' PROJECTS · ' + String(c.artists.length) + ' ARTISTS · ' + String(c.services.length) + ' SERVICES'
+          ),
+          el('div', { style: { marginTop: '10px' } },
+            el('div', { style: S.label }, 'Last updated'),
+            el('div', { style: { font: '600 13px/1.4 var(--font-body)' } }, lastUpdatedText)
+          )
+        ),
+        el('div', { style: S.card },
+          el('h3', { style: { margin: 0, font: '900 13px/1 var(--font-heading)', letterSpacing: '.06em', textTransform: 'uppercase' } }, 'Recent activity'),
+          leads.length
+            ? el('p', { style: S.hint }, String(leads.length) + ' solicitud(es) de Booking recibidas en total, ' + String(nuevos) + ' sin contactar todavía. Revísalas en Booking.')
+            : el('p', { style: S.hint }, 'Todavía no hay actividad real que mostrar (no se ha recibido ninguna solicitud, y este prototipo no guarda un historial de ediciones). En cuanto exista una base real para calcularla, aparece acá — no se inventan eventos.')
+        )
+      ),
       el('div', { style: S.card },
-        el('h3', { style: { margin: 0, font: '900 15px/1 var(--font-heading)', textTransform: 'uppercase' } }, 'Antes de mostrárselo al cliente'),
-        el('ul', { style: { margin: 0, paddingLeft: '18px', font: '400 13px/1.7 var(--font-body)', color: 'var(--color-neutral-800)' } },
-          el('li', null, 'Sube las fotos reales en Hero, Sobre Nosotros, Portfolio, Reels, Artistas e Instagram.'),
-          el('li', null, 'Revisa nombres de artistas, servicios y precios en sus pestañas.'),
-          el('li', null, 'Confirma teléfono, WhatsApp, email e Instagram en Contacto.'),
-          el('li', null, 'Usa "Ver sitio en vivo" para ver los cambios reflejados al instante.')
+        el('h3', { style: { margin: 0, font: '900 13px/1 var(--font-heading)', letterSpacing: '.06em', textTransform: 'uppercase' } }, 'Quick actions'),
+        el('div', { style: S.row },
+          el('button', { type: 'button', style: S.btnPrimary, onClick: quickAdd('portfolio', 'portfolio', { id: LFStore.uid('pf'), cat: 'NUEVA CATEGORÍA · 2026', title: 'NUEVO TÍTULO', size: 'small' }) }, '+ New project'),
+          el('button', { type: 'button', style: S.btnSecondary, onClick: quickAdd('artistas', 'artists', { id: LFStore.uid('a'), name: 'NUEVO ARTISTA', role: 'PROYECTO · [DETALLE]', link: '#work' }) }, '+ Add artist'),
+          el('button', { type: 'button', style: S.btnSecondary, onClick: quickAdd('motion', 'reels', { id: LFStore.uid('r'), code: '', label: 'REEL ' + String(c.reels.length + 1).padStart(2, '0') }) }, '+ Add video'),
+          el('button', { type: 'button', style: S.btnSecondary, onClick: goTo('fotografo') }, 'Edit About')
         )
       )
     );
   }
 
-  // ── IDENTIDAD ────────────────────────────────────────────────────────
-  renderIdentidad(c) {
-    const setAccent = (e) => this.updateContent((c2) => { c2.accent = e.currentTarget.value; });
-    const toggleShowPricing = (e) => this.updateContent((c2) => { c2.showPricing = e.currentTarget.checked; });
+  // ── HOME ─────────────────────────────────────────────────────────────
+  // Todo lo que es realmente editable de la home pública: la tira de 5
+  // fotos del Hero, la etiqueta REC y la línea de ubicaciones, y el bloque
+  // "LA CALLE ES EL SET" que va debajo (párrafos + stats + mosaico). El
+  // título principal ("LA FAMA FILMS"), el subtítulo ("VISUALS FOR THE
+  // CULTURE") y el texto de los botones del Hero están escritos directo en
+  // el HTML público — no son campos de contenido todavía. Convertirlos en
+  // editables es viable (agregar c.hero.title/subtitle con defaults iguales
+  // al texto actual) pero es un cambio de arquitectura que toca el HTML
+  // público; queda documentado como siguiente paso, no se inventó un campo
+  // que en realidad no hace nada.
+  renderHome(c) {
     const setHeroTag = (e) => this.updateContent((c2) => { c2.hero.tag = e.currentTarget.value; });
     const setHeroLoc = (e) => this.updateContent((c2) => { c2.hero.locations = e.currentTarget.value; });
-    return el('div', { style: S.page },
-      SectionHead('Identidad', 'Color de marca y textos pequeños que aparecen arriba del todo en el sitio.'),
-      el('div', { style: S.grid2 },
-        Field('Color de acento', el('input', { type: 'color', value: c.accent, onChange: setAccent, style: { width: '100%', height: '42px', border: '1px solid var(--color-divider)', padding: '2px', background: 'var(--color-bg)' } })),
-        Field('Mostrar precios en Servicios', el('label', { style: { display: 'flex', alignItems: 'center', gap: '8px', font: '600 13px/1 var(--font-body)' } },
-          el('input', { type: 'checkbox', checked: !!c.showPricing, onChange: toggleShowPricing }),
-          c.showPricing ? 'Visible' : 'Oculto'
-        ))
-      ),
-      el('div', { style: S.grid2 },
-        Field('Etiqueta REC (arriba del título)', el('input', { style: S.input, value: c.hero.tag, onChange: setHeroTag })),
-        Field('Línea de ubicaciones', el('input', { style: S.input, value: c.hero.locations, onChange: setHeroLoc }))
-      )
-    );
-  }
-
-  // ── HERO ─────────────────────────────────────────────────────────────
-  renderHero() {
+    const setP1 = (e) => this.updateContent((c2) => { c2.about.p1 = e.currentTarget.value; });
+    const setP2 = (e) => this.updateContent((c2) => { c2.about.p2 = e.currentTarget.value; });
+    const setStat = (i, field) => (e) => this.updateContent((c2) => { c2.about.stats[i][field] = e.currentTarget.value; });
     const frames = [
       ['lf-hero-1', 'Frame 01 · NYC'], ['lf-hero-2', 'Frame 02 · SET'], ['lf-hero-3', 'Frame 03 · NJ'],
       ['lf-hero-4', 'Frame 04 · STAGE'], ['lf-hero-5', 'Frame 05 · SDQ']
     ];
-    return el('div', { style: S.page },
-      SectionHead('Hero', 'Las 5 fotos de la franja debajo del título principal. Formato vertical (4:5) se ve mejor.'),
-      el('div', { style: S.grid2 }, ...frames.map(([id, label]) => el('div', { key: id }, this.photoWidget(id, label, { height: '150px' }))))
-    );
-  }
-
-  // ── SOBRE NOSOTROS ───────────────────────────────────────────────────
-  renderNosotros(c) {
-    const setP1 = (e) => this.updateContent((c2) => { c2.about.p1 = e.currentTarget.value; });
-    const setP2 = (e) => this.updateContent((c2) => { c2.about.p2 = e.currentTarget.value; });
-    const setStat = (i, field) => (e) => this.updateContent((c2) => { c2.about.stats[i][field] = e.currentTarget.value; });
     const mosaic = [
       ['lf-mos-1', 'Vertical'], ['lf-mos-2', 'Foto'], ['lf-mos-3', 'Foto'], ['lf-mos-4', 'Horizontal']
     ];
     return el('div', { style: S.page },
-      SectionHead('Sobre nosotros', 'Los dos párrafos, las 3 estadísticas y el mosaico de 4 fotos.'),
+      SectionHead('Home', 'Todo lo editable de la portada: el Hero (arriba del todo) y el bloque "La calle es el set" que va justo debajo.'),
+      el('div', { style: S.grid2 },
+        Field('Etiqueta REC (arriba del título)', el('input', { style: S.input, value: c.hero.tag, onChange: setHeroTag })),
+        Field('Línea de ubicaciones', el('input', { style: S.input, value: c.hero.locations, onChange: setHeroLoc }))
+      ),
+      el('div', null,
+        el('div', { style: S.label }, 'Hero — 5 fotos de la franja "ROLL 01" (vertical 4:5 se ve mejor)'),
+        el('div', { style: S.grid2 }, ...frames.map(([id, label]) => el('div', { key: id }, this.photoWidget(id, label, { height: '150px' }))))
+      ),
+      el('div', { style: { borderTop: '1px solid var(--color-divider)', paddingTop: '20px' } },
+        el('h3', { style: { margin: '0 0 4px', font: '900 15px/1 var(--font-heading)', textTransform: 'uppercase' } }, '"La calle es el set" (debajo del Hero)'),
+        el('p', { style: S.hint }, 'Los dos párrafos, las 3 estadísticas y el mosaico de 4 fotos.')
+      ),
       el('div', { style: S.section },
         Field('Párrafo 1 (español)', el('textarea', { style: S.textarea, rows: 3, value: c.about.p1, onChange: setP1 })),
         Field('Párrafo 2 (inglés)', el('textarea', { style: S.textarea, rows: 3, value: c.about.p2, onChange: setP2 }))
@@ -1091,7 +1209,7 @@ class Component extends DCLogic {
       c2.portfolio.push({ id: LFStore.uid('pf'), cat: 'NUEVA CATEGORÍA · 2026', title: 'NUEVO TÍTULO', size: 'small' });
     });
     return el('div', { style: S.page },
-      SectionHead('Portfolio (El Archivo)', 'La cuadrícula estilo Pinterest de fotos y videos. El tamaño controla qué tan grande se ve cada foto — se acomodan solas sin dejar huecos.'),
+      SectionHead('Work', 'El Archivo — la cuadrícula estilo Pinterest de fotos y videos. El tamaño controla qué tan grande se ve cada foto; se acomodan solas sin dejar huecos.'),
       el('div', { style: S.section }, ...list.map((it, i) => el('div', { key: it.id, style: S.card },
         el('div', { style: { display: 'flex', gap: '14px', flexWrap: 'wrap' } },
           el('div', { style: { width: '140px', flex: '0 0 140px' } }, this.photoWidget(it.id, it.cat, { height: '110px' })),
@@ -1105,7 +1223,7 @@ class Component extends DCLogic {
           el('div', { style: { display: 'flex', flexDirection: 'column', gap: '6px' } },
             el('button', { type: 'button', style: S.btnIcon, onClick: () => move(i, -1), disabled: i === 0, title: 'Subir' }, '↑'),
             el('button', { type: 'button', style: S.btnIcon, onClick: () => move(i, 1), disabled: i === list.length - 1, title: 'Bajar' }, '↓'),
-            el('button', { type: 'button', style: Object.assign({}, S.btnIcon, { color: '#c0392b' }), onClick: () => remove(it.id), title: 'Eliminar' }, '✕')
+            el('button', { type: 'button', style: Object.assign({}, S.btnIcon, { color: 'var(--pa-danger, #c0392b)' }), onClick: () => remove(it.id), title: 'Eliminar' }, '✕')
           )
         )
       ))),
@@ -1134,7 +1252,7 @@ class Component extends DCLogic {
       c2.reels.push({ id: LFStore.uid('r'), code: '', label: 'REEL ' + String(c2.reels.length + 1).padStart(2, '0') });
     });
     return el('div', { style: S.page },
-      SectionHead('Motion (Reels)', 'Sube el video y se reproduce solo (mudo) apenas el visitante llega a él haciendo scroll — sin botón de play. El código de Instagram es opcional: solo hace falta si NO subes un video, para poder abrir el reel embebido al hacer clic.'),
+      SectionHead('Motion', 'Sube el video y se reproduce solo (mudo) apenas el visitante llega a él haciendo scroll — sin botón de play. El código de Instagram es opcional: solo hace falta si NO subes un video, para poder abrir el reel embebido al hacer clic.'),
       el('div', { style: S.section }, ...list.map((it, i) => el('div', { key: it.id, style: S.card },
         el('div', { style: { display: 'flex', gap: '14px', flexWrap: 'wrap' } },
           el('div', { style: { width: '110px', flex: '0 0 110px', display: 'flex', flexDirection: 'column', gap: '10px' } },
@@ -1148,7 +1266,7 @@ class Component extends DCLogic {
           el('div', { style: { display: 'flex', flexDirection: 'column', gap: '6px' } },
             el('button', { type: 'button', style: S.btnIcon, onClick: () => move(i, -1), disabled: i === 0 }, '↑'),
             el('button', { type: 'button', style: S.btnIcon, onClick: () => move(i, 1), disabled: i === list.length - 1 }, '↓'),
-            el('button', { type: 'button', style: Object.assign({}, S.btnIcon, { color: '#c0392b' }), onClick: () => remove(it.id) }, '✕')
+            el('button', { type: 'button', style: Object.assign({}, S.btnIcon, { color: 'var(--pa-danger, #c0392b)' }), onClick: () => remove(it.id) }, '✕')
           )
         )
       ))),
@@ -1171,7 +1289,7 @@ class Component extends DCLogic {
       c2.artists.push({ id: LFStore.uid('a'), name: 'NUEVO ARTISTA', role: 'PROYECTO · [DETALLE]', link: '#work' });
     });
     return el('div', { style: S.page },
-      SectionHead('Artistas', 'La franja de tarjetas de "Con quién trabajamos".'),
+      SectionHead('Artists', 'La franja de tarjetas de "Con quién trabajamos".'),
       el('div', { style: S.section }, ...list.map((it, i) => el('div', { key: it.id, style: S.card },
         el('div', { style: { display: 'flex', gap: '14px', flexWrap: 'wrap' } },
           el('div', { style: { width: '110px', flex: '0 0 110px' } }, this.photoWidget(it.id, it.name, { height: '140px' })),
@@ -1183,7 +1301,7 @@ class Component extends DCLogic {
           el('div', { style: { display: 'flex', flexDirection: 'column', gap: '6px' } },
             el('button', { type: 'button', style: S.btnIcon, onClick: () => move(i, -1), disabled: i === 0 }, '↑'),
             el('button', { type: 'button', style: S.btnIcon, onClick: () => move(i, 1), disabled: i === list.length - 1 }, '↓'),
-            el('button', { type: 'button', style: Object.assign({}, S.btnIcon, { color: '#c0392b' }), onClick: () => remove(it.id) }, '✕')
+            el('button', { type: 'button', style: Object.assign({}, S.btnIcon, { color: 'var(--pa-danger, #c0392b)' }), onClick: () => remove(it.id) }, '✕')
           )
         )
       ))),
@@ -1207,7 +1325,7 @@ class Component extends DCLogic {
       c2.services.push({ id: LFStore.uid('s'), svc: 'Otro', title: 'NUEVO SERVICIO', desc: 'Descripción del servicio.', price: '' });
     });
     return el('div', { style: S.page },
-      SectionHead('Servicios y precios', 'La lista de "Lo que hacemos". El precio queda vacío hasta que escribas uno (se ve "DESDE $ —" mientras tanto).'),
+      SectionHead('Services', 'La lista de "Lo que hacemos". El precio queda vacío hasta que escribas uno (se ve "DESDE $ —" mientras tanto).'),
       el('div', { style: S.section }, ...list.map((it, i) => el('div', { key: it.id, style: S.card },
         Field('Título', el('input', { style: S.input, value: it.title, onChange: setField(it.id, 'title') })),
         Field('Descripción', el('textarea', { style: S.textarea, rows: 2, value: it.desc, onChange: setField(it.id, 'desc') })),
@@ -1227,11 +1345,11 @@ class Component extends DCLogic {
     );
   }
 
-  // ── SOBRE EL FOTÓGRAFO ──────────────────────────────────────────────
+  // ── ABOUT ────────────────────────────────────────────────────────────
   renderFotografo(c) {
     const setField = (field) => (e) => this.updateContent((c2) => { c2.photographer[field] = e.currentTarget.value; });
     return el('div', { style: S.page },
-      SectionHead('Sobre el fotógrafo', 'La sección "Sobre el fotógrafo" del sitio público, justo antes de Booking. Reemplaza el nombre, el rol y la bio (llegan con texto placeholder), y sube una foto real cuando la tengas.'),
+      SectionHead('About', 'La sección "THE EYE BEHIND THE FRAME" del sitio público, justo antes de Booking. Reemplaza el nombre, el rol y la bio (llegan con texto placeholder), y sube una foto real cuando la tengas.'),
       el('div', { style: S.card },
         this.photoWidget('lf-photographer', 'Foto del fotógrafo', { height: '220px', maxW: 1200 }),
         Field('Nombre', el('input', { style: S.input, value: c.photographer.name, onChange: setField('name') })),
@@ -1241,28 +1359,108 @@ class Component extends DCLogic {
     );
   }
 
-  // ── CONTACTO ─────────────────────────────────────────────────────────
-  renderContacto(c) {
-    const setField = (field) => (e) => this.updateContent((c2) => { c2.contact[field] = e.currentTarget.value; });
+  // ── SETTINGS ─────────────────────────────────────────────────────────
+  // Junta lo que antes eran tres pestañas separadas (Identidad, Contacto,
+  // Ajustes) en una sola, agrupada en CONTACT / BRAND / DATA — mismos
+  // campos, misma lógica de guardado, solo reorganizados.
+  renderSettings(c) {
+    const setContact = (field) => (e) => this.updateContent((c2) => { c2.contact[field] = e.currentTarget.value; });
+    const setAccent = (e) => this.updateContent((c2) => { c2.accent = e.currentTarget.value; });
+    const toggleShowPricing = (e) => this.updateContent((c2) => { c2.showPricing = e.currentTarget.checked; });
+    const exportBackup = () => {
+      const data = LFStore.exportBackup();
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'lafamafilms-backup.json';
+      document.body.appendChild(a); a.click(); a.remove();
+      URL.revokeObjectURL(url);
+    };
+    const importBackup = (e) => {
+      const file = e.currentTarget.files && e.currentTarget.files[0];
+      e.currentTarget.value = '';
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const data = JSON.parse(String(reader.result));
+          if (LFStore.importBackup(data)) { this.bump(); alert('Respaldo importado.'); }
+          else alert('No se pudo importar ese archivo.');
+        } catch (err) { alert('Archivo inválido.'); }
+      };
+      reader.readAsText(file);
+    };
+    const resetAll = () => {
+      if (!confirm('Esto borra todas las fotos, videos, textos y leads guardados en este navegador y no se puede deshacer. ¿Continuar?')) return;
+      LFStore.resetAll();
+      this.bump();
+    };
     return el('div', { style: S.page },
-      SectionHead('Contacto y marca', 'Esta información aparece en el footer, la barra fija inferior y los links de WhatsApp / email.'),
-      el('div', { style: S.grid2 },
-        Field('Nombre de la empresa', el('input', { style: S.input, value: c.contact.companyName, onChange: setField('companyName') })),
-        Field('Teléfono (texto visible)', el('input', { style: S.input, value: c.contact.phone, onChange: setField('phone') })),
-        Field('WhatsApp (solo números, con código de país)', el('input', { style: S.input, value: c.contact.whatsapp, onChange: setField('whatsapp'), placeholder: 'Ej. 12012961944' }), 'Sin +, espacios ni guiones — así arma los links de wa.me.'),
-        Field('Email', el('input', { style: S.input, value: c.contact.email, onChange: setField('email'), type: 'email' })),
-        Field('Usuario de Instagram (texto)', el('input', { style: S.input, value: c.contact.instagramHandle, onChange: setField('instagramHandle'), placeholder: '@usuario' })),
-        Field('Link de Instagram', el('input', { style: S.input, value: c.contact.instagramUrl, onChange: setField('instagramUrl') }))
+      SectionHead('Settings', 'Configuración global: datos de contacto, marca, y respaldo de todo lo guardado.'),
+
+      el('div', null,
+        el('h3', { style: { margin: '0 0 4px', font: '900 13px/1 var(--font-heading)', letterSpacing: '.08em', textTransform: 'uppercase', color: 'var(--color-neutral-600)' } }, 'Contact'),
+        el('p', { style: S.hint }, 'Esta información aparece en el footer, la barra fija inferior y los links de WhatsApp / email.')
       ),
-      Field('Dirección', el('input', { style: S.input, value: c.contact.address, onChange: setField('address') })),
-      Field('Nota de dirección (zonas donde ruedan)', el('input', { style: S.input, value: c.contact.addressNote, onChange: setField('addressNote') }))
+      el('div', { style: S.grid2 },
+        Field('Nombre de la empresa', el('input', { style: S.input, value: c.contact.companyName, onChange: setContact('companyName') })),
+        Field('Teléfono (texto visible)', el('input', { style: S.input, value: c.contact.phone, onChange: setContact('phone') })),
+        Field('WhatsApp (solo números, con código de país)', el('input', { style: S.input, value: c.contact.whatsapp, onChange: setContact('whatsapp'), placeholder: 'Ej. 12012961944' }), 'Sin +, espacios ni guiones — así arma los links de wa.me.'),
+        Field('Email', el('input', { style: S.input, value: c.contact.email, onChange: setContact('email'), type: 'email' })),
+        Field('Usuario de Instagram (texto)', el('input', { style: S.input, value: c.contact.instagramHandle, onChange: setContact('instagramHandle'), placeholder: '@usuario' })),
+        Field('Link de Instagram', el('input', { style: S.input, value: c.contact.instagramUrl, onChange: setContact('instagramUrl') }))
+      ),
+      Field('Dirección', el('input', { style: S.input, value: c.contact.address, onChange: setContact('address') })),
+      Field('Nota de dirección (zonas donde ruedan)', el('input', { style: S.input, value: c.contact.addressNote, onChange: setContact('addressNote') })),
+
+      el('div', { style: { borderTop: '1px solid var(--color-divider)', paddingTop: '20px' } },
+        el('h3', { style: { margin: '0 0 4px', font: '900 13px/1 var(--font-heading)', letterSpacing: '.08em', textTransform: 'uppercase', color: 'var(--color-neutral-600)' } }, 'Brand'),
+        el('p', { style: S.hint }, 'Color de acento del sitio y el sello/logo (subido desde Home). El favicon usa el mismo archivo del sello.')
+      ),
+      el('div', { style: S.grid2 },
+        Field('Color de acento', el('input', { type: 'color', value: c.accent, onChange: setAccent, style: { width: '100%', height: '42px', border: '1px solid var(--color-divider)', padding: '2px', background: 'var(--color-bg)' } })),
+        Field('Mostrar precios en Services', el('label', { style: { display: 'flex', alignItems: 'center', gap: '8px', font: '600 13px/1 var(--font-body)' } },
+          el('input', { type: 'checkbox', checked: !!c.showPricing, onChange: toggleShowPricing }),
+          c.showPricing ? 'Visible' : 'Oculto'
+        ))
+      ),
+
+      el('div', { style: { borderTop: '1px solid var(--color-divider)', paddingTop: '20px' } },
+        el('h3', { style: { margin: '0 0 4px', font: '900 13px/1 var(--font-heading)', letterSpacing: '.08em', textTransform: 'uppercase', color: 'var(--color-neutral-600)' } }, 'Data')
+      ),
+      el('div', { style: S.card },
+        el('h3', { style: { margin: 0, font: '900 14px/1 var(--font-heading)', textTransform: 'uppercase' } }, 'Exportar respaldo'),
+        el('p', { style: S.hint }, 'Descarga un archivo con todo el contenido y las fotos guardadas — sirve como respaldo o para pasarlo a otra computadora.'),
+        el('div', null, el('button', { type: 'button', style: S.btnPrimary, onClick: exportBackup }, 'Descargar respaldo (.json)'))
+      ),
+      el('div', { style: S.card },
+        el('h3', { style: { margin: 0, font: '900 14px/1 var(--font-heading)', textTransform: 'uppercase' } }, 'Importar respaldo'),
+        el('p', { style: S.hint }, 'Sube un archivo de respaldo exportado antes. Reemplaza el contenido actual.'),
+        el('label', { style: Object.assign({}, S.btnSecondary, { cursor: 'pointer', display: 'inline-flex', width: 'fit-content' }) },
+          'Elegir archivo .json',
+          el('input', { type: 'file', accept: 'application/json', onChange: importBackup, style: { display: 'none' } })
+        )
+      ),
+      el('div', { style: Object.assign({}, S.card, { borderColor: 'var(--pa-danger, #c0392b)' }) },
+        el('h3', { style: { margin: 0, font: '900 14px/1 var(--font-heading)', textTransform: 'uppercase', color: 'var(--pa-danger, #c0392b)' } }, 'Restablecer todo'),
+        el('p', { style: S.hint }, 'Borra fotos, videos, textos y leads guardados en este navegador y vuelve a los valores originales del sitio.'),
+        el('div', null, el('button', { type: 'button', style: S.btnGhost, onClick: resetAll }, 'Borrar todo y restablecer'))
+      ),
+      el('p', { style: S.hint }, 'Nota: este panel guarda todo en el navegador — localStorage para texto/fotos, IndexedDB para video —, como prototipo previo a tener hosting con backend real. Antes de publicar el sitio a producción con varias personas editando, conviene migrar este contenido a una base de datos.')
     );
   }
 
-  // ── LEADS ────────────────────────────────────────────────────────────
+  // ── BOOKING REQUESTS ─────────────────────────────────────────────────
+  // Estas son las solicitudes REALES que llegan por el formulario público de
+  // Booking — no es un sistema aparte: cada vez que alguien completa el
+  // formulario, LFStore.addLead() ya las guarda en localStorage (lf_leads) Y
+  // abre WhatsApp con el mismo mensaje. Ese flujo de WhatsApp no se tocó acá
+  // — el panel solo agrega una vista para llevar seguimiento de cada
+  // solicitud (cambiar su estado, ver los datos, eliminarla) sin depender
+  // de revisar el chat de WhatsApp.
   renderLeads() {
     const leads = LFStore.getLeads();
-    const estados = ['Nuevo', 'Contactado', 'Ganado', 'Perdido'];
+    const estados = ['NEW', 'CONTACTED', 'IN DISCUSSION', 'CONFIRMED', 'COMPLETED', 'CANCELLED'];
     const setEstado = (id) => (e) => {
       const all = LFStore.getLeads();
       const it = all.find((x) => x.id === id);
@@ -1276,14 +1474,14 @@ class Component extends DCLogic {
     };
     if (!leads.length) {
       return el('div', { style: S.page },
-        SectionHead('Leads', 'Cada vez que alguien completa el formulario de Booking, aparece aquí (además de abrirse WhatsApp).'),
+        SectionHead('Booking Requests', 'Cada vez que alguien completa el formulario de Booking, aparece aquí (además de abrirse WhatsApp con el mismo mensaje — ese flujo sigue funcionando igual).'),
         el('div', { style: Object.assign({}, S.card, { alignItems: 'center', textAlign: 'center', padding: '48px 20px', border: '1px dashed var(--color-divider)' }) },
           el('p', { style: { margin: 0, font: '700 13px/1.5 var(--font-body)', color: 'var(--color-neutral-700)' } }, 'Todavía no hay leads. Cuando alguien reserve desde el sitio, aparecerá aquí.')
         )
       );
     }
     return el('div', { style: S.page },
-      SectionHead('Leads', String(leads.length) + ' mensajes recibidos desde el formulario de Booking.'),
+      SectionHead('Booking Requests', String(leads.length) + ' solicitud(es) recibidas desde el formulario público de Booking.'),
       el('div', { style: S.section }, ...leads.map((l) => el('div', { key: l.id, style: S.card },
         el('div', { style: { display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px' } },
           el('div', null,
@@ -1312,57 +1510,120 @@ class Component extends DCLogic {
     );
   }
 
-  // ── AJUSTES ──────────────────────────────────────────────────────────
-  renderAjustes() {
-    const exportBackup = () => {
-      const data = LFStore.exportBackup();
-      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url; a.download = 'lafamafilms-backup.json';
-      document.body.appendChild(a); a.click(); a.remove();
-      URL.revokeObjectURL(url);
+  // ── MEDIA LIBRARY ────────────────────────────────────────────────────
+  // Inventario REAL de lo que hay guardado — no una simulación. Enumera
+  // todas las fotos (localStorage, lf_photo_*) y todos los videos
+  // (IndexedDB) que existen ahora mismo, sin importar a qué sección
+  // pertenecen. Cada archivo vive atado a un espacio fijo de una sección
+  // (la foto 01 del Hero, el video del Reel 02...) — no es un banco de
+  // medios genérico donde subís algo una vez y lo reutilizás donde sea; la
+  // arquitectura actual (localStorage/IndexedDB por id de espacio) no
+  // soporta eso todavía. Acá se puede ver todo junto, buscar y eliminar.
+  renderMedia() {
+    this.ensureMediaVideos();
+    const photos = LFStore.listPhotos();
+    const videos = this.mediaVideos || [];
+    const q = (this.state.mediaSearch || '').toLowerCase();
+    const filteredPhotos = photos.filter((p) => p.id.toLowerCase().indexOf(q) !== -1);
+    const filteredVideos = videos.filter((v) => v.id.toLowerCase().indexOf(q) !== -1);
+    const fmtBytes = (n) => n > 1024 * 1024 ? (n / 1024 / 1024).toFixed(1) + ' MB' : Math.round(n / 1024) + ' KB';
+    const removePhotoAt = (id) => () => {
+      if (!confirm('¿Eliminar esta foto? La sección que la usa vuelve a mostrar su placeholder.')) return;
+      LFStore.removePhoto(id); this.bump();
     };
-    const importBackup = (e) => {
-      const file = e.currentTarget.files && e.currentTarget.files[0];
-      e.currentTarget.value = '';
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = () => {
-        try {
-          const data = JSON.parse(String(reader.result));
-          if (LFStore.importBackup(data)) { this.bump(); alert('Respaldo importado.'); }
-          else alert('No se pudo importar ese archivo.');
-        } catch (err) { alert('Archivo inválido.'); }
-      };
-      reader.readAsText(file);
-    };
-    const resetAll = () => {
-      if (!confirm('Esto borra todas las fotos, textos y leads guardados en este navegador y no se puede deshacer. ¿Continuar?')) return;
-      LFStore.resetAll();
-      this.bump();
+    const removeVideoAt = (id) => () => {
+      if (!confirm('¿Eliminar este video?')) return;
+      LFStore.removeVideo(id).then(() => { this.mediaVideos = null; this.bump(); });
     };
     return el('div', { style: S.page },
-      SectionHead('Ajustes', 'Respaldo, restauración y datos de este prototipo.'),
-      el('div', { style: S.card },
-        el('h3', { style: { margin: 0, font: '900 14px/1 var(--font-heading)', textTransform: 'uppercase' } }, 'Exportar respaldo'),
-        el('p', { style: S.hint }, 'Descarga un archivo con todo el contenido y las fotos guardadas — sirve como respaldo o para pasarlo a otra computadora.'),
-        el('div', null, el('button', { type: 'button', style: S.btnPrimary, onClick: exportBackup }, 'Descargar respaldo (.json)'))
+      SectionHead('Media Library', 'Todas las fotos y videos guardados en este navegador, en un solo lugar, con cuánto pesan. Reemplazar o subir uno nuevo se hace desde la sección donde vive (Home, Work, Motion, Artists, About); acá se puede buscar, revisar el peso y eliminar.'),
+      Field('Buscar por nombre de espacio', el('input', { style: S.input, value: this.state.mediaSearch, onChange: (e) => this.setState({ mediaSearch: e.currentTarget.value }), placeholder: 'Ej. pf01, lf-hero-1, r1…' })),
+      el('div', null,
+        el('div', { style: S.label }, 'IMAGES (' + filteredPhotos.length + ')'),
+        filteredPhotos.length
+          ? el('div', { style: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(150px,1fr))', gap: '12px' } }, ...filteredPhotos.map((p) => el('div', { key: p.id, style: S.card },
+              el('img', { src: p.dataUrl, alt: '', style: { width: '100%', height: '110px', objectFit: 'cover', border: '1px solid var(--color-divider)' } }),
+              el('div', { style: { font: '700 11px/1.3 var(--font-body)', wordBreak: 'break-all' } }, p.id),
+              el('div', { style: S.hint }, fmtBytes(p.approxBytes)),
+              el('button', { type: 'button', style: S.btnGhost, onClick: removePhotoAt(p.id) }, 'Eliminar')
+            )))
+          : el('p', { style: S.hint }, 'Ninguna imagen coincide.')
       ),
-      el('div', { style: S.card },
-        el('h3', { style: { margin: 0, font: '900 14px/1 var(--font-heading)', textTransform: 'uppercase' } }, 'Importar respaldo'),
-        el('p', { style: S.hint }, 'Sube un archivo de respaldo exportado antes. Reemplaza el contenido actual.'),
-        el('label', { style: Object.assign({}, S.btnSecondary, { cursor: 'pointer', display: 'inline-flex', width: 'fit-content' }) },
-          'Elegir archivo .json',
-          el('input', { type: 'file', accept: 'application/json', onChange: importBackup, style: { display: 'none' } })
+      el('div', null,
+        el('div', { style: S.label }, 'VIDEOS (' + filteredVideos.length + ')'),
+        filteredVideos.length
+          ? el('div', { style: S.section }, ...filteredVideos.map((v) => el('div', { key: v.id, style: Object.assign({}, S.card, { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }) },
+              el('div', null,
+                el('div', { style: { font: '700 12px/1.3 var(--font-body)' } }, v.id),
+                el('div', { style: S.hint }, fmtBytes(v.bytes))
+              ),
+              el('button', { type: 'button', style: S.btnGhost, onClick: removeVideoAt(v.id) }, 'Eliminar')
+            )))
+          : el('p', { style: S.hint }, this.mediaVideosLoading ? 'Cargando…' : 'Ningún video coincide.')
+      )
+    );
+  }
+
+  // ── NAVIGATION ───────────────────────────────────────────────────────
+  renderNavigation(c) {
+    const items = [
+      ['work', 'WORK', '#work'],
+      ['motion', 'MOTION', '#motion'],
+      ['artists', 'ARTISTS', '#artists'],
+      ['services', 'SERVICES', '#services'],
+      ['photographer', 'ABOUT', '#photographer']
+    ];
+    const hidden = (c.navigation && c.navigation.hidden) || [];
+    const toggle = (key) => (e) => this.updateContent((c2) => {
+      if (!c2.navigation) c2.navigation = { hidden: [] };
+      const set = new Set(c2.navigation.hidden || []);
+      if (e.currentTarget.checked) set.delete(key); else set.add(key);
+      c2.navigation.hidden = Array.from(set);
+    });
+    return el('div', { style: S.page },
+      SectionHead('Navigation', 'Qué links del menú público están visibles. El orden es fijo (coincide con el orden real de las secciones en la página) — lo que se controla acá es mostrar u ocultar cada uno.'),
+      el('div', { style: S.section }, ...items.map(([key, label, href]) => el('div', { key, style: Object.assign({}, S.card, { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px' }) },
+        el('div', null,
+          el('div', { style: { font: '900 14px/1 var(--font-heading)', textTransform: 'uppercase' } }, label),
+          el('div', { style: S.hint }, href)
+        ),
+        el('label', { style: { display: 'flex', alignItems: 'center', gap: '8px', font: '600 12px/1 var(--font-body)' } },
+          el('input', { type: 'checkbox', checked: hidden.indexOf(key) === -1, onChange: toggle(key) }),
+          hidden.indexOf(key) === -1 ? 'Visible' : 'Oculto'
         )
+      ))),
+      el('div', { style: Object.assign({}, S.card, { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px' }) },
+        el('div', null,
+          el('div', { style: { font: '900 14px/1 var(--font-heading)', textTransform: 'uppercase' } }, 'BOOK A PROJECT'),
+          el('div', { style: S.hint }, '#booking — CTA de conversión, siempre visible, no se puede ocultar desde acá')
+        ),
+        el('span', { style: { border: '1px solid var(--color-divider)', padding: '5px 10px', font: '700 10px/1 var(--font-body)', letterSpacing: '.1em', textTransform: 'uppercase', color: 'var(--color-neutral-600)' } }, 'PROTEGIDO')
+      )
+    );
+  }
+
+  // ── SEO ──────────────────────────────────────────────────────────────
+  renderSeo() {
+    const rows = [
+      ['Site Title', 'LA FAMA FILMS — Visuals For The Culture · NYC / NJ / RD'],
+      ['Meta Description', 'Videoclips, fotografía y contenido para artistas urbanos. La calle es el set: rodamos en Nueva York, New Jersey y República Dominicana, y entregamos como se ve en la pantalla del teléfono.'],
+      ['Canonical URL', 'https://lozan0-is.github.io/lafama-films-web/'],
+      ['Open Graph Image', 'sello-lafama.webp (el mismo sello, también usado como favicon)'],
+      ['Twitter Card', 'summary_large_image'],
+      ['Idioma (lang)', 'es'],
+      ['Favicon', 'sello-lafama.webp']
+    ];
+    return el('div', { style: S.page },
+      SectionHead('SEO', 'Estado real de las etiquetas SEO del sitio público ahora mismo.'),
+      el('div', { style: Object.assign({}, S.card, { borderColor: 'var(--lf-ac)' }) },
+        el('h3', { style: { margin: 0, font: '900 13px/1 var(--font-heading)', textTransform: 'uppercase', color: 'var(--lf-ac)' } }, 'Por qué esto todavía no es editable'),
+        el('p', { style: S.hint }, 'El título y los meta tags están escritos directo en el HTML (no como variables) a propósito: los crawlers que arman la vista previa al compartir el link (WhatsApp, Instagram, Facebook, X) y buena parte del SEO de buscadores leen el HTML tal cual llega del servidor, sin ejecutar JavaScript. Si estos campos fueran editables desde acá, cambiarían en TU navegador pero WhatsApp/Google seguirían viendo el texto original — parecería que funciona pero no serviría para lo que realmente importa. Hacerlo editable de verdad requiere generar el HTML del lado del servidor con el valor guardado, algo viable cuando haya hosting con backend real.'),
+        el('p', { style: S.hint }, 'Si necesitas cambiar alguno de estos valores mientras tanto, dímelo directamente y lo actualizo en el archivo.')
       ),
-      el('div', { style: Object.assign({}, S.card, { borderColor: '#c0392b' }) },
-        el('h3', { style: { margin: 0, font: '900 14px/1 var(--font-heading)', textTransform: 'uppercase', color: '#c0392b' } }, 'Restablecer todo'),
-        el('p', { style: S.hint }, 'Borra fotos, textos y leads guardados en este navegador y vuelve a los valores originales del sitio.'),
-        el('div', null, el('button', { type: 'button', style: S.btnGhost, onClick: resetAll }, 'Borrar todo y restablecer'))
-      ),
-      el('p', { style: S.hint }, 'Nota: este panel guarda todo en el navegador (localStorage), como prototipo previo a tener hosting con backend real. Antes de publicar el sitio a producción con varias personas editando, conviene migrar este contenido a una base de datos.')
+      el('div', { style: S.section }, ...rows.map(([label, val]) => el('div', { key: label, style: S.card },
+        el('div', { style: S.label }, label),
+        el('div', { style: { font: '400 13px/1.5 var(--font-body)', wordBreak: 'break-word' } }, val)
+      )))
     );
   }
 
@@ -1376,6 +1637,12 @@ class Component extends DCLogic {
     const src = st.lb ? this.slotSrc(st.lb) : null;
     const isAdmin = st.mode === 'admin';
     const isSite = !isAdmin;
+    const navHidden = (c.navigation && c.navigation.hidden) || [];
+    const navShowWork = navHidden.indexOf('work') === -1;
+    const navShowMotion = navHidden.indexOf('motion') === -1;
+    const navShowArtists = navHidden.indexOf('artists') === -1;
+    const navShowServices = navHidden.indexOf('services') === -1;
+    const navShowPhotographer = navHidden.indexOf('photographer') === -1;
 
     const toggleMode = () => {
       const next = isSite ? 'admin' : 'site';
@@ -1408,44 +1675,48 @@ class Component extends DCLogic {
 
     // ── datos del panel admin ────────────────────────────────────────────
     const leads = LFStore.getLeads();
-    const nuevos = leads.filter((l) => l.estado === 'Nuevo').length;
+    const nuevos = leads.filter((l) => l.estado === 'NEW').length;
     const TABS = [
-      ['resumen', 'Resumen', 0],
-      ['identidad', 'Identidad', 0],
-      ['hero', 'Hero', 0],
-      ['nosotros', 'Sobre nosotros', 0],
-      ['portfolio', 'Portfolio', 0],
-      ['motion', 'Reels', 0],
-      ['artistas', 'Artistas', 0],
-      ['servicios', 'Servicios', 0],
-      ['fotografo', 'Sobre el fotógrafo', 0],
-      ['contacto', 'Contacto', 0],
-      ['leads', 'Leads', nuevos],
-      ['ajustes', 'Ajustes', 0]
+      ['resumen', 'Overview', 0, null],
+      ['home', 'Home', 0, 'CONTENT'],
+      ['portfolio', 'Work', 0, 'CONTENT'],
+      ['motion', 'Motion', 0, 'CONTENT'],
+      ['artistas', 'Artists', 0, 'CONTENT'],
+      ['servicios', 'Services', 0, 'CONTENT'],
+      ['fotografo', 'About', 0, 'CONTENT'],
+      ['leads', 'Booking', nuevos, 'BUSINESS'],
+      ['media', 'Media Library', 0, 'MEDIA'],
+      ['navigation', 'Navigation', 0, 'SYSTEM'],
+      ['seo', 'SEO', 0, 'SYSTEM'],
+      ['settings', 'Settings', 0, 'SYSTEM']
     ];
     const pick = (key) => () => this.setState({ tab: key });
-    const navItems = TABS.map(([key, label, badge]) => {
+    const pickMobile = (key) => () => this.setState({ tab: key, paMenuOpen: false });
+    let prevGroup;
+    const navItems = TABS.map(([key, label, badge, group]) => {
       const active = st.tab === key;
+      const groupLabel = group !== prevGroup ? (group || '') : '';
+      prevGroup = group;
       return {
-        key, label, badge: String(badge), hasBadge: badge > 0,
+        key, label, badge: String(badge), hasBadge: badge > 0, groupLabel,
         cls: active ? 'pa-navitem active' : 'pa-navitem',
-        chipCls: active ? 'pa-chip active' : 'pa-chip',
-        onClick: pick(key)
+        onClick: pick(key),
+        onClickMobile: pickMobile(key)
       };
     });
     const bodies = {
       resumen: () => this.renderResumen(c, leads),
-      identidad: () => this.renderIdentidad(c),
-      hero: () => this.renderHero(),
-      nosotros: () => this.renderNosotros(c),
+      home: () => this.renderHome(c),
       portfolio: () => this.renderPortfolio(c),
       motion: () => this.renderMotion(c),
       artistas: () => this.renderArtistas(c),
       servicios: () => this.renderServicios(c),
       fotografo: () => this.renderFotografo(c),
-      contacto: () => this.renderContacto(c),
       leads: () => this.renderLeads(),
-      ajustes: () => this.renderAjustes()
+      media: () => this.renderMedia(),
+      navigation: () => this.renderNavigation(c),
+      seo: () => this.renderSeo(),
+      settings: () => this.renderSettings(c)
     };
     const tabBody = isAdmin ? (bodies[st.tab] || bodies.resumen)() : null;
     const topTitle = (TABS.find((t) => t[0] === st.tab) || TABS[0])[1];
@@ -1453,6 +1724,10 @@ class Component extends DCLogic {
     return {
       isSite, isAdmin, toggleMode,
       navItems, tabBody, topTitle,
+      paMenuOpen: !!st.paMenuOpen,
+      togglePaMenu: () => this.setState({ paMenuOpen: !st.paMenuOpen }),
+      savedToast: !!st.saved,
+      navShowWork, navShowMotion, navShowArtists, navShowServices, navShowPhotographer,
       c,
       pfItems, reelItems, artistItems, serviceItems, photographerPhoto,
       // El motor de plantillas {{ }} solo resuelve rutas simples (a.b.c) —
