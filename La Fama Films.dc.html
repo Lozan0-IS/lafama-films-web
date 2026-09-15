@@ -677,9 +677,12 @@ class Component extends DCLogic {
     // segunda) — no en el medio de "FILMS" sola.
     const seamY = line1Rect ? (line1Rect.bottom + line2Rect.top) / 2 : (line2Rect.top + line2Rect.height / 2);
     const top = (seamY - contRect.top) - size / 2;
-    // Pegado cerca del texto (no flotando lejos en el espacio vacío).
+    // Pegado cerca del texto (no flotando lejos en el espacio vacío). En
+    // celular el título casi toca el borde de la pantalla, así que ahí
+    // separa un poco más para que no quede montado sobre la letra.
     const textRight = (line2Rect.left - contRect.left) + line2Rect.width;
-    let left = textRight + 14;
+    const gap = window.matchMedia('(max-width: 640px)').matches ? 22 : 14;
+    let left = textRight + gap;
     // En pantallas medianas/angostas el título casi llena el contenedor —
     // no dejes que el sello se salga por la derecha, pégalo al borde.
     const maxLeft = contRect.width - size - 4;
