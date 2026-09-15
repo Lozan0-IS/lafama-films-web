@@ -70,7 +70,8 @@
       { id: 's2', svc: 'Fotografía', title: 'FOTOGRAFÍA · STREET & STUDIO', desc: 'Flash directo, retrato de portada, promo para prensa y sesiones en la calle.', price: '' },
       { id: 's3', svc: 'Reel', title: 'REELS & CONTENT CREATION', desc: 'Paquetes mensuales de contenido vertical para IG y TikTok. Entrega en 48h.', price: '' },
       { id: 's4', svc: 'Evento', title: 'EVENTOS · LIVE & BACKSTAGE', desc: 'Conciertos, club nights, giras y cobertura de backstage en NYC, NJ y RD.', price: '' },
-      { id: 's5', svc: 'Campaña', title: 'CAMPAÑAS DE MARCA', desc: 'Marcas que quieren hablarle a la cultura urbana latina sin sonar falso.', price: '' }
+      { id: 's5', svc: 'Campaña', title: 'CAMPAÑAS DE MARCA', desc: 'Marcas que quieren hablarle a la cultura urbana latina sin sonar falso.', price: '' },
+      { id: 's6', svc: 'Edición de video', title: 'EDICIÓN DE VIDEO', desc: 'Edición para el material que ya tienes grabado: videoclips, reels, eventos o footage propio. Color, ritmo y entrega lista para la plataforma.', price: '' }
     ]
   };
 
@@ -131,6 +132,68 @@
   }
   function removePhoto(id) {
     try { localStorage.removeItem(PHOTO_PREFIX + id); } catch (e) {}
+  }
+
+  // ── Videos (IndexedDB) ──────────────────────────────────────────────────
+  // localStorage tiene ~5-10MB de cupo total y solo guarda strings — un
+  // video, aunque sea corto, no cabe ahí. IndexedDB sí soporta blobs
+  // binarios y da muchísimo más espacio, así que los reels con autoplay
+  // (para hacer scroll y que reproduzcan solos) se guardan aquí.
+  var VIDEO_DB = 'lf_videos_db';
+  var VIDEO_STORE = 'videos';
+  var videoDbPromise = null;
+  function openVideoDb() {
+    if (videoDbPromise) return videoDbPromise;
+    videoDbPromise = new Promise(function (resolve) {
+      if (!global.indexedDB) { resolve(null); return; }
+      var req;
+      try { req = global.indexedDB.open(VIDEO_DB, 1); } catch (e) { resolve(null); return; }
+      req.onupgradeneeded = function () {
+        if (!req.result.objectStoreNames.contains(VIDEO_STORE)) req.result.createObjectStore(VIDEO_STORE);
+      };
+      req.onsuccess = function () { resolve(req.result); };
+      req.onerror = function () { resolve(null); };
+    });
+    return videoDbPromise;
+  }
+  function saveVideo(id, blob) {
+    return openVideoDb().then(function (db) {
+      if (!db) return false;
+      return new Promise(function (resolve) {
+        try {
+          var tx = db.transaction(VIDEO_STORE, 'readwrite');
+          tx.objectStore(VIDEO_STORE).put(blob, id);
+          tx.oncomplete = function () { resolve(true); };
+          tx.onerror = function () { resolve(false); };
+        } catch (e) { resolve(false); }
+      });
+    });
+  }
+  function getVideo(id) {
+    return openVideoDb().then(function (db) {
+      if (!db) return null;
+      return new Promise(function (resolve) {
+        try {
+          var tx = db.transaction(VIDEO_STORE, 'readonly');
+          var req = tx.objectStore(VIDEO_STORE).get(id);
+          req.onsuccess = function () { resolve(req.result || null); };
+          req.onerror = function () { resolve(null); };
+        } catch (e) { resolve(null); }
+      });
+    });
+  }
+  function removeVideo(id) {
+    return openVideoDb().then(function (db) {
+      if (!db) return false;
+      return new Promise(function (resolve) {
+        try {
+          var tx = db.transaction(VIDEO_STORE, 'readwrite');
+          tx.objectStore(VIDEO_STORE).delete(id);
+          tx.oncomplete = function () { resolve(true); };
+          tx.onerror = function () { resolve(false); };
+        } catch (e) { resolve(false); }
+      });
+    });
   }
 
   // Redimensiona/comprime antes de guardar — una foto de cámara sin comprimir
@@ -221,6 +284,9 @@
     savePhoto: savePhoto,
     removePhoto: removePhoto,
     readAndResizeImage: readAndResizeImage,
+    saveVideo: saveVideo,
+    getVideo: getVideo,
+    removeVideo: removeVideo,
     getLeads: getLeads,
     addLead: addLead,
     setLeads: setLeads,

@@ -69,7 +69,13 @@
     100% { opacity: 1; transform: scale(1); filter: blur(0); }
   }
   .lf-stamp-flash { position: absolute; inset: 0; border-radius: 50%; background: radial-gradient(circle, rgba(220,38,38,.55) 0%, rgba(220,38,38,0) 70%); opacity: 0; transform: scale(.6); pointer-events: none; }
-  .lf-stamp.stamped .lf-stamp-flash { animation: lfStampFlash .6s ease-out .45s forwards; }
+  /* Sin "forwards": el keyframe final (scale 2.4, invisible) quedaba fijo
+     para siempre después del golpe — invisible pero con su caja de layout
+     inflada, lo que empujaba el ancho de toda la página en pantallas
+     angostas (scroll horizontal fantasma en el cel). El estado de reposo
+     (opacity:0) ya es igual de invisible, así que al terminar la animación
+     vuelve solo a su tamaño normal sin cambiar nada visible. */
+  .lf-stamp.stamped .lf-stamp-flash { animation: lfStampFlash .6s ease-out .45s; }
   @keyframes lfStampFlash {
     0%   { opacity: .8; transform: scale(.6); }
     100% { opacity: 0; transform: scale(2.4); }
@@ -296,12 +302,12 @@
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:6px">
       <sc-for list="{{ reelItems }}" as="rl" hint-placeholder-count="3">
       <div class="hovg rv" style="aspect-ratio:9/16;position:relative;background:var(--color-neutral-400);outline:2px solid var(--color-text)">
-        {{ rl.photo }}
+        {{ rl.media }}
         <div style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(0deg,rgba(32,30,29,.9) 0%,rgba(32,30,29,0) 55%);display:flex;flex-direction:column;justify-content:flex-end;padding:12px;gap:4px">
-          <div style="font:600 9px/1 var(--font-body);letter-spacing:.2em;text-transform:uppercase;color:var(--color-accent-400)">▶ REEL · INSTAGRAM</div>
+          <div style="font:600 9px/1 var(--font-body);letter-spacing:.2em;text-transform:uppercase;color:var(--color-accent-400)">{{ rl.tagLabel }}</div>
           <div style="font:900 18px/0.95 var(--font-heading);text-transform:uppercase;color:var(--color-bg)">{{ rl.label }}</div>
         </div>
-        <button type="button" data-reel="{{ rl.code }}" onClick="{{ play }}" style="position:absolute;top:10px;right:10px;background:var(--lf-ac);color:#fff;border:none;font:900 10px/1 var(--font-heading);letter-spacing:.14em;padding:7px 9px;cursor:pointer" style-hover="background:var(--color-text)">▶ PLAY</button>
+        <button type="button" data-reel-id="{{ rl.id }}" onClick="{{ play }}" style="position:absolute;top:10px;right:10px;background:var(--lf-ac);color:#fff;border:none;font:900 10px/1 var(--font-heading);letter-spacing:.14em;padding:7px 9px;cursor:pointer" style-hover="background:var(--color-text)">{{ rl.playLabel }}</button>
       </div>
       </sc-for>
     </div>
@@ -407,6 +413,7 @@
               <button type="button" data-svc="Contenido para artista" onClick="{{ pickChoice }}" style="padding:16px 12px;border:2px solid {{ pcArtista.border }};background:{{ pcArtista.bg }};color:{{ pcArtista.color }};text-align:left;font:900 15px/1.1 var(--font-heading);text-transform:uppercase;cursor:pointer">CONTENIDO ARTISTA</button>
               <button type="button" data-svc="Evento" onClick="{{ pickChoice }}" style="padding:16px 12px;border:2px solid {{ pcEvento.border }};background:{{ pcEvento.bg }};color:{{ pcEvento.color }};text-align:left;font:900 15px/1.1 var(--font-heading);text-transform:uppercase;cursor:pointer">EVENTO</button>
               <button type="button" data-svc="Campaña" onClick="{{ pickChoice }}" style="padding:16px 12px;border:2px solid {{ pcCampana.border }};background:{{ pcCampana.bg }};color:{{ pcCampana.color }};text-align:left;font:900 15px/1.1 var(--font-heading);text-transform:uppercase;cursor:pointer">CAMPAÑA</button>
+              <button type="button" data-svc="Edición de video" onClick="{{ pickChoice }}" style="padding:16px 12px;border:2px solid {{ pcEdicion.border }};background:{{ pcEdicion.bg }};color:{{ pcEdicion.color }};text-align:left;font:900 15px/1.1 var(--font-heading);text-transform:uppercase;cursor:pointer">EDICIÓN DE VIDEO</button>
               <button type="button" data-svc="Otro" onClick="{{ pickChoice }}" style="padding:16px 12px;border:2px solid {{ pcOtro.border }};background:{{ pcOtro.bg }};color:{{ pcOtro.color }};text-align:left;font:900 15px/1.1 var(--font-heading);text-transform:uppercase;cursor:pointer">OTRO</button>
             </div>
             <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;border-top:2px solid var(--color-text);padding-top:16px">
@@ -619,6 +626,12 @@ const PF_SIZE_OPTIONS = [
 class Component extends DCLogic {
   state = { mode: 'site', menu: false, step: 1, svc: '', lb: null, reel: null, note: '', tab: 'resumen', tick: 0, stamped: false };
   f = {};
+  // Los videos de los reels viven en IndexedDB (ver lf-store.js), así que la
+  // lectura es async — se cachean acá como object URLs una vez cargados en
+  // vez de guardarlos en el state de React (evita relecturas/parpadeos).
+  videoCache = {};
+  videoTried = {};
+  observedVideoNodes = new WeakSet();
 
   applyVars(c) {
     const r = document.documentElement.style;
@@ -662,6 +675,45 @@ class Component extends DCLogic {
     // abre una SEGUNDA pestaña con este mismo archivo.
     this.onStorage = (e) => { if (!e.key || e.key.indexOf('lf_') === 0) this.setState({ tick: this.state.tick + 1 }); };
     window.addEventListener('storage', this.onStorage);
+    // Autoplay de los reels al hacer scroll (mudo, como IG/TikTok) — se
+    // reproducen solos al entrar en pantalla y se pausan al salir.
+    if ('IntersectionObserver' in window) {
+      this.reelObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          const v = entry.target;
+          if (entry.isIntersecting) { const p = v.play(); if (p && p.catch) p.catch(() => {}); }
+          else v.pause();
+        });
+      }, { threshold: 0.5 });
+    }
+    this.syncReelObserver();
+  }
+
+  // Registra los <video> de reels recién montados en el IntersectionObserver
+  // (sc-for los recrea al reordenar/editar en el admin, así que se re-corre
+  // en cada actualización — observar un nodo ya observado no hace nada).
+  syncReelObserver() {
+    if (!this.reelObserver) return;
+    document.querySelectorAll('[data-reel-video]').forEach((v) => {
+      if (this.observedVideoNodes.has(v)) return;
+      this.observedVideoNodes.add(v);
+      // El navegador solo respeta el atributo HTML `muted` cuando lo parsea
+      // él mismo — un motor de templates que arma el DOM por su cuenta no
+      // siempre setea la PROPIEDAD .muted, y sin eso el navegador bloquea
+      // el autoplay. Se fuerza acá para que sea confiable siempre.
+      v.muted = true;
+      v.loop = true;
+      v.playsInline = true;
+      this.reelObserver.observe(v);
+    });
+  }
+
+  ensureReelVideo(id) {
+    if (this.videoTried[id]) return;
+    this.videoTried[id] = true;
+    LFStore.getVideo(id).then((blob) => {
+      if (blob) { this.videoCache[id] = URL.createObjectURL(blob); this.bump(); }
+    });
   }
 
   // Ubica el sello pegado al texto real de "FILMS". El <h1> es block-level
@@ -752,11 +804,13 @@ class Component extends DCLogic {
     this.observe();
     this.positionStamp();
     this.syncArchiveRows();
+    this.syncReelObserver();
     if (this.syncNav) this.syncNav();
   }
 
   componentWillUnmount() {
     if (this.mo) this.mo.disconnect();
+    if (this.reelObserver) this.reelObserver.disconnect();
     clearTimeout(this.safety);
     window.removeEventListener('scroll', this.onScroll);
     window.removeEventListener('resize', this.onScroll);
@@ -780,6 +834,18 @@ class Component extends DCLogic {
         letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--color-neutral-600)'
       }
     }, label || 'Foto pendiente');
+  }
+
+  // Se arma en JS (como heroPhoto) en vez de escribir src="{{ }}" en el
+  // markup: un binding de atributo se pinta primero con el texto crudo del
+  // placeholder mientras el motor monta, y el navegador llega a pedir esa
+  // URL literal ("{{ rl.videoUrl }}") como si fuera real — un elemento ya
+  // armado con datos reales no tiene ese problema.
+  reelVideoEl(url) {
+    return React.createElement('video', {
+      'data-reel-video': '1', src: url, muted: true, loop: true, playsInline: true, preload: 'metadata',
+      style: { position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', display: 'block' }
+    });
   }
 
   slotSrc(id) {
@@ -821,6 +887,48 @@ class Component extends DCLogic {
           el('input', { type: 'file', accept: 'image/png,image/jpeg,image/webp,image/avif', onChange: onPick, style: { display: 'none' } })
         ),
         src ? el('button', { type: 'button', onClick: onClear, style: S.btnGhost }, 'Quitar') : null
+      )
+    );
+  }
+
+  // Sube el video real que se reproduce solo al hacer scroll (autoplay
+  // mudo). Es opcional: si no se sube nada, el reel se queda con la foto +
+  // el botón de PLAY que abre el embed de Instagram, como antes.
+  videoWidget(id) {
+    this.ensureReelVideo(id);
+    const cached = this.videoCache[id];
+    const onPick = (e) => {
+      const file = e.currentTarget.files && e.currentTarget.files[0];
+      e.currentTarget.value = '';
+      if (!file) return;
+      LFStore.saveVideo(id, file).then((ok) => {
+        if (!ok) { alert('No se pudo guardar el video (¿muy pesado para el navegador?). Prueba con un archivo más corto/liviano.'); return; }
+        if (this.videoCache[id]) URL.revokeObjectURL(this.videoCache[id]);
+        delete this.videoCache[id];
+        this.videoTried[id] = false;
+        this.ensureReelVideo(id);
+      });
+    };
+    const onClear = () => {
+      LFStore.removeVideo(id).then(() => {
+        if (this.videoCache[id]) URL.revokeObjectURL(this.videoCache[id]);
+        delete this.videoCache[id];
+        this.videoTried[id] = false;
+        this.bump();
+      });
+    };
+    return el('div', { style: { display: 'flex', flexDirection: 'column', gap: '6px' } },
+      el('div', { style: { position: 'relative', width: '100%', height: '150px', background: 'var(--color-neutral-200)', border: '1px solid var(--color-divider)', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' } },
+        cached
+          ? el('video', { src: cached, muted: true, loop: true, autoPlay: true, playsInline: true, style: { width: '100%', height: '100%', objectFit: 'cover' } })
+          : el('span', { style: { font: '700 10px/1.4 var(--font-body)', letterSpacing: '.1em', textTransform: 'uppercase', color: 'var(--color-neutral-600)', textAlign: 'center', padding: '6px' } }, 'Sin video — usa la foto + Instagram')
+      ),
+      el('div', { style: S.row },
+        el('label', { style: Object.assign({}, S.btnSecondary, { cursor: 'pointer' }) },
+          cached ? 'Cambiar video' : 'Subir video',
+          el('input', { type: 'file', accept: 'video/mp4,video/webm,video/quicktime', onChange: onPick, style: { display: 'none' } })
+        ),
+        cached ? el('button', { type: 'button', onClick: onClear, style: S.btnGhost }, 'Quitar') : null
       )
     );
   }
@@ -958,7 +1066,13 @@ class Component extends DCLogic {
       const j = i + dir; if (j < 0 || j >= c2.reels.length) return;
       const tmp = c2.reels[i]; c2.reels[i] = c2.reels[j]; c2.reels[j] = tmp;
     });
-    const remove = (id) => this.updateContent((c2) => { c2.reels = c2.reels.filter((x) => x.id !== id); LFStore.removePhoto(id); });
+    const remove = (id) => this.updateContent((c2) => {
+      c2.reels = c2.reels.filter((x) => x.id !== id);
+      LFStore.removePhoto(id);
+      LFStore.removeVideo(id);
+      if (this.videoCache[id]) { URL.revokeObjectURL(this.videoCache[id]); delete this.videoCache[id]; }
+      this.videoTried[id] = false;
+    });
     const setField = (id, field) => (e) => this.updateContent((c2) => {
       const it = c2.reels.find((x) => x.id === id); if (it) it[field] = e.currentTarget.value;
     });
@@ -966,13 +1080,16 @@ class Component extends DCLogic {
       c2.reels.push({ id: LFStore.uid('r'), code: '', label: 'REEL ' + String(c2.reels.length + 1).padStart(2, '0') });
     });
     return el('div', { style: S.page },
-      SectionHead('Motion (Reels)', 'Videos verticales de Instagram. El código es la parte de la URL entre /reel/ y el siguiente /, por ejemplo instagram.com/reel/ABC123XYZ/ → el código es ABC123XYZ.'),
+      SectionHead('Motion (Reels)', 'Sube el video y se reproduce solo (mudo) apenas el visitante llega a él haciendo scroll — sin botón de play. El código de Instagram es opcional: solo hace falta si NO subes un video, para poder abrir el reel embebido al hacer clic.'),
       el('div', { style: S.section }, ...list.map((it, i) => el('div', { key: it.id, style: S.card },
         el('div', { style: { display: 'flex', gap: '14px', flexWrap: 'wrap' } },
-          el('div', { style: { width: '110px', flex: '0 0 110px' } }, this.photoWidget(it.id, it.label, { height: '150px' })),
+          el('div', { style: { width: '110px', flex: '0 0 110px', display: 'flex', flexDirection: 'column', gap: '10px' } },
+            this.photoWidget(it.id, it.label, { height: '110px' }),
+            this.videoWidget(it.id)
+          ),
           el('div', { style: { flex: '1 1 260px', display: 'flex', flexDirection: 'column', gap: '10px' } },
             Field('Nombre / etiqueta', el('input', { style: S.input, value: it.label, onChange: setField(it.id, 'label') })),
-            Field('Código del reel de Instagram', el('input', { style: S.input, value: it.code, onChange: setField(it.id, 'code'), placeholder: 'Ej. Dc7Su26xWGA' }), 'Se usa para reproducir el reel embebido al hacer clic en PLAY.')
+            Field('Código del reel de Instagram (opcional)', el('input', { style: S.input, value: it.code, onChange: setField(it.id, 'code'), placeholder: 'Ej. Dc7Su26xWGA' }), 'Solo se usa si no hay video subido.')
           ),
           el('div', { style: { display: 'flex', flexDirection: 'column', gap: '6px' } },
             el('button', { type: 'button', style: S.btnIcon, onClick: () => move(i, -1), disabled: i === 0 }, '↑'),
@@ -1053,17 +1170,6 @@ class Component extends DCLogic {
         )
       ))),
       el('button', { type: 'button', style: S.btnPrimary, onClick: addItem }, '+ Añadir servicio')
-    );
-  }
-
-  // ── INSTAGRAM FEED ───────────────────────────────────────────────────
-  renderFeed() {
-    const ids = Array.from({ length: 12 }, (_, i) => 'lf-ig-' + String(i + 1).padStart(2, '0'));
-    return el('div', { style: S.page },
-      SectionHead('Instagram Feed', 'La cuadrícula de 12 fotos cuadradas que enlaza al Instagram del estudio.'),
-      el('div', { style: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(130px,1fr))', gap: '10px' } },
-        ...ids.map((id, i) => el('div', { key: id }, this.photoWidget(id, 'IG ' + String(i + 1).padStart(2, '0'), { height: '110px' })))
-      )
     );
   }
 
@@ -1215,16 +1321,25 @@ class Component extends DCLogic {
       const frameNo = 'N°' + String(i + 1).padStart(2, '0');
       return Object.assign({}, it, sz, { rowSpanCss: 'span ' + (sz.rowSpan + 3), photo: this.heroPhoto(it.id, it.cat), frameNo });
     });
-    const reelItems = (c.reels || []).map((it) => Object.assign({}, it, { photo: this.heroPhoto(it.id, it.label) }));
+    const reelItems = (c.reels || []).map((it) => {
+      this.ensureReelVideo(it.id);
+      const videoUrl = this.videoCache[it.id] || null;
+      return Object.assign({}, it, {
+        media: videoUrl ? this.reelVideoEl(videoUrl) : this.heroPhoto(it.id, it.label),
+        hasVideo: !!videoUrl,
+        playLabel: videoUrl ? '⛶ VER' : '▶ PLAY',
+        tagLabel: videoUrl ? 'REEL · AUTOPLAY' : '▶ REEL · INSTAGRAM'
+      });
+    });
     const artistItems = (c.artists || []).map((it) => Object.assign({}, it, { photo: this.heroPhoto(it.id, it.name) }));
     const serviceItems = (c.services || []).map((it) => Object.assign({}, it, {
       showPrice: !!c.showPricing,
       priceLabel: 'DESDE ' + (it.price && it.price.trim() ? it.price : '$ —')
     }));
-    const igItems = Array.from({ length: 12 }, (_, i) => {
-      const n = String(i + 1).padStart(2, '0');
-      const id = 'lf-ig-' + n;
-      return { id, photo: this.heroPhoto(id, 'IG ' + n) };
+    // El feed reutiliza las mismas fotos ya subidas en El Archivo — no hace
+    // falta que el admin suba 12 imágenes aparte solo para esta franja.
+    const igItems = (c.portfolio || []).slice(0, 12).map((it) => {
+      return { id: it.id, photo: this.heroPhoto(it.id, it.cat) };
     });
 
     // ── datos del panel admin ────────────────────────────────────────────
@@ -1239,7 +1354,6 @@ class Component extends DCLogic {
       ['motion', 'Reels', 0],
       ['artistas', 'Artistas', 0],
       ['servicios', 'Servicios', 0],
-      ['feed', 'Instagram', 0],
       ['contacto', 'Contacto', 0],
       ['leads', 'Leads', nuevos],
       ['ajustes', 'Ajustes', 0]
@@ -1263,7 +1377,6 @@ class Component extends DCLogic {
       motion: () => this.renderMotion(c),
       artistas: () => this.renderArtistas(c),
       servicios: () => this.renderServicios(c),
-      feed: () => this.renderFeed(),
       contacto: () => this.renderContacto(c),
       leads: () => this.renderLeads(),
       ajustes: () => this.renderAjustes()
@@ -1305,6 +1418,7 @@ class Component extends DCLogic {
       pcArtista: svcSel('Contenido para artista'),
       pcEvento: svcSel('Evento'),
       pcCampana: svcSel('Campaña'),
+      pcEdicion: svcSel('Edición de video'),
       pcOtro: svcSel('Otro'),
       chosen: st.svc || 'ninguno todavía',
       sendNote: st.note || 'Se abre WhatsApp con el mensaje ya escrito. Nombre, email y WhatsApp son obligatorios.',
@@ -1349,15 +1463,27 @@ class Component extends DCLogic {
       zoom: (e) => { e.stopPropagation(); this.setState({ lb: e.currentTarget.dataset.slot }); },
       reel: !!st.reel,
       closeReel: () => this.setState({ reel: null }),
-      reelFrame: st.reel
-        ? React.createElement('iframe', {
-            src: 'https://www.instagram.com/reel/' + st.reel + '/embed',
+      reelFrame: (() => {
+        if (!st.reel) return null;
+        const openVideoUrl = this.videoCache[st.reel];
+        if (openVideoUrl) {
+          return React.createElement('video', {
+            src: openVideoUrl, controls: true, autoPlay: true, playsInline: true,
+            style: { width: 'min(420px, 92vw)', height: 'min(740px, 86vh)', border: '2px solid #f3f2f2', background: '#000' }
+          });
+        }
+        const openItem = (c.reels || []).find((r) => r.id === st.reel);
+        if (openItem && openItem.code) {
+          return React.createElement('iframe', {
+            src: 'https://www.instagram.com/reel/' + openItem.code + '/embed',
             title: 'Reel',
             allow: 'autoplay; encrypted-media; fullscreen',
             style: { width: 'min(420px, 92vw)', height: 'min(740px, 86vh)', border: '2px solid #f3f2f2', background: '#000' }
-          })
-        : null,
-      play: (e) => this.setState({ reel: e.currentTarget.dataset.reel })
+          });
+        }
+        return null;
+      })(),
+      play: (e) => this.setState({ reel: e.currentTarget.dataset.reelId })
     };
   }
 }
