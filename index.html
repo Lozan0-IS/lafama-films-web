@@ -3,5 +3,11 @@
 <title>La Fama Films</title>
 <meta http-equiv="refresh" content="0; url=La%20Fama%20Films.dc.html">
 <link rel="canonical" href="La%20Fama%20Films.dc.html">
-<script>location.replace('La Fama Films.dc.html');</script>
+<script>
+  // Preserva el hash (#admin) y cualquier query string al redirigir — sin
+  // esto, entrar a la raíz del sitio con #admin (un patrón real: "andá a
+  // tuweb.com/#admin") aterrizaba siempre en el sitio público, porque el
+  // replace() perdía el hash original.
+  location.replace('La Fama Films.dc.html' + location.search + location.hash);
+</script>
 <p>Redirigiendo a <a href="La%20Fama%20Films.dc.html">La Fama Films</a>…</p>
