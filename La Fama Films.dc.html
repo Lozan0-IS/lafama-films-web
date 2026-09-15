@@ -24,7 +24,19 @@
 <link rel="stylesheet" href="_ds/modernist-1feebbc2-e15e-41ff-baf4-84409bd79914/styles.css">
 <script src="_ds/modernist-1feebbc2-e15e-41ff-baf4-84409bd79914/_ds_bundle.js"></script>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Archivo+Narrow:wght@500;600;700&display=swap" rel="stylesheet">
+<!-- display=optional (no "swap"): la tipografía del sitio es "Archivo" a
+     peso 900 con letter-spacing apretado en títulos enormes (hasta 206px) —
+     muy distinta en ancho al fallback (system-ui). Con "swap" el navegador
+     pinta primero con el fallback y la cambia por Archivo apenas carga,
+     lo que en móvil (más lento) se ve como que "la página se reacomoda"
+     un par de segundos después — y como positionStamp()/syncArchiveRows()
+     vuelven a correr en fonts.ready, el sello y el grid del archivo
+     también saltan de lugar justo en ese momento. Con "optional" el
+     navegador espera un instante cortísimo por la fuente y, si no llegó,
+     se queda con el fallback para esa carga — sin swap tardío, sin salto
+     visible. (Ya en caché, en visitas siguientes carga con Archivo
+     directamente porque está disponible al instante.) -->
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Archivo+Narrow:wght@500;600;700&display=optional" rel="stylesheet">
 <script src="./lf-store.js"></script>
 <style>
   :root { --lf-ac: #ec3013; --lf-cols: 6; --lf-grain: 0.055; }
@@ -60,7 +72,7 @@
   input:focus-visible, textarea:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid var(--lf-ac); outline-offset: 2px; }
 
   /* ── Sello estampado del Hero ─────────────────────────────────────────── */
-  .lf-stamp-wrap { position: absolute; top: 140px; left: 260px; width: 212px; height: 212px; z-index: 5; transform: rotate(-8deg); }
+  .lf-stamp-wrap { position: absolute; top: 140px; left: 260px; width: 212px; height: 212px; z-index: 5; transform: rotate(-8deg); transition: top .25s ease, left .25s ease; }
   .lf-stamp { position: relative; width: 100%; height: 100%; opacity: 0; transform: scale(3.5); filter: blur(8px); transform-origin: 50% 50%; }
   .lf-stamp.stamped { animation: lfStampDrop .85s cubic-bezier(.175,.885,.32,1.275) forwards; }
   @keyframes lfStampDrop {
