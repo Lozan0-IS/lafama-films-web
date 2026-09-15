@@ -3,6 +3,17 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+  // support.js trae un self-fetch de auto-actualización (pensado para el
+  // editor de diseño en vivo) que vuelve a pedir este mismo HTML después de
+  // montar la página y "actualiza" la plantilla si detecta diferencias.
+  // En un sitio ya publicado esto no cumple ningún propósito y es
+  // justo el tipo de cosa que puede duplicar contenido si la caché del CDN
+  // (GitHub Pages) devuelve una versión ligeramente distinta en esa segunda
+  // petición justo después de un deploy. Desactivado seteando esta bandera
+  // antes de que support.js la revise.
+  window.__resources = true;
+</script>
 <script src="./support.js"></script>
 </head>
 <body>
