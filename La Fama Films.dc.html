@@ -21,17 +21,17 @@
 <helmet>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LA FAMA FILMS — Visuals For The Culture · NYC / NJ / RD</title>
-<meta name="description" content="Videoclips, fotografía y contenido para artistas urbanos. La calle es el set: rodamos en Nueva York, New Jersey y República Dominicana, y entregamos como se ve en la pantalla del teléfono.">
+<meta name="description" content="Music videos, photography and content for urban artists. The street is the set: we shoot in New York, New Jersey and the Dominican Republic, and deliver the way it looks on your phone screen.">
 <link rel="canonical" href="https://lozan0-is.github.io/lafama-films-web/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="La Fama Films">
 <meta property="og:title" content="LA FAMA FILMS — Visuals For The Culture">
-<meta property="og:description" content="Videoclips, fotografía y contenido para artistas urbanos. La calle es el set: rodamos en Nueva York, New Jersey y República Dominicana.">
+<meta property="og:description" content="Music videos, photography and content for urban artists. The street is the set: we shoot in New York, New Jersey and the Dominican Republic.">
 <meta property="og:image" content="https://lozan0-is.github.io/lafama-films-web/sello-lafama.webp">
 <meta property="og:url" content="https://lozan0-is.github.io/lafama-films-web/">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="LA FAMA FILMS — Visuals For The Culture">
-<meta name="twitter:description" content="Videoclips, fotografía y contenido para artistas urbanos. La calle es el set.">
+<meta name="twitter:description" content="Music videos, photography and content for urban artists. The street is the set.">
 <meta name="twitter:image" content="https://lozan0-is.github.io/lafama-films-web/sello-lafama.webp">
 <link rel="icon" type="image/webp" href="sello-lafama.webp">
 <link rel="stylesheet" href="_ds/modernist-1feebbc2-e15e-41ff-baf4-84409bd79914/styles.css">
@@ -328,10 +328,10 @@
       </div>
     </div>
 
-    <h1 class="{{ heroShakeClass }}" style="margin:0;font:900 clamp(72px,19vw,206px)/0.82 var(--font-heading);letter-spacing:-.045em;text-transform:uppercase">{{ heroTitleLine1 }}<br>{{ heroTitleLine2 }}</h1>
+    <h1 class="{{ heroShakeClass }}" aria-label="{{ heroTitleAria }}" style="margin:0;font:900 clamp(72px,19vw,206px)/0.82 var(--font-heading);letter-spacing:-.045em;text-transform:uppercase">{{ heroTitleLine1 }}<br>{{ heroTitleLine2 }}</h1>
 
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:clamp(18px,3vw,40px);align-items:end;border-top:2px solid var(--color-text);margin-top:clamp(24px,4vw,28px);padding-top:clamp(18px,2.4vw,14px)">
-      <h2 style="margin:0;font:700 clamp(36px,9vw,58px)/0.92 'Archivo Narrow',var(--font-heading);letter-spacing:-.01em;text-transform:uppercase">{{ heroSubtitleLine1 }}<br>{{ heroSub2Rest }} <span style="color:var(--lf-ac)">{{ heroSub2Accent }}</span></h2>
+      <h2 aria-label="{{ heroSubtitleAria }}" style="margin:0;font:700 clamp(36px,9vw,58px)/0.92 'Archivo Narrow',var(--font-heading);letter-spacing:-.01em;text-transform:uppercase">{{ heroSubtitleLine1 }}<br>{{ heroSub2Rest }} <span style="color:var(--lf-ac)">{{ heroSub2Accent }}</span></h2>
       <p style="margin:0;max-width:42ch;font:400 15px/1.6 var(--font-body);color:var(--color-neutral-800)">{{ t.heroBodyCopy }}</p>
       <div style="display:flex;flex-wrap:wrap;gap:10px">
         <a href="#work" style="padding:13px 18px;border:2px solid var(--color-text);font:900 13px/1 var(--font-heading);letter-spacing:.08em;text-transform:uppercase" style-hover="background:var(--color-text);color:var(--color-bg)">{{ t.heroViewArchive }}</a>
@@ -2125,7 +2125,7 @@ class Component extends DCLogic {
   renderSeo(t) {
     const rows = [
       [t.seoSiteTitle, 'LA FAMA FILMS — Visuals For The Culture · NYC / NJ / RD'],
-      [t.seoMetaDesc, 'Videoclips, fotografía y contenido para artistas urbanos. La calle es el set: rodamos en Nueva York, New Jersey y República Dominicana, y entregamos como se ve en la pantalla del teléfono.'],
+      [t.seoMetaDesc, 'Music videos, photography and content for urban artists. The street is the set: we shoot in New York, New Jersey and the Dominican Republic, and deliver the way it looks on your phone screen.'],
       [t.seoCanonical, 'https://lozan0-is.github.io/lafama-films-web/'],
       [t.seoOgImage, 'sello-lafama.webp ' + t.seoOgImageNote],
       [t.seoTwitterCard, 'summary_large_image'],
@@ -2208,6 +2208,14 @@ class Component extends DCLogic {
     const sub2Words = sub2.split(' ');
     const heroSub2Accent = sub2Words.length > 1 ? sub2Words.pop() : sub2Words[0];
     const heroSub2Rest = sub2Words.length ? sub2Words.join(' ') : '';
+    // El <br> entre línea 1 y línea 2 del H1/H2 es solo visual — sin espacio
+    // de por medio, el textContent (y lo que anuncia un lector de pantalla)
+    // queda pegado ("LA FAMAFILMS", "VISUALSFOR THE CULTURE"). aria-label
+    // fuerza el nombre accesible correcto sin tocar el layout ni el texto
+    // visible; se recalcula solo con las mismas piezas ya editables desde
+    // Admin, así que sigue correcto en los dos idiomas y si se edita el Hero.
+    const heroTitleAria = (heroTitleLine1 + ' ' + heroTitleLine2).replace(/ /g, ' ');
+    const heroSubtitleAria = heroSubtitleLine1 + ' ' + heroSub2Rest + ' ' + heroSub2Accent;
     const heroTag = tr(c.hero.tag);
     const heroLocations = tr(c.hero.locations);
     const aboutP1 = tr(c.about.p1);
@@ -2310,7 +2318,7 @@ class Component extends DCLogic {
       savedToast: !!st.saved,
       navShowWork, navShowMotion, navShowArtists, navShowServices, navShowPhotographer,
       c,
-      heroTitleLine1, heroTitleLine2, heroSubtitleLine1, heroTag, heroLocations,
+      heroTitleLine1, heroTitleLine2, heroSubtitleLine1, heroTag, heroLocations, heroTitleAria, heroSubtitleAria,
       aboutP1, aboutP2, aboutStatsResolved, addressNote, photographerRole, photographerBio,
       heroSub2Rest, heroSub2Accent,
       pfItems, reelItems, artistItems, serviceItems, photographerPhoto,
