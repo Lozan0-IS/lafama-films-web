@@ -19,7 +19,11 @@
     showPricing: true,
     hero: {
       tag: 'REC · PHOTO + VIDEO',
-      locations: 'NYC / NJ · DOMINICAN REPUBLIC · WORLDWIDE'
+      locations: 'NYC / NJ · DOMINICAN REPUBLIC · WORLDWIDE',
+      titleLine1: 'LA FAMA',
+      titleLine2: 'FILMS',
+      subtitleLine1: 'VISUALS',
+      subtitleLine2: 'FOR THE CULTURE.'
     },
     about: {
       p1: 'LaFama Films trabaja con artistas urbanos dominicanos dentro y fuera de la isla. Grabamos donde pasa la cosa: la esquina, el estudio, el club, el backstage, el carro, la tarima. Sin poses de agencia.',

@@ -289,10 +289,10 @@
       </div>
     </div>
 
-    <h1 class="{{ heroShakeClass }}" style="margin:0;font:900 clamp(72px,19vw,206px)/0.82 var(--font-heading);letter-spacing:-.045em;text-transform:uppercase">LA&nbsp;FAMA<br>FILMS</h1>
+    <h1 class="{{ heroShakeClass }}" style="margin:0;font:900 clamp(72px,19vw,206px)/0.82 var(--font-heading);letter-spacing:-.045em;text-transform:uppercase">{{ c.hero.titleLine1 }}<br>{{ c.hero.titleLine2 }}</h1>
 
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:clamp(18px,3vw,40px);align-items:end;border-top:2px solid var(--color-text);margin-top:clamp(24px,4vw,28px);padding-top:clamp(18px,2.4vw,14px)">
-      <h2 style="margin:0;font:700 clamp(36px,9vw,58px)/0.92 'Archivo Narrow',var(--font-heading);letter-spacing:-.01em;text-transform:uppercase">VISUALS<br>FOR THE <span style="color:var(--lf-ac)">CULTURE.</span></h2>
+      <h2 style="margin:0;font:700 clamp(36px,9vw,58px)/0.92 'Archivo Narrow',var(--font-heading);letter-spacing:-.01em;text-transform:uppercase">{{ c.hero.subtitleLine1 }}<br>{{ heroSub2Rest }} <span style="color:var(--lf-ac)">{{ heroSub2Accent }}</span></h2>
       <p style="margin:0;max-width:42ch;font:400 15px/1.6 var(--font-body);color:var(--color-neutral-800)">Videoclips, fotografía y contenido para artistas urbanos. La calle es el set: rodamos en Nueva York, New Jersey y República Dominicana, y entregamos como se ve en la pantalla del teléfono.</p>
       <div style="display:flex;flex-wrap:wrap;gap:10px">
         <a href="#work" style="padding:13px 18px;border:2px solid var(--color-text);font:900 13px/1 var(--font-heading);letter-spacing:.08em;text-transform:uppercase" style-hover="background:var(--color-text);color:var(--color-bg)">VER EL ARCHIVO →</a>
@@ -904,9 +904,7 @@ class Component extends DCLogic {
     // su offsetWidth sin rotar — por eso el límite derecho usa este ancho
     // "real", no el nominal, si no el sello queda un poco afuera de la
     // pantalla en los casos donde ya está pegado al borde.
-    const stampBox = wrap.getBoundingClientRect();
-    const renderedWidth = stampBox.width || size;
-    const renderedHeight = stampBox.height || size;
+    const renderedWidth = wrap.getBoundingClientRect().width || size;
     // Centrado verticalmente en la costura entre "LA FAMA" y "FILMS" (el
     // punto medio entre el final de la primera línea y el inicio de la
     // segunda) — no en el medio de "FILMS" sola.
@@ -919,42 +917,30 @@ class Component extends DCLogic {
     const line1Right = line1Rect ? (line1Rect.left - contRect.left) + line1Rect.width : 0;
     const line2Right = (line2Rect.left - contRect.left) + line2Rect.width;
     const textRight = Math.max(line1Right, line2Right);
-    // Espacio bien holgado — nada de rozar las letras.
+    // Espacio bien holgado — nada de rozar las letras, EN CONDICIONES
+    // NORMALES. El sello SIEMPRE queda centrado en la costura entre "LA
+    // FAMA" y "FILMS" (nunca se mueve a otra fila ni se separa del H1) —
+    // lo único que cambia según el ancho disponible es qué tan cerca del
+    // texto queda.
     const gap = window.matchMedia('(max-width: 640px)').matches ? 34 : 44;
     let left = textRight + gap;
     if (left < textRight + 20) left = textRight + 20;
     const maxLeft = contRect.width - renderedWidth - 4;
-    // En pantallas muy angostas, el título (ahora grande a propósito) ocupa
-    // casi todo el ancho del contenedor: no queda hueco real para el sello
-    // al lado del texto sin que se salga de la pantalla o lo tape. En ese
-    // caso el sello se despega del texto por completo y pasa a ser un sello
-    // de esquina fijo, debajo de la fila del badge REC/ubicaciones — y como
-    // esa fila más el sello no siempre caben en el hueco que ya existe antes
-    // del título (su alto varía según cuánto texto tenga el tag/ubicación,
-    // editable desde el admin), se empuja el título hacia abajo con un
-    // margin-top calculado en JS, lo justo para que el sello quepa completo
-    // sin tapar ni el texto de arriba ni el título.
-    if (maxLeft < textRight + 20) {
-      const badgeRow = wrap.previousElementSibling;
-      const badgeBottom = badgeRow ? badgeRow.getBoundingClientRect().bottom - contRect.top : 0;
-      const stampTop = Math.max(0, badgeBottom + 10);
-      wrap.style.top = stampTop + 'px';
-      wrap.style.left = Math.max(0, maxLeft) + 'px';
-      const stampBottom = stampTop + renderedHeight;
-      // Se resetea ANTES de medir: si no, en la segunda pasada mediríamos la
-      // posición ya empujada por el margin de la pasada anterior (en vez de
-      // su posición natural), y el cálculo oscilaría entre poner y quitar el
-      // margin en cada llamada sin converger nunca.
-      h1.style.marginTop = '';
-      const h1TopNow = h1.getBoundingClientRect().top - contRect.top;
-      const extra = (stampBottom + 12) - h1TopNow;
-      if (extra > 0) h1.style.marginTop = extra + 'px';
-      return;
-    }
-    h1.style.marginTop = '';
+    // En pantallas angostas, el título (grande a propósito) puede ocupar
+    // casi todo el ancho del contenedor y no queda hueco libre a su derecha.
+    // Antes, en ese caso, el sello saltaba a otra fila (pegado al badge
+    // REC/ubicaciones) — eso es exactamente lo que se veía como "el sello
+    // se separa del título y se mueve hacia arriba". Ahora, en vez de
+    // saltar de lugar, el sello se queda EXACTAMENTE en la misma costura
+    // vertical (mismo "top" de siempre) y simplemente se acerca más al
+    // texto — incluso superponiéndose un poco a la última letra si hace
+    // falta — pero nunca se despega del título ni cambia de fila. Un
+    // solape controlado contra el borde del contenedor se ve intencional
+    // (como un sello real estampado sobre el papel); saltar de posición no.
     if (left > maxLeft) left = maxLeft;
+    if (left < 0) left = 0;
     wrap.style.top = Math.max(0, top) + 'px';
-    wrap.style.left = Math.max(0, left) + 'px';
+    wrap.style.left = left + 'px';
   }
 
   // Las fotos de "El Archivo" usan grid-row:span N con un alto de fila fijo
@@ -1065,6 +1051,28 @@ class Component extends DCLogic {
     clearTimeout(this.savedTimer);
     this.setState({ saved: true });
     this.savedTimer = setTimeout(() => this.setState({ saved: false }), 1800);
+  }
+
+  // Draft/Publish compartido por Work, Motion, Artists y Services — mismo
+  // botón, misma lógica (togglea it.published dentro del array indicado).
+  // published !== false se trata como "publicado" (ver nota en pfItems):
+  // así todo lo que ya existía antes de este campo sigue visible sin migrar
+  // nada a mano.
+  publishToggle(arrKey, id, published) {
+    const isPub = published !== false;
+    const toggle = () => this.updateContent((c2) => {
+      const it = c2[arrKey].find((x) => x.id === id);
+      if (it) it.published = !isPub;
+    });
+    return el('button', {
+      type: 'button', onClick: toggle,
+      title: isPub ? 'Publicado — clic para pasar a borrador' : 'Borrador — no aparece en el sitio público. Clic para publicar',
+      style: {
+        alignSelf: 'flex-start', border: '1px solid ' + (isPub ? 'var(--color-divider)' : 'var(--pa-danger, #c0392b)'),
+        background: isPub ? 'var(--color-bg)' : 'var(--pa-danger, #c0392b)', color: isPub ? 'var(--color-neutral-700)' : '#fff',
+        padding: '5px 10px', font: '700 10px/1 var(--font-body)', letterSpacing: '.08em', textTransform: 'uppercase', cursor: 'pointer'
+      }
+    }, isPub ? '● Published' : '○ Draft');
   }
 
   photoWidget(id, label, opts) {
@@ -1200,19 +1208,22 @@ class Component extends DCLogic {
   }
 
   // ── HOME ─────────────────────────────────────────────────────────────
-  // Todo lo que es realmente editable de la home pública: la tira de 5
-  // fotos del Hero, la etiqueta REC y la línea de ubicaciones, y el bloque
-  // "LA CALLE ES EL SET" que va debajo (párrafos + stats + mosaico). El
-  // título principal ("LA FAMA FILMS"), el subtítulo ("VISUALS FOR THE
-  // CULTURE") y el texto de los botones del Hero están escritos directo en
-  // el HTML público — no son campos de contenido todavía. Convertirlos en
-  // editables es viable (agregar c.hero.title/subtitle con defaults iguales
-  // al texto actual) pero es un cambio de arquitectura que toca el HTML
-  // público; queda documentado como siguiente paso, no se inventó un campo
-  // que en realidad no hace nada.
+  // Todo lo que es realmente editable de la home pública: título y subtítulo
+  // del Hero, la tira de 5 fotos, la etiqueta REC y la línea de ubicaciones,
+  // y el bloque "LA CALLE ES EL SET" que va debajo (párrafos + stats +
+  // mosaico). El título y el subtítulo se guardan en dos líneas separadas
+  // (c.hero.titleLine1/titleLine2, subtitleLine1/subtitleLine2) porque el
+  // salto de línea del diseño es intencional, no un wrap automático; los
+  // defaults son idénticos al texto que ya estaba escrito a mano en el HTML,
+  // así que un sitio existente se ve exactamente igual hasta que alguien
+  // edite estos campos desde el admin.
   renderHome(c) {
     const setHeroTag = (e) => this.updateContent((c2) => { c2.hero.tag = e.currentTarget.value; });
     const setHeroLoc = (e) => this.updateContent((c2) => { c2.hero.locations = e.currentTarget.value; });
+    const setHeroTitle1 = (e) => this.updateContent((c2) => { c2.hero.titleLine1 = e.currentTarget.value; });
+    const setHeroTitle2 = (e) => this.updateContent((c2) => { c2.hero.titleLine2 = e.currentTarget.value; });
+    const setHeroSub1 = (e) => this.updateContent((c2) => { c2.hero.subtitleLine1 = e.currentTarget.value; });
+    const setHeroSub2 = (e) => this.updateContent((c2) => { c2.hero.subtitleLine2 = e.currentTarget.value; });
     const setP1 = (e) => this.updateContent((c2) => { c2.about.p1 = e.currentTarget.value; });
     const setP2 = (e) => this.updateContent((c2) => { c2.about.p2 = e.currentTarget.value; });
     const setStat = (i, field) => (e) => this.updateContent((c2) => { c2.about.stats[i][field] = e.currentTarget.value; });
@@ -1225,6 +1236,20 @@ class Component extends DCLogic {
     ];
     return el('div', { style: S.page },
       SectionHead('Home', 'Todo lo editable de la portada: el Hero (arriba del todo) y el bloque "La calle es el set" que va justo debajo.'),
+      el('div', null,
+        el('div', { style: S.label }, 'Título del Hero (2 líneas — el salto de línea es fijo, cada campo es una línea)'),
+        el('div', { style: S.grid2 },
+          Field('Línea 1', el('input', { style: S.input, value: c.hero.titleLine1, onChange: setHeroTitle1 })),
+          Field('Línea 2', el('input', { style: S.input, value: c.hero.titleLine2, onChange: setHeroTitle2 }))
+        )
+      ),
+      el('div', null,
+        el('div', { style: S.label }, 'Subtítulo del Hero (línea 2: la última palabra sale resaltada en rojo)'),
+        el('div', { style: S.grid2 },
+          Field('Línea 1', el('input', { style: S.input, value: c.hero.subtitleLine1, onChange: setHeroSub1 })),
+          Field('Línea 2', el('input', { style: S.input, value: c.hero.subtitleLine2, onChange: setHeroSub2 }))
+        )
+      ),
       el('div', { style: S.grid2 },
         Field('Etiqueta REC (arriba del título)', el('input', { style: S.input, value: c.hero.tag, onChange: setHeroTag })),
         Field('Línea de ubicaciones', el('input', { style: S.input, value: c.hero.locations, onChange: setHeroLoc }))
@@ -1273,6 +1298,7 @@ class Component extends DCLogic {
         el('div', { style: { display: 'flex', gap: '14px', flexWrap: 'wrap' } },
           el('div', { style: { width: '140px', flex: '0 0 140px' } }, this.photoWidget(it.id, it.cat, { height: '110px' })),
           el('div', { style: { flex: '1 1 260px', display: 'flex', flexDirection: 'column', gap: '10px' } },
+            this.publishToggle('portfolio', it.id, it.published),
             Field('Etiqueta / categoría', el('input', { style: S.input, value: it.cat, onChange: setField(it.id, 'cat') })),
             Field('Título sobre la foto', el('input', { style: S.input, value: it.title, onChange: setField(it.id, 'title') })),
             Field('Tamaño en la grilla', el('select', { style: S.select, value: it.size, onChange: setField(it.id, 'size') },
@@ -1319,6 +1345,7 @@ class Component extends DCLogic {
             this.videoWidget(it.id)
           ),
           el('div', { style: { flex: '1 1 260px', display: 'flex', flexDirection: 'column', gap: '10px' } },
+            this.publishToggle('reels', it.id, it.published),
             Field('Nombre / etiqueta', el('input', { style: S.input, value: it.label, onChange: setField(it.id, 'label') })),
             Field('Código del reel de Instagram (opcional)', el('input', { style: S.input, value: it.code, onChange: setField(it.id, 'code'), placeholder: 'Ej. Dc7Su26xWGA' }), 'Solo se usa si no hay video subido.')
           ),
@@ -1353,6 +1380,7 @@ class Component extends DCLogic {
         el('div', { style: { display: 'flex', gap: '14px', flexWrap: 'wrap' } },
           el('div', { style: { width: '110px', flex: '0 0 110px' } }, this.photoWidget(it.id, it.name, { height: '140px' })),
           el('div', { style: { flex: '1 1 260px', display: 'flex', flexDirection: 'column', gap: '10px' } },
+            this.publishToggle('artists', it.id, it.published),
             Field('Nombre', el('input', { style: S.input, value: it.name, onChange: setField(it.id, 'name') })),
             Field('Proyecto / rol', el('input', { style: S.input, value: it.role, onChange: setField(it.id, 'role') })),
             Field('Link "Ver trabajo"', el('input', { style: S.input, value: it.link, onChange: setField(it.id, 'link') }), 'Puede ser #work (sube al portfolio) o un link externo.')
@@ -1395,6 +1423,7 @@ class Component extends DCLogic {
           ))
         ),
         el('div', { style: S.row },
+          this.publishToggle('services', it.id, it.published),
           el('button', { type: 'button', style: S.btnSecondary, onClick: () => move(i, -1), disabled: i === 0 }, '↑ Subir'),
           el('button', { type: 'button', style: S.btnSecondary, onClick: () => move(i, 1), disabled: i === list.length - 1 }, '↓ Bajar'),
           el('button', { type: 'button', style: S.btnGhost, onClick: () => remove(it.id) }, 'Eliminar')
@@ -1710,12 +1739,29 @@ class Component extends DCLogic {
     };
 
     // ── datos del sitio público ─────────────────────────────────────────
-    const pfItems = (c.portfolio || []).map((it, i) => {
+    // Draft/Publish: un item es público salvo que published===false EN
+    // SENTIDO ESTRICTO. Los arrays se reemplazan enteros al guardar (no se
+    // fusionan item por item), así que todo lo que ya existía antes de este
+    // campo no tiene "published" definido — con !== false en vez de
+    // ===true, ese contenido sigue viéndose exactamente igual que siempre;
+    // solo lo que se marque explícitamente como borrador desde el admin
+    // desaparece del sitio público.
+    // Hero editable: título y subtítulo vienen de c.hero.*, con fallback al
+    // texto actual si el admin no los tocó nunca (ver DEFAULTS en lf-store.js).
+    // El motor de plantillas no puede partir un string ni pintar la última
+    // palabra en rojo por sí solo, así que ese split se precalcula acá.
+    const sub2 = c.hero.subtitleLine2 || 'FOR THE CULTURE.';
+    const sub2Words = sub2.split(' ');
+    const heroSub2Accent = sub2Words.length > 1 ? sub2Words.pop() : sub2Words[0];
+    const heroSub2Rest = sub2Words.length ? sub2Words.join(' ') : '';
+
+    const isPublished = (it) => it.published !== false;
+    const pfItems = (c.portfolio || []).filter(isPublished).map((it, i) => {
       const sz = LF_PF_SIZE[it.size] || LF_PF_SIZE.small;
       const frameNo = 'N°' + String(i + 1).padStart(2, '0');
       return Object.assign({}, it, sz, { rowSpanCss: 'span ' + (sz.rowSpan + 3), photo: this.heroPhoto(it.id, it.cat), frameNo });
     });
-    const reelItems = (c.reels || []).map((it) => {
+    const reelItems = (c.reels || []).filter(isPublished).map((it) => {
       this.ensureReelVideo(it.id);
       const videoUrl = this.videoCache[it.id] || null;
       return Object.assign({}, it, {
@@ -1725,8 +1771,8 @@ class Component extends DCLogic {
         tagLabel: videoUrl ? 'REEL · AUTOPLAY' : '▶ REEL · INSTAGRAM'
       });
     });
-    const artistItems = (c.artists || []).map((it) => Object.assign({}, it, { photo: this.heroPhoto(it.id, it.name) }));
-    const serviceItems = (c.services || []).map((it) => Object.assign({}, it, {
+    const artistItems = (c.artists || []).filter(isPublished).map((it) => Object.assign({}, it, { photo: this.heroPhoto(it.id, it.name) }));
+    const serviceItems = (c.services || []).filter(isPublished).map((it) => Object.assign({}, it, {
       showPrice: !!c.showPricing,
       priceLabel: 'DESDE ' + (it.price && it.price.trim() ? it.price : '$ —')
     }));
@@ -1788,6 +1834,7 @@ class Component extends DCLogic {
       savedToast: !!st.saved,
       navShowWork, navShowMotion, navShowArtists, navShowServices, navShowPhotographer,
       c,
+      heroSub2Rest, heroSub2Accent,
       pfItems, reelItems, artistItems, serviceItems, photographerPhoto,
       // El motor de plantillas {{ }} solo resuelve rutas simples (a.b.c) —
       // nada de llamadas a función ni "+" — por eso cada foto y cada href
