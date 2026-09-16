@@ -185,6 +185,23 @@
      con su propio ritmo (más padding vertical, gap entre bloques). */
   .lf-svc-row { display: grid; grid-template-columns: 1fr; gap: 10px; padding: 26px 0; }
   @media (min-width: 640px) { .lf-svc-row { grid-template-columns: minmax(0,1.2fr) minmax(0,1fr) auto; gap: 14px; padding: 22px 0; } }
+  /* Stats de "La calle es el set": antes cada stat llevaba border-right de
+     borde a borde (incluso el último), lo que se leía como fila de tabla /
+     dashboard. En mobile se apilan en una columna con aire entre ellos y sin
+     líneas divisorias — nada de tres columnas comprimidas. En desktop vuelven
+     las 3 columnas, pero el separador es una línea corta centrada en el
+     bloque (no toda la altura de la celda) y solo entre stats reales, nunca
+     después del último — se lee como un detalle editorial, no como un borde
+     de tabla. El border-top del conjunto se conserva: es el mismo recurso de
+     regla gruesa usado en el resto del sitio (nav, hero, services, booking).*/
+  .lf-about-stats { display: grid; grid-template-columns: 1fr; row-gap: 22px; border-top: 2px solid var(--color-text); }
+  .lf-about-stat { position: relative; padding: 16px 0; }
+  @media (min-width: 640px) {
+    .lf-about-stats { grid-template-columns: repeat(3, 1fr); row-gap: 0; }
+    .lf-about-stat { padding: 16px 22px; }
+    .lf-about-stat:first-child { padding-left: 0; }
+    .lf-about-stat:not(:first-child)::before { content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 1px; height: 28px; background: var(--color-neutral-400); }
+  }
 
   /* ── Panel Admin (mismo archivo, vista alterna vía toggleMode) ───────────
      Tema oscuro propio del admin: en vez de tocar cada estilo inline de los
@@ -366,9 +383,9 @@
       <h2 style="margin:0 0 18px;font:900 clamp(34px,6vw,82px)/0.86 var(--font-heading);letter-spacing:-.04em;text-transform:uppercase">{{ t.aboutHeading1 }}<br>{{ t.aboutHeading2 }}</h2>
       <p style="margin:0 0 14px;max-width:52ch;font:400 16px/1.62 var(--font-body);color:var(--color-neutral-800)">{{ aboutP1 }}</p>
       <p style="margin:0 0 24px;max-width:52ch;font:400 16px/1.62 var(--font-body);color:var(--color-neutral-800)">{{ aboutP2 }}</p>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));border-top:2px solid var(--color-text)">
+      <div class="lf-about-stats">
         <sc-for list="{{ aboutStatsResolved }}" as="s" hint-placeholder-count="3">
-        <div style="padding:14px;border-right:1px solid var(--color-neutral-400)">
+        <div class="lf-about-stat">
           <div style="font:900 38px/0.9 var(--font-heading);color:var(--lf-ac)">{{ s.n }}</div>
           <div style="font:600 10px/1.3 var(--font-body);letter-spacing:.18em;text-transform:uppercase;color:var(--color-neutral-700);margin-top:6px">{{ s.l }}</div>
         </div>
@@ -782,6 +799,33 @@ function Field(label, node, hint) {
   );
 }
 
+// Un campo de contenido bilingüe ({ en, es }) mostrado como UN solo input:
+// el admin escribe en el idioma que tiene seleccionado arriba (el mismo
+// selector EN/ES del topbar/sidebar — no hay un segundo selector), y ese
+// valor se guarda en value[lang]. Para ver/editar el otro idioma, cambia el
+// idioma del panel — el campo entonces muestra y guarda ese otro idioma.
+// No auto-traduce nada: si el otro idioma nunca se escribió, el sitio
+// público cae de vuelta al idioma que sí existe (ver LFStore.tr) en vez de
+// mostrar vacío — eso se explica en el hint, no se inventa contenido acá.
+function BilingualField(label, value, onChange, lang, t, opts) {
+  opts = opts || {};
+  value = value || {};
+  const current = value[lang] || '';
+  const curName = lang === 'en' ? 'EN' : 'ES';
+  const otherName = lang === 'en' ? 'ES' : 'EN';
+  const otherFullName = lang === 'en' ? (t.langNameEs || 'Español') : (t.langNameEn || 'English');
+  const otherHasContent = !!((value[lang === 'en' ? 'es' : 'en'] || '').trim());
+  const node = opts.textarea
+    ? el('textarea', { style: S.textarea, rows: opts.rows || 3, value: current, onChange })
+    : el('input', { style: S.input, value: current, onChange });
+  // El aviso de fallback solo importa cuando ESTE campo (el idioma que se ve
+  // ahora mismo) está vacío Y el otro sí tiene texto — ese es justo el caso
+  // donde el sitio público no queda en blanco. Si el campo actual ya tiene
+  // contenido no hace falta avisar nada (se muestra tal cual, sin fallback).
+  const showFallbackNote = !current.trim() && otherHasContent;
+  return Field(label, node, t.bilingualHint(curName, otherName) + (showFallbackNote ? ' ' + t.bilingualFallbackNote(otherFullName) : ''));
+}
+
 function SectionHead(title, sub) {
   return el('div', null,
     el('h2', { style: S.h2 }, title),
@@ -892,6 +936,9 @@ const UI = {
     homeHeroPhotos: 'Hero — 5 photos in the "ROLL 01" strip (vertical 4:5 looks best)',
     homeStreetTitle: '"The street is the set" (below the Hero)', homeStreetSub: 'The two paragraphs, the 3 stats and the 4-photo mosaic.',
     homeP1: 'Paragraph 1', homeP2: 'Paragraph 2', homeStatN: 'Number', homeStatL: 'Label',
+    langNameEn: 'English', langNameEs: 'Spanish',
+    bilingualHint: (cur, other) => 'Editing ' + cur + '. Switch the language toggle above to ' + other + ' to write that version.',
+    bilingualFallbackNote: (other) => "Empty — the public site shows the " + other + " version here until you write this one.",
     homeMosaic: 'Mosaic (4 photos)',
     frame01: 'Frame 01 · NYC', frame02: 'Frame 02 · SET', frame03: 'Frame 03 · NJ', frame04: 'Frame 04 · STAGE', frame05: 'Frame 05 · SDQ',
     mosVertical: 'Vertical', mosPhoto: 'Photo', mosHorizontal: 'Horizontal',
@@ -1039,6 +1086,9 @@ const UI = {
     homeHeroPhotos: 'Hero — 5 fotos de la franja "ROLL 01" (vertical 4:5 se ve mejor)',
     homeStreetTitle: '"La calle es el set" (debajo del Hero)', homeStreetSub: 'Los dos párrafos, las 3 estadísticas y el mosaico de 4 fotos.',
     homeP1: 'Párrafo 1', homeP2: 'Párrafo 2', homeStatN: 'Número', homeStatL: 'Etiqueta',
+    langNameEn: 'inglés', langNameEs: 'español',
+    bilingualHint: (cur, other) => 'Editando ' + cur + '. Cambia el selector de idioma de arriba a ' + other + ' para escribir esa versión.',
+    bilingualFallbackNote: (other) => 'Vacío — el sitio público muestra acá la versión en ' + other + ' hasta que escribas esta.',
     homeMosaic: 'Mosaico (4 fotos)',
     frame01: 'Frame 01 · NYC', frame02: 'Frame 02 · SET', frame03: 'Frame 03 · NJ', frame04: 'Frame 04 · STAGE', frame05: 'Frame 05 · SDQ',
     mosVertical: 'Vertical', mosPhoto: 'Foto', mosHorizontal: 'Horizontal',
@@ -1565,17 +1615,20 @@ class Component extends DCLogic {
   // defaults son idénticos al texto que ya estaba escrito a mano en el HTML,
   // así que un sitio existente se ve exactamente igual hasta que alguien
   // edite estos campos desde el admin.
-  renderHome(c, t, tr) {
+  renderHome(c, t, tr, lang) {
     const setHeroTag = (l) => (e) => this.updateContent((c2) => { c2.hero.tag = Object.assign({}, c2.hero.tag, { [l]: e.currentTarget.value }); });
     const setHeroLoc = (l) => (e) => this.updateContent((c2) => { c2.hero.locations = Object.assign({}, c2.hero.locations, { [l]: e.currentTarget.value }); });
     const setHeroTitle1 = (e) => this.updateContent((c2) => { c2.hero.titleLine1 = e.currentTarget.value; });
     const setHeroTitle2 = (e) => this.updateContent((c2) => { c2.hero.titleLine2 = e.currentTarget.value; });
     const setHeroSub1 = (l) => (e) => this.updateContent((c2) => { c2.hero.subtitleLine1 = Object.assign({}, c2.hero.subtitleLine1, { [l]: e.currentTarget.value }); });
     const setHeroSub2 = (l) => (e) => this.updateContent((c2) => { c2.hero.subtitleLine2 = Object.assign({}, c2.hero.subtitleLine2, { [l]: e.currentTarget.value }); });
-    const setP1 = (l) => (e) => this.updateContent((c2) => { c2.about.p1 = Object.assign({}, c2.about.p1, { [l]: e.currentTarget.value }); });
-    const setP2 = (l) => (e) => this.updateContent((c2) => { c2.about.p2 = Object.assign({}, c2.about.p2, { [l]: e.currentTarget.value }); });
+    // Los párrafos y las etiquetas de stats se editan en UN solo campo — el
+    // idioma que se guarda es el que el panel tiene seleccionado ahora mismo
+    // (mismo selector EN/ES del topbar/sidebar, ver BilingualField arriba).
+    const setP1 = (e) => this.updateContent((c2) => { c2.about.p1 = Object.assign({}, c2.about.p1, { [lang]: e.currentTarget.value }); });
+    const setP2 = (e) => this.updateContent((c2) => { c2.about.p2 = Object.assign({}, c2.about.p2, { [lang]: e.currentTarget.value }); });
     const setStatN = (i) => (e) => this.updateContent((c2) => { c2.about.stats[i].n = e.currentTarget.value; });
-    const setStatL = (i, l) => (e) => this.updateContent((c2) => { c2.about.stats[i].l = Object.assign({}, c2.about.stats[i].l, { [l]: e.currentTarget.value }); });
+    const setStatL = (i) => (e) => this.updateContent((c2) => { c2.about.stats[i].l = Object.assign({}, c2.about.stats[i].l, { [lang]: e.currentTarget.value }); });
     const frames = [
       ['lf-hero-1', t.frame01], ['lf-hero-2', t.frame02], ['lf-hero-3', t.frame03],
       ['lf-hero-4', t.frame04], ['lf-hero-5', t.frame05]
@@ -1616,15 +1669,12 @@ class Component extends DCLogic {
         el('p', { style: S.hint }, t.homeStreetSub)
       ),
       el('div', { style: S.section },
-        Field(t.homeP1 + ' (EN)', el('textarea', { style: S.textarea, rows: 3, value: c.about.p1.en || '', onChange: setP1('en') })),
-        Field(t.homeP1 + ' (ES)', el('textarea', { style: S.textarea, rows: 3, value: c.about.p1.es || '', onChange: setP1('es') })),
-        Field(t.homeP2 + ' (EN)', el('textarea', { style: S.textarea, rows: 3, value: c.about.p2.en || '', onChange: setP2('en') })),
-        Field(t.homeP2 + ' (ES)', el('textarea', { style: S.textarea, rows: 3, value: c.about.p2.es || '', onChange: setP2('es') }))
+        BilingualField(t.homeP1, c.about.p1, setP1, lang, t, { textarea: true, rows: 3 }),
+        BilingualField(t.homeP2, c.about.p2, setP2, lang, t, { textarea: true, rows: 3 })
       ),
       el('div', { style: S.grid2 }, ...c.about.stats.map((s, i) => el('div', { key: i, style: S.card },
         Field(t.homeStatN, el('input', { style: S.input, value: s.n, onChange: setStatN(i) })),
-        Field(t.homeStatL + ' (EN)', el('input', { style: S.input, value: s.l.en || '', onChange: setStatL(i, 'en') })),
-        Field(t.homeStatL + ' (ES)', el('input', { style: S.input, value: s.l.es || '', onChange: setStatL(i, 'es') }))
+        BilingualField(t.homeStatL, s.l, setStatL(i), lang, t, {})
       ))),
       el('div', null,
         el('div', { style: S.label }, t.homeMosaic),
@@ -2234,7 +2284,7 @@ class Component extends DCLogic {
     });
     const bodies = {
       resumen: () => this.renderResumen(c, leads, t),
-      home: () => this.renderHome(c, t, tr),
+      home: () => this.renderHome(c, t, tr, lang),
       portfolio: () => this.renderPortfolio(c, t, tr, lang),
       motion: () => this.renderMotion(c, t, tr),
       artistas: () => this.renderArtistas(c, t, tr),
