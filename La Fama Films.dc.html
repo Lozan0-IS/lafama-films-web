@@ -243,6 +243,13 @@
 <sc-if value="{{ isSite }}" hint-placeholder-val="{{ true }}">
 <div style="position:fixed;inset:0;z-index:9000;pointer-events:none;opacity:var(--lf-grain);background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E&quot;)"></div>
 
+<sc-if value="{{ previewBannerVisible }}" hint-placeholder-val="{{ false }}">
+<div style="position:fixed;left:0;right:0;bottom:0;z-index:9500;background:#111;color:#fff;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:12px;padding:10px 16px;font:700 12px/1.3 var(--font-body);letter-spacing:.04em;border-top:2px solid var(--lf-ac)">
+  <span>👁ī¸ PREVIEW — se ven también los borradores (Draft). Así NO lo ve el público.</span>
+  <button type="button" onClick="{{ exitPreviewDrafts }}" style="background:var(--lf-ac);color:#fff;border:none;padding:6px 14px;font:900 11px/1 var(--font-heading);letter-spacing:.08em;text-transform:uppercase;cursor:pointer">Volver al Admin</button>
+</div>
+</sc-if>
+
 <nav style="position:fixed;top:0;left:0;width:100%;z-index:1000;background:var(--color-bg);border-bottom:2px solid var(--color-text);display:flex;align-items:stretch;justify-content:space-between">
   <a href="#top" style="display:flex;align-items:center;gap:10px;padding:14px clamp(16px,3vw,28px);font:900 17px/1 var(--font-heading);letter-spacing:-.02em;text-transform:uppercase;border-right:2px solid var(--color-text)">
     <span class="lf-rec-dot" style="width:9px;height:9px;background:var(--lf-ac)"></span>LA FAMA FILMS
@@ -683,6 +690,7 @@
       <div class="pa-topbar-title">{{ topTitle }}</div>
       <div class="pa-topbar-right">
         <span class="pa-status"><span class="pa-status-dot"></span>ONLINE</span>
+        <button type="button" class="pa-toplink" onClick="{{ togglePreviewDrafts }}" title="Ver el sitio como si los borradores estuvieran publicados — solo para ti, en esta pestaña, nunca para el público">{{ previewToggleLabel }}</button>
         <button type="button" class="pa-toplink" onClick="{{ toggleMode }}">View Website ↗</button>
         <span class="pa-pill">ADMIN</span>
       </div>
@@ -766,7 +774,7 @@ const PF_SIZE_OPTIONS = [
 ];
 
 class Component extends DCLogic {
-  state = { mode: 'site', menu: false, step: 1, svc: '', lb: null, reel: null, note: '', tab: 'resumen', tick: 0, stamped: false, paMenuOpen: false, saved: false, mediaSearch: '' };
+  state = { mode: 'site', menu: false, step: 1, svc: '', lb: null, reel: null, note: '', tab: 'resumen', tick: 0, stamped: false, paMenuOpen: false, saved: false, mediaSearch: '', previewDrafts: false };
   f = {};
   // Los videos de los reels viven en IndexedDB (ver lf-store.js), así que la
   // lectura es async — se cachean acá como object URLs una vez cargados en
@@ -1737,6 +1745,15 @@ class Component extends DCLogic {
       try { history.replaceState(null, '', next === 'admin' ? '#admin' : (location.pathname + location.search)); } catch (e) {}
       this.setState({ mode: next, menu: false });
     };
+    // Preview drafts: solo un flag de sesión (this.state), nunca se guarda en
+    // localStorage — así que ni una recarga ni una pestaña nueva pueden dejar
+    // borradores visibles a un visitante real por accidente, aunque el admin
+    // se olvide de apagarlo.
+    const togglePreviewDrafts = () => this.setState({ previewDrafts: !st.previewDrafts });
+    const exitPreviewDrafts = () => {
+      try { history.replaceState(null, '', '#admin'); } catch (e) {}
+      this.setState({ previewDrafts: false, mode: 'admin' });
+    };
 
     // ── datos del sitio público ─────────────────────────────────────────
     // Draft/Publish: un item es público salvo que published===false EN
@@ -1755,7 +1772,16 @@ class Component extends DCLogic {
     const heroSub2Accent = sub2Words.length > 1 ? sub2Words.pop() : sub2Words[0];
     const heroSub2Rest = sub2Words.length ? sub2Words.join(' ') : '';
 
-    const isPublished = (it) => it.published !== false;
+    // Preview: no hay "borrador en memoria" que previsualizar (updateContent
+    // guarda cada cambio al toque, así que el sitio público ya muestra
+    // siempre el estado real y actual de localStorage — no hace falta un
+    // modo preview separado para eso). Lo único que el sitio público oculta
+    // de verdad es un item marcado como Draft; por eso el preview real y útil
+    // acá es "ver cómo se vería el sitio si los borradores estuvieran
+    // publicados", con un aviso visible para que nunca se confunda con el
+    // sitio en vivo.
+    const previewDraftsOn = isSite && !!st.previewDrafts;
+    const isPublished = (it) => previewDraftsOn || it.published !== false;
     const pfItems = (c.portfolio || []).filter(isPublished).map((it, i) => {
       const sz = LF_PF_SIZE[it.size] || LF_PF_SIZE.small;
       const frameNo = 'N°' + String(i + 1).padStart(2, '0');
@@ -1828,6 +1854,8 @@ class Component extends DCLogic {
 
     return {
       isSite, isAdmin, toggleMode,
+      previewDrafts: !!st.previewDrafts, togglePreviewDrafts, exitPreviewDrafts, previewBannerVisible: previewDraftsOn,
+      previewToggleLabel: st.previewDrafts ? '◉ Preview: Drafts ON' : '◎ Preview drafts',
       navItems, tabBody, topTitle,
       paMenuOpen: !!st.paMenuOpen,
       togglePaMenu: () => this.setState({ paMenuOpen: !st.paMenuOpen }),
