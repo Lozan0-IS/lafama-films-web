@@ -132,10 +132,20 @@
     0%   { opacity: .8; transform: scale(.6); }
     100% { opacity: 0; transform: scale(2.4); }
   }
-  .lf-stamp-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; display: block; }
+  /* mix-blend-mode:multiply — el archivo sello-lafama.webp trae fondo blanco
+     sólido (no transparente); sobre el fondo gris del Hero eso se ve como un
+     recuadro blanco pegado al sello. Multiply sobre blanco no cambia el color
+     de abajo (blanco es el elemento neutro de multiply), así que el blanco
+     del archivo "desaparece" y deja ver el gris del Hero, mientras la tinta
+     roja sí se sigue oscureciendo/mostrando con normalidad. No toca tamaño,
+     posición ni animación — solo cómo se componen los colores del píxel. */
+  .lf-stamp-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; display: block; mix-blend-mode: multiply; }
   /* Eco del golpe: una copia fantasma del sello que aparece corrida y se
-     asienta de vuelta al instante, como el "doble golpe" de un timbre real. */
-  .lf-stamp-echo { position: absolute; inset: 0; background: url('sello-lafama.webp') center/contain no-repeat; opacity: 0; pointer-events: none; }
+     asienta de vuelta al instante, como el "doble golpe" de un timbre real.
+     Misma imagen que .lf-stamp-img (como background, no <img>) — necesita el
+     mismo mix-blend-mode para no mostrar su propio recuadro blanco durante
+     el instante en que es visible. */
+  .lf-stamp-echo { position: absolute; inset: 0; background: url('sello-lafama.webp') center/contain no-repeat; opacity: 0; pointer-events: none; mix-blend-mode: multiply; }
   .lf-stamp.stamped .lf-stamp-echo { animation: lfStampEcho .45s ease-out .42s both; }
   @keyframes lfStampEcho {
     0%   { opacity: .5; transform: translate(9px,-7px) rotate(3deg) scale(1.03); }
