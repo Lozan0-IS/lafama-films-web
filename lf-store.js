@@ -11,33 +11,54 @@
   var LEADS_KEY = PREFIX + 'leads';
   var PHOTO_PREFIX = PREFIX + 'photo_';
   var UPDATED_KEY = PREFIX + 'updatedAt';
+  var LANG_KEY = PREFIX + 'lang';
 
   // ── Contenido por defecto — coincide 1:1 con el texto ya escrito en la página
   // pública. Si el admin no ha tocado nada, el sitio se ve exactamente igual.
+  //
+  // Bilingüe: todo campo de texto que es contenido real (se traduce con el
+  // idioma) se guarda como { en, es } en vez de un string plano. Los nombres
+  // propios (marca, nombre del fotógrafo, nombres de artistas, dirección,
+  // teléfono, redes) NO se vuelven bilingües a propósito — un nombre propio
+  // no se traduce. Ver tr() más abajo: acepta tanto el objeto { en, es } como
+  // un string plano viejo (contenido guardado antes de este cambio), así que
+  // nada de lo ya guardado se rompe ni desaparece.
   var DEFAULTS = {
     accent: '#ec3013',
     showPricing: true,
     hero: {
-      tag: 'REC · PHOTO + VIDEO',
-      locations: 'NYC / NJ · DOMINICAN REPUBLIC · WORLDWIDE',
+      tag: { en: 'REC · PHOTO + VIDEO', es: 'REC · FOTO + VIDEO' },
+      locations: { en: 'NYC / NJ · DOMINICAN REPUBLIC · WORLDWIDE', es: 'NYC / NJ · REPÚBLICA DOMINICANA · MUNDIAL' },
+      // Nombre de marca — no se traduce.
       titleLine1: 'LA FAMA',
       titleLine2: 'FILMS',
-      subtitleLine1: 'VISUALS',
-      subtitleLine2: 'FOR THE CULTURE.'
+      subtitleLine1: { en: 'VISUALS', es: 'VISUALES' },
+      subtitleLine2: { en: 'FOR THE CULTURE.', es: 'PARA LA CULTURA.' }
     },
     about: {
-      p1: 'LaFama Films trabaja con artistas urbanos dominicanos dentro y fuera de la isla. Grabamos donde pasa la cosa: la esquina, el estudio, el club, el backstage, el carro, la tarima. Sin poses de agencia.',
-      p2: 'We shoot the artists, the block and the night — Dominican culture with New York speed. Photo and video, one crew, one direction.',
+      p1: {
+        en: "LaFama Films works with Dominican urban artists on and off the island. We shoot where it's actually happening: the corner, the studio, the club, backstage, the car, the stage. No agency poses.",
+        es: 'LaFama Films trabaja con artistas urbanos dominicanos dentro y fuera de la isla. Grabamos donde pasa la cosa: la esquina, el estudio, el club, el backstage, el carro, la tarima. Sin poses de agencia.'
+      },
+      p2: {
+        en: 'We shoot the artists, the block and the night — Dominican culture with New York speed. Photo and video, one crew, one direction.',
+        es: 'Grabamos a los artistas, el barrio y la noche — cultura dominicana con velocidad neoyorquina. Foto y video, un solo equipo, una sola dirección.'
+      },
       stats: [
-        { n: '100+', l: 'VIDEOCLIPS RODADOS' },
-        { n: '3', l: 'BASES: NYC · NJ · RD' },
-        { n: '48H', l: 'ENTREGA DE REELS' }
+        { n: '100+', l: { en: 'MUSIC VIDEOS SHOT', es: 'VIDEOCLIPS RODADOS' } },
+        { n: '3', l: { en: 'BASES: NYC · NJ · DR', es: 'BASES: NYC · NJ · RD' } },
+        { n: '48H', l: { en: 'REEL DELIVERY', es: 'ENTREGA DE REELS' } }
       ]
     },
     contact: {
+      // Nombre de empresa, dirección, teléfono y redes — datos factuales, no
+      // se traducen.
       companyName: 'LA FAMA FILMS LLC',
       address: '42 Harding Ave, Westwood, NJ.',
-      addressNote: 'Rodamos en Nueva York, New Jersey, República Dominicana y donde haga falta.',
+      addressNote: {
+        en: 'We shoot in New York, New Jersey, the Dominican Republic, and wherever the project takes us.',
+        es: 'Rodamos en Nueva York, New Jersey, República Dominicana y donde haga falta.'
+      },
       phone: '+1 (201) 296-1944',
       whatsapp: '12012961944',
       email: 'lafamafilmsllc@gmail.com',
@@ -45,26 +66,30 @@
       instagramUrl: 'https://www.instagram.com/imangelfilms/'
     },
     // No hay todavía un nombre/bio real confirmados para el fotógrafo — estos
-    // tres campos son placeholder a propósito (marcados como tal) para que el
+    // campos son placeholder a propósito (marcados como tal) para que el
     // cliente los reemplace desde el panel admin; no se inventó contenido.
     photographer: {
-      name: '[NOMBRE DEL FOTÓGRAFO]',
-      role: 'PHOTOGRAPHER / DIRECTOR',
-      bio: '[Bio pendiente — 2 a 4 líneas sobre el enfoque, el estilo y la experiencia. Reemplaza este texto desde el panel admin.]'
+      // Nombre propio — no se traduce.
+      name: '[PHOTOGRAPHER NAME]',
+      role: { en: 'PHOTOGRAPHER / DIRECTOR', es: 'FOTÓGRAFO / DIRECTOR' },
+      bio: {
+        en: '[Bio pending — 2 to 4 lines about approach, style and experience. Replace this text from the admin panel.]',
+        es: '[Bio pendiente — 2 a 4 líneas sobre el enfoque, el estilo y la experiencia. Reemplaza este texto desde el panel admin.]'
+      }
     },
     portfolio: [
-      { id: 'pf01', cat: 'MUSIC VIDEO · NYC · 2026', title: 'ARTISTA 01 — REEMPLAZAR', size: 'large' },
-      { id: 'pf02', cat: 'PORTRAIT · 2026', title: 'ARTISTA 02', size: 'small' },
-      { id: 'pf03', cat: 'BEHIND THE SCENES · SDQ', title: 'RODAJE 03 — REEMPLAZAR', size: 'wide' },
-      { id: 'pf04', cat: 'LIVE · 2026', title: 'SHOW 04', size: 'small' },
-      { id: 'pf05', cat: 'STREET · NJ', title: 'FRAME 05', size: 'small' },
-      { id: 'pf06', cat: 'ARTIST VISUALS · 2026', title: 'ARTISTA 06 — REEMPLAZAR', size: 'large' },
-      { id: 'pf07', cat: 'STUDIO · 2025', title: 'SESIÓN 07', size: 'small' },
-      { id: 'pf08', cat: 'EVENT · BRONX', title: 'FRAME 08', size: 'small' },
-      { id: 'pf09', cat: 'COVER ART · 2026', title: 'SINGLE 09 — REEMPLAZAR', size: 'square-large' },
-      { id: 'pf10', cat: 'FLASH · NIGHT', title: 'FRAME 10', size: 'small' },
-      { id: 'pf11', cat: 'LIVE PERFORMANCE · 2026', title: 'TARIMA 11 — REEMPLAZAR', size: 'panorama' },
-      { id: 'pf12', cat: 'CAMPAIGN · 2026', title: 'FRAME 12', size: 'small' }
+      { id: 'pf01', cat: { en: 'MUSIC VIDEO · NYC · 2026', es: 'VIDEOCLIP · NYC · 2026' }, title: { en: 'ARTIST 01 — REPLACE', es: 'ARTISTA 01 — REEMPLAZAR' }, size: 'large' },
+      { id: 'pf02', cat: { en: 'PORTRAIT · 2026', es: 'RETRATO · 2026' }, title: { en: 'ARTIST 02', es: 'ARTISTA 02' }, size: 'small' },
+      { id: 'pf03', cat: { en: 'BEHIND THE SCENES · SDQ', es: 'DETRÁS DE CÁMARAS · SDQ' }, title: { en: 'SHOOT 03 — REPLACE', es: 'RODAJE 03 — REEMPLAZAR' }, size: 'wide' },
+      { id: 'pf04', cat: { en: 'LIVE · 2026', es: 'EN VIVO · 2026' }, title: { en: 'SHOW 04', es: 'SHOW 04' }, size: 'small' },
+      { id: 'pf05', cat: { en: 'STREET · NJ', es: 'CALLE · NJ' }, title: { en: 'FRAME 05', es: 'FRAME 05' }, size: 'small' },
+      { id: 'pf06', cat: { en: 'ARTIST VISUALS · 2026', es: 'VISUALES DE ARTISTA · 2026' }, title: { en: 'ARTIST 06 — REPLACE', es: 'ARTISTA 06 — REEMPLAZAR' }, size: 'large' },
+      { id: 'pf07', cat: { en: 'STUDIO · 2025', es: 'ESTUDIO · 2025' }, title: { en: 'SESSION 07', es: 'SESIÓN 07' }, size: 'small' },
+      { id: 'pf08', cat: { en: 'EVENT · BRONX', es: 'EVENTO · BRONX' }, title: { en: 'FRAME 08', es: 'FRAME 08' }, size: 'small' },
+      { id: 'pf09', cat: { en: 'COVER ART · 2026', es: 'ARTE DE PORTADA · 2026' }, title: { en: 'SINGLE 09 — REPLACE', es: 'SINGLE 09 — REEMPLAZAR' }, size: 'square-large' },
+      { id: 'pf10', cat: { en: 'FLASH · NIGHT', es: 'FLASH · NOCHE' }, title: { en: 'FRAME 10', es: 'FRAME 10' }, size: 'small' },
+      { id: 'pf11', cat: { en: 'LIVE PERFORMANCE · 2026', es: 'TARIMA EN VIVO · 2026' }, title: { en: 'STAGE 11 — REPLACE', es: 'TARIMA 11 — REEMPLAZAR' }, size: 'panorama' },
+      { id: 'pf12', cat: { en: 'CAMPAIGN · 2026', es: 'CAMPAÑA · 2026' }, title: { en: 'FRAME 12', es: 'FRAME 12' }, size: 'small' }
     ],
     reels: [
       { id: 'r1', code: 'Dc7Su26xWGA', label: 'REEL 01' },
@@ -72,19 +97,20 @@
       { id: 'r3', code: 'Dc3qsCrRlYM', label: 'REEL 03' }
     ],
     artists: [
-      { id: 'a1', name: 'ARTISTA 01', role: 'VIDEOCLIP · 2026 · [NOMBRE AQUÍ]', link: '#work' },
-      { id: 'a2', name: 'ARTISTA 02', role: 'REELS · 2026 · [NOMBRE AQUÍ]', link: '#work' },
-      { id: 'a3', name: 'ARTISTA 03', role: 'STUDIO SESSION · [NOMBRE AQUÍ]', link: '#work' },
-      { id: 'a4', name: 'ARTISTA 04', role: 'LIVE / TOUR · [NOMBRE AQUÍ]', link: '#work' },
-      { id: 'a5', name: 'ARTISTA 05', role: 'CAMPAÑA · [NOMBRE AQUÍ]', link: '#work' }
+      // El nombre del artista no se traduce; el rol/proyecto sí.
+      { id: 'a1', name: 'ARTIST 01', role: { en: 'MUSIC VIDEO · 2026 · [NAME HERE]', es: 'VIDEOCLIP · 2026 · [NOMBRE AQUÍ]' }, link: '#work' },
+      { id: 'a2', name: 'ARTIST 02', role: { en: 'REELS · 2026 · [NAME HERE]', es: 'REELS · 2026 · [NOMBRE AQUÍ]' }, link: '#work' },
+      { id: 'a3', name: 'ARTIST 03', role: { en: 'STUDIO SESSION · [NAME HERE]', es: 'STUDIO SESSION · [NOMBRE AQUÍ]' }, link: '#work' },
+      { id: 'a4', name: 'ARTIST 04', role: { en: 'LIVE / TOUR · [NAME HERE]', es: 'LIVE / TOUR · [NOMBRE AQUÍ]' }, link: '#work' },
+      { id: 'a5', name: 'ARTIST 05', role: { en: 'CAMPAIGN · [NAME HERE]', es: 'CAMPAÑA · [NOMBRE AQUÍ]' }, link: '#work' }
     ],
     services: [
-      { id: 's1', svc: 'Videoclip', title: 'VIDEOCLIPS / MUSIC VIDEOS', desc: 'Concepto, rodaje 4K, dirección de arte de calle y edición al ritmo del track.', price: '' },
-      { id: 's2', svc: 'Fotografía', title: 'FOTOGRAFÍA · STREET & STUDIO', desc: 'Flash directo, retrato de portada, promo para prensa y sesiones en la calle.', price: '' },
-      { id: 's3', svc: 'Reel', title: 'REELS & CONTENT CREATION', desc: 'Paquetes mensuales de contenido vertical para IG y TikTok. Entrega en 48h.', price: '' },
-      { id: 's4', svc: 'Evento', title: 'EVENTOS · LIVE & BACKSTAGE', desc: 'Conciertos, club nights, giras y cobertura de backstage en NYC, NJ y RD.', price: '' },
-      { id: 's5', svc: 'Campaña', title: 'CAMPAÑAS DE MARCA', desc: 'Marcas que quieren hablarle a la cultura urbana latina sin sonar falso.', price: '' },
-      { id: 's6', svc: 'Edición de video', title: 'EDICIÓN DE VIDEO', desc: 'Edición para el material que ya tienes grabado: videoclips, reels, eventos o footage propio. Color, ritmo y entrega lista para la plataforma.', price: '' }
+      { id: 's1', svc: 'Videoclip', title: { en: 'MUSIC VIDEOS', es: 'VIDEOCLIPS' }, desc: { en: 'Concept, 4K shooting, street art direction, and editing cut to the track.', es: 'Concepto, rodaje 4K, dirección de arte de calle y edición al ritmo del track.' }, price: '' },
+      { id: 's2', svc: 'Fotografía', title: { en: 'PHOTOGRAPHY · STREET & STUDIO', es: 'FOTOGRAFÍA · CALLE Y ESTUDIO' }, desc: { en: 'Direct flash, cover portraits, press promo, and street sessions.', es: 'Flash directo, retrato de portada, promo para prensa y sesiones en la calle.' }, price: '' },
+      { id: 's3', svc: 'Reel', title: { en: 'REELS & CONTENT CREATION', es: 'REELS Y CREACIÓN DE CONTENIDO' }, desc: { en: 'Monthly vertical content packages for IG and TikTok. 48h delivery.', es: 'Paquetes mensuales de contenido vertical para IG y TikTok. Entrega en 48h.' }, price: '' },
+      { id: 's4', svc: 'Evento', title: { en: 'EVENTS · LIVE & BACKSTAGE', es: 'EVENTOS · EN VIVO Y BACKSTAGE' }, desc: { en: 'Concerts, club nights, tours, and backstage coverage across NYC, NJ, and DR.', es: 'Conciertos, club nights, giras y cobertura de backstage en NYC, NJ y RD.' }, price: '' },
+      { id: 's5', svc: 'Campaña', title: { en: 'BRAND CAMPAIGNS', es: 'CAMPAÑAS DE MARCA' }, desc: { en: 'Brands that want to speak to Latin urban culture without sounding fake.', es: 'Marcas que quieren hablarle a la cultura urbana latina sin sonar falso.' }, price: '' },
+      { id: 's6', svc: 'Edición de video', title: { en: 'VIDEO EDITING', es: 'EDICIÓN DE VIDEO' }, desc: { en: 'Editing for footage you already have: music videos, reels, events, or your own material. Color, pacing, and platform-ready delivery.', es: 'Edición para el material que ya tienes grabado: videoclips, reels, eventos o footage propio. Color, ritmo y entrega lista para la plataforma.' }, price: '' }
     ],
     // Qué links del nav público están ocultos (por key). "booking" nunca se
     // guarda acá — el CTA de conversión no se puede ocultar desde el panel.
@@ -93,6 +119,19 @@
 
   function isPlainObject(v) {
     return v && typeof v === 'object' && !Array.isArray(v);
+  }
+
+  // Campo { en, es } vs string plano viejo (contenido guardado antes de que
+  // este campo se volviera bilingüe): si es un objeto con en/es, devuelve el
+  // del idioma pedido (con fallback al otro si falta); si es un string
+  // (u otro valor), lo devuelve tal cual — así ningún contenido ya guardado
+  // se pierde ni queda en blanco, solo no cambia con el idioma hasta que se
+  // vuelva a guardar en el formato nuevo.
+  function tr(field, lang) {
+    if (isPlainObject(field)) {
+      return field[lang] || field.en || field.es || '';
+    }
+    return field == null ? '' : field;
   }
 
   function deepMerge(base, over) {
@@ -148,6 +187,20 @@
   function resetContent() {
     try { localStorage.removeItem(CONTENT_KEY); } catch (e) {}
     return deepMerge(DEFAULTS, {});
+  }
+
+  // ── Idioma del sitio ─────────────────────────────────────────────────────
+  // Preferencia del visitante (o del admin), no contenido — se guarda aparte,
+  // separado de lf_content. Default 'en' según lo pedido: el sitio abre en
+  // inglés y cualquiera puede pasar a español desde el selector del nav.
+  function getLang() {
+    try {
+      var v = localStorage.getItem(LANG_KEY);
+      return v === 'es' ? 'es' : 'en';
+    } catch (e) { return 'en'; }
+  }
+  function setLang(lang) {
+    try { localStorage.setItem(LANG_KEY, lang === 'es' ? 'es' : 'en'); } catch (e) {}
   }
 
   // ── Fotos ────────────────────────────────────────────────────────────────
@@ -353,6 +406,9 @@
     getContent: getContent,
     setContent: setContent,
     resetContent: resetContent,
+    tr: tr,
+    getLang: getLang,
+    setLang: setLang,
     getPhoto: getPhoto,
     savePhoto: savePhoto,
     removePhoto: removePhoto,
