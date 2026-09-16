@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://lozan0-is.github.io/lafama-films-web/sitemap.xml
