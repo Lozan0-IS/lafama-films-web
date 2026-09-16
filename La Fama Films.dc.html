@@ -87,13 +87,17 @@
   input:focus-visible, textarea:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid var(--lf-ac); outline-offset: 2px; }
 
   /* ── Sello estampado del Hero ─────────────────────────────────────────── */
-  .lf-stamp-wrap { position: absolute; top: 140px; left: 260px; width: 212px; height: 212px; z-index: 5; transform: rotate(-8deg); }
-  /* En mobile el sello suele terminar pegado al borde del contenedor (poco
-     margen para maniobrar junto al título agrandado) — el "flash" de
-     impacto llega a escalar 2.4x, y a esa escala se sale de la pantalla
-     desde una posición tan al borde. Se recorta solo en mobile: en desktop,
-     con más aire alrededor, el burst se ve completo sin riesgo real. */
-  @media (max-width: 640px) { .lf-stamp-wrap { overflow: hidden; } }
+  /* overflow:hidden universal (no solo mobile): el sello puede terminar
+     pegado al borde del contenedor en cualquier ancho donde el título
+     (ahora más grande) deja poco margen — no es exclusivo de mobile, se
+     midió el mismo problema en tablet (768px). El "flash" de impacto llega
+     a escalar 2.4x y el "eco" se traslada unos px fuera de su caja; a esa
+     escala, desde una posición pegada al borde, se salen de la pantalla.
+     Recortarlos acá siempre es más seguro que intentar adivinar en qué
+     ancho exacto hay "espacio de sobra" — el efecto visual (arranca grande
+     y se asienta) se sigue viendo igual, solo el radio del burst hacia
+     afuera del círculo queda contenido dentro de su propia caja. */
+  .lf-stamp-wrap { position: absolute; top: 140px; left: 260px; width: 212px; height: 212px; z-index: 5; transform: rotate(-8deg); overflow: hidden; }
   /* Antes arrancaba en scale(3.5) + blur(8px): una bola roja gigante y
      borrosa que tapaba el título por ~150-250ms antes de asentarse — a
      un visitante nuevo le lee como "la página cargó mal y se corrigió",
