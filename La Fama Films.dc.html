@@ -87,15 +87,30 @@
   input:focus-visible, textarea:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid var(--lf-ac); outline-offset: 2px; }
 
   /* ── Sello estampado del Hero ─────────────────────────────────────────── */
-  .lf-stamp-wrap { position: absolute; top: 140px; left: 260px; width: 212px; height: 212px; z-index: 5; transform: rotate(-8deg); transition: top .25s ease, left .25s ease; }
+  .lf-stamp-wrap { position: absolute; top: 140px; left: 260px; width: 212px; height: 212px; z-index: 5; transform: rotate(-8deg); }
+  /* En mobile el sello suele terminar pegado al borde del contenedor (poco
+     margen para maniobrar junto al título agrandado) — el "flash" de
+     impacto llega a escalar 2.4x, y a esa escala se sale de la pantalla
+     desde una posición tan al borde. Se recorta solo en mobile: en desktop,
+     con más aire alrededor, el burst se ve completo sin riesgo real. */
+  @media (max-width: 640px) { .lf-stamp-wrap { overflow: hidden; } }
   /* Antes arrancaba en scale(3.5) + blur(8px): una bola roja gigante y
      borrosa que tapaba el título por ~150-250ms antes de asentarse — a
      un visitante nuevo le lee como "la página cargó mal y se corrigió",
      no como un efecto de marca. Es la MISMA idea (el sello "cae" y se
      asienta) pero a una escala que nunca invade el texto ni parece un
      glitch de carga. */
-  .lf-stamp { position: relative; width: 100%; height: 100%; opacity: 0; transform: scale(1.3); filter: blur(3px); transform-origin: 50% 50%; }
-  .lf-stamp.stamped { animation: lfStampDrop .7s cubic-bezier(.175,.885,.32,1.275) forwards; }
+  /* El estado BASE (antes de "stamped") NO debe llevar el scale grande de la
+     animación de entrada: mientras es sólo esto (invisible, opacity:0), su
+     caja de layout real ya queda inflada 1.3x — con el sello ahora pegado al
+     borde del contenedor en mobile, esa caja invisible de más sí se sale de
+     la pantalla (overflow real, intermitente, justo en la ventana breve
+     antes de que React aplique la clase "stamped"). Con fill-mode "both" en
+     vez de "forwards", el keyframe 0% (que ya es scale(1.3)/blur(3px)) se
+     aplica recién cuando la clase "stamped" existe — el efecto visual de
+     entrada queda idéntico, pero ya no hay ventana con una caja inflada. */
+  .lf-stamp { position: relative; width: 100%; height: 100%; opacity: 0; transform-origin: 50% 50%; }
+  .lf-stamp.stamped { animation: lfStampDrop .7s cubic-bezier(.175,.885,.32,1.275) both; }
   @keyframes lfStampDrop {
     0%   { opacity: 0; transform: scale(1.3); filter: blur(3px); }
     55%  { opacity: 1; filter: blur(0); }
@@ -150,6 +165,12 @@
      encogerse, y el texto se recorta con "…" en vez de desbordar. */
   .lf-booktab { flex: 1; min-width: 0; padding: 11px 12px; font: 600 10px/1 var(--font-body); letter-spacing: .18em; text-transform: uppercase; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
   @media (max-width: 480px) { .lf-booktab { font-size: 8.5px; letter-spacing: .08em; padding: 10px 6px; } }
+  /* Cada fila de Services: en desktop, 3 columnas (título/descripción/CTA)
+     lado a lado. En mobile eso se convertía en una tabla apretada de 3
+     columnas angostas — se vuelve editorial apilando todo en una columna
+     con su propio ritmo (más padding vertical, gap entre bloques). */
+  .lf-svc-row { display: grid; grid-template-columns: 1fr; gap: 10px; padding: 26px 0; }
+  @media (min-width: 640px) { .lf-svc-row { grid-template-columns: minmax(0,1.2fr) minmax(0,1fr) auto; gap: 14px; padding: 22px 0; } }
 
   /* ── Panel Admin (mismo archivo, vista alterna vía toggleMode) ───────────
      Tema oscuro propio del admin: en vez de tocar cada estilo inline de los
@@ -264,19 +285,19 @@
       </div>
     </div>
 
-    <h1 class="{{ heroShakeClass }}" style="margin:0;font:900 clamp(52px,13.5vw,206px)/0.82 var(--font-heading);letter-spacing:-.045em;text-transform:uppercase">LA&nbsp;FAMA<br>FILMS</h1>
+    <h1 class="{{ heroShakeClass }}" style="margin:0;font:900 clamp(72px,19vw,206px)/0.82 var(--font-heading);letter-spacing:-.045em;text-transform:uppercase">LA&nbsp;FAMA<br>FILMS</h1>
 
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:clamp(14px,3vw,40px);align-items:end;border-top:2px solid var(--color-text);margin-top:clamp(14px,2vw,22px);padding-top:14px">
-      <h2 style="margin:0;font:700 clamp(26px,4.4vw,58px)/0.92 'Archivo Narrow',var(--font-heading);letter-spacing:-.01em;text-transform:uppercase">VISUALS<br>FOR THE <span style="color:var(--lf-ac)">CULTURE.</span></h2>
-      <p style="margin:0;max-width:46ch;font:400 15px/1.6 var(--font-body);color:var(--color-neutral-800)">Videoclips, fotografía y contenido para artistas urbanos. La calle es el set: rodamos en Nueva York, New Jersey y República Dominicana, y entregamos como se ve en la pantalla del teléfono.</p>
-      <div style="display:flex;flex-wrap:wrap;gap:8px">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:clamp(18px,3vw,40px);align-items:end;border-top:2px solid var(--color-text);margin-top:clamp(24px,4vw,28px);padding-top:clamp(18px,2.4vw,14px)">
+      <h2 style="margin:0;font:700 clamp(36px,9vw,58px)/0.92 'Archivo Narrow',var(--font-heading);letter-spacing:-.01em;text-transform:uppercase">VISUALS<br>FOR THE <span style="color:var(--lf-ac)">CULTURE.</span></h2>
+      <p style="margin:0;max-width:42ch;font:400 15px/1.6 var(--font-body);color:var(--color-neutral-800)">Videoclips, fotografía y contenido para artistas urbanos. La calle es el set: rodamos en Nueva York, New Jersey y República Dominicana, y entregamos como se ve en la pantalla del teléfono.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px">
         <a href="#work" style="padding:13px 18px;border:2px solid var(--color-text);font:900 13px/1 var(--font-heading);letter-spacing:.08em;text-transform:uppercase" style-hover="background:var(--color-text);color:var(--color-bg)">VER EL ARCHIVO →</a>
         <a href="#booking" style="padding:13px 18px;background:var(--lf-ac);color:#fff;font:900 13px/1 var(--font-heading);letter-spacing:.08em;text-transform:uppercase" style-hover="background:var(--color-accent-600)">AGENDA TU PROYECTO</a>
       </div>
     </div>
   </div>
 
-  <div style="display:flex;align-items:stretch;gap:0;border-top:2px solid var(--color-text);margin-top:clamp(18px,3vw,34px);overflow-x:auto" class="xs">
+  <div style="display:flex;align-items:stretch;gap:0;border-top:2px solid var(--color-text);margin-top:clamp(32px,6vw,48px);overflow-x:auto" class="xs">
     <div style="flex:0 0 auto;display:flex;align-items:center;padding:0 14px;background:var(--color-text);color:var(--color-bg);font:700 11px/1 'Archivo Narrow',var(--font-body);letter-spacing:.22em;writing-mode:vertical-rl;text-transform:uppercase">ROLL 01 / 2026</div>
     <div class="hovg" style="flex:1 1 0;min-width:150px;aspect-ratio:4/5;position:relative;border-right:1px solid var(--color-text);background:var(--color-neutral-300)">
       {{ heroPh1 }}
@@ -313,7 +334,7 @@
 </div>
 
 <section data-screen-label="Sobre nosotros" style="border-bottom:2px solid var(--color-text);background:var(--color-surface)">
-  <div style="max-width:1600px;margin:0 auto;padding:clamp(36px,6vw,84px) clamp(16px,3vw,40px);display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:clamp(24px,4vw,56px)">
+  <div style="max-width:1600px;margin:0 auto;padding:clamp(52px,9vw,84px) clamp(16px,3vw,40px);display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:clamp(28px,5vw,56px)">
     <div class="rvx">
       <span style="display:inline-block;background:var(--color-text);color:var(--color-bg);font:900 11px/1 var(--font-heading);letter-spacing:.18em;text-transform:uppercase;padding:7px 10px;margin-bottom:16px">01 — SOBRE NOSOTROS</span>
       <h2 style="margin:0 0 18px;font:900 clamp(34px,6vw,82px)/0.86 var(--font-heading);letter-spacing:-.04em;text-transform:uppercase">LA CALLE<br>ES EL SET.</h2>
@@ -338,7 +359,7 @@
 </section>
 
 <section id="work" data-screen-label="Portfolio" style="border-bottom:2px solid var(--color-text)">
-  <div style="max-width:1600px;margin:0 auto;padding:clamp(36px,6vw,84px) clamp(16px,3vw,40px)">
+  <div style="max-width:1600px;margin:0 auto;padding:clamp(52px,9vw,84px) clamp(16px,3vw,40px)">
     <div class="rv" style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:22px">
       <div>
         <span style="display:inline-block;background:var(--lf-ac);color:#fff;font:900 11px/1 var(--font-heading);letter-spacing:.18em;text-transform:uppercase;padding:7px 10px;margin-bottom:14px;transform:rotate(-0.4deg)">02 — CONTACT SHEET</span>
@@ -372,7 +393,7 @@
 </section>
 
 <section id="motion" data-screen-label="Video" style="border-bottom:2px solid var(--color-text);background:var(--color-surface)">
-  <div style="max-width:1600px;margin:0 auto;padding:clamp(36px,6vw,84px) clamp(16px,3vw,40px)">
+  <div style="max-width:1600px;margin:0 auto;padding:clamp(52px,9vw,84px) clamp(16px,3vw,40px)">
     <div class="rv" style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:22px">
       <div>
         <span style="display:inline-block;background:var(--color-text);color:var(--color-bg);font:900 11px/1 var(--font-heading);letter-spacing:.18em;text-transform:uppercase;padding:7px 10px;margin-bottom:14px">03 — MOTION</span>
@@ -381,7 +402,7 @@
       <p style="margin:0;max-width:40ch;font:400 15px/1.6 var(--font-body);color:var(--color-neutral-800)">Videoclips, reels, artist visuals, live performances, content creation y behind the scenes. Dale play — se abre en grande.</p>
     </div>
 
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:6px">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:clamp(16px,3vw,28px)">
       <sc-for list="{{ reelItems }}" as="rl" hint-placeholder-count="3">
       <div class="hovg rv" style="aspect-ratio:9/16;position:relative;background:var(--color-neutral-400);outline:2px solid var(--color-text)">
         {{ rl.media }}
@@ -397,7 +418,7 @@
 </section>
 
 <section id="artists" data-screen-label="Artistas" style="background:var(--color-text);color:var(--color-bg);border-bottom:2px solid var(--color-text)">
-  <div style="max-width:1600px;margin:0 auto;padding:clamp(36px,6vw,84px) 0 clamp(28px,4vw,56px)">
+  <div style="max-width:1600px;margin:0 auto;padding:clamp(52px,9vw,84px) 0 clamp(64px,11vw,96px)">
     <div class="rv" style="padding:0 clamp(16px,3vw,40px);display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:24px">
       <div>
         <span style="display:inline-block;background:var(--lf-ac);color:#fff;font:900 11px/1 var(--font-heading);letter-spacing:.18em;text-transform:uppercase;padding:7px 10px;margin-bottom:14px;transform:rotate(-0.5deg)">04 — ARTISTS</span>
@@ -406,7 +427,7 @@
       <p style="margin:0;max-width:38ch;font:400 15px/1.6 var(--font-body);color:var(--color-neutral-400)">Artistas, productores y sellos. Los nombres van aquí: cada tarjeta lleva foto, nombre, proyecto y el link al trabajo.</p>
     </div>
 
-    <div class="xs" style="display:flex;gap:6px;overflow-x:auto;padding:0 clamp(16px,3vw,40px);scroll-snap-type:x mandatory">
+    <div class="xs" style="display:flex;gap:14px;overflow-x:auto;padding:0 clamp(16px,3vw,40px);scroll-snap-type:x mandatory">
       <sc-for list="{{ artistItems }}" as="ar" hint-placeholder-count="5">
       <div class="hovg rv" style="flex:0 0 clamp(220px,26vw,300px);scroll-snap-align:start;border:2px solid var(--color-neutral-800);background:var(--color-neutral-900)">
         <div style="position:relative;aspect-ratio:3/4">{{ ar.photo }}</div>
@@ -422,7 +443,7 @@
 </section>
 
 <section style="background:var(--lf-ac);color:#fff;border-bottom:2px solid var(--color-text)">
-  <div style="max-width:1600px;margin:0 auto;padding:clamp(32px,5vw,72px) clamp(16px,3vw,40px);display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;align-items:end">
+  <div style="max-width:1600px;margin:0 auto;padding:clamp(64px,11vw,96px) clamp(16px,3vw,40px);display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:28px;align-items:end">
     <h2 class="rvx" style="margin:0;font:900 clamp(34px,6.6vw,96px)/0.84 var(--font-heading);letter-spacing:-.045em;text-transform:uppercase">TU PRÓXIMO<br>VIDEO EMPIEZA<br>CON UN MENSAJE.</h2>
     <div style="display:flex;flex-direction:column;gap:12px;align-items:flex-start">
       <span style="font:600 11px/1.5 var(--font-body);letter-spacing:.2em;text-transform:uppercase">NYC / NJ / RD · DISPONIBILIDAD GLOBAL</span>
@@ -432,14 +453,14 @@
 </section>
 
 <section id="services" data-screen-label="Servicios" style="border-bottom:2px solid var(--color-text)">
-  <div style="max-width:1600px;margin:0 auto;padding:clamp(36px,6vw,84px) clamp(16px,3vw,40px)">
+  <div style="max-width:1600px;margin:0 auto;padding:clamp(56px,9vw,84px) clamp(16px,3vw,40px)">
     <div class="rv" style="margin-bottom:10px">
       <span style="display:inline-block;background:var(--color-text);color:var(--color-bg);font:900 11px/1 var(--font-heading);letter-spacing:.18em;text-transform:uppercase;padding:7px 10px;margin-bottom:14px">05 — SERVICES</span>
       <h2 style="margin:0;font:900 clamp(38px,7.5vw,120px)/0.84 var(--font-heading);letter-spacing:-.045em;text-transform:uppercase">LO QUE HACEMOS</h2>
     </div>
     <div style="display:flex;flex-direction:column;border-top:2px solid var(--color-text);margin-top:18px">
       <sc-for list="{{ serviceItems }}" as="sv" hint-placeholder-count="5">
-      <div class="rv" style="display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr) auto;gap:14px;align-items:center;padding:20px 0;border-bottom:1px solid var(--color-neutral-400)" style-hover="background:var(--color-accent-100)">
+      <div class="rv lf-svc-row" style="align-items:center;border-bottom:1px solid var(--color-neutral-400)" style-hover="background:var(--color-accent-100)">
         <h3 style="margin:0;font:700 clamp(24px,3.6vw,52px)/0.94 'Archivo Narrow',var(--font-heading);text-transform:uppercase;letter-spacing:-.01em">{{ sv.title }}</h3>
         <p style="margin:0;font:400 14px/1.55 var(--font-body);color:var(--color-neutral-800)">{{ sv.desc }}</p>
         <div style="display:flex;flex-direction:column;align-items:flex-start;gap:6px">
@@ -453,7 +474,7 @@
 </section>
 
 <section id="photographer" data-screen-label="About" style="border-bottom:2px solid var(--color-text);background:var(--color-text);color:var(--color-bg)">
-  <div style="max-width:1600px;margin:0 auto;padding:clamp(36px,6vw,84px) clamp(16px,3vw,40px);display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:clamp(28px,4vw,64px);align-items:center">
+  <div style="max-width:1600px;margin:0 auto;padding:clamp(56px,9vw,88px) clamp(16px,3vw,40px) clamp(64px,11vw,96px);display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:clamp(32px,5vw,64px);align-items:center">
     <div class="rv" style="aspect-ratio:4/5;max-width:460px;position:relative;background:var(--color-neutral-900);outline:2px solid var(--color-neutral-800)">
       {{ photographerPhoto }}
     </div>
@@ -475,7 +496,7 @@
 </section>
 
 <section id="booking" data-screen-label="Booking" style="border-bottom:2px solid var(--color-text)">
-  <div style="max-width:1100px;margin:0 auto;padding:clamp(36px,6vw,84px) clamp(16px,3vw,40px)">
+  <div style="max-width:1100px;margin:0 auto;padding:clamp(64px,11vw,96px) clamp(16px,3vw,40px) clamp(52px,9vw,84px)">
     <div class="rv" style="margin-bottom:22px">
       <span style="display:inline-block;background:var(--color-text);color:var(--color-bg);font:900 11px/1 var(--font-heading);letter-spacing:.18em;text-transform:uppercase;padding:7px 10px;margin-bottom:14px">07 — BOOKING</span>
       <h2 style="margin:0;font:900 clamp(38px,7vw,104px)/0.84 var(--font-heading);letter-spacing:-.045em;text-transform:uppercase">BOOK A<br>PROJECT</h2>
@@ -874,6 +895,14 @@ class Component extends DCLogic {
     const line1Rect = (firstText && firstText !== lastText) ? rectOf(firstText) : null;
     const contRect = container.getBoundingClientRect();
     const size = wrap.offsetWidth || 176;
+    // El sello está rotado (-8deg / -6deg en mobile): su caja visual real
+    // (getBoundingClientRect, que sí refleja la rotación) es más ANCHA que
+    // su offsetWidth sin rotar — por eso el límite derecho usa este ancho
+    // "real", no el nominal, si no el sello queda un poco afuera de la
+    // pantalla en los casos donde ya está pegado al borde.
+    const stampBox = wrap.getBoundingClientRect();
+    const renderedWidth = stampBox.width || size;
+    const renderedHeight = stampBox.height || size;
     // Centrado verticalmente en la costura entre "LA FAMA" y "FILMS" (el
     // punto medio entre el final de la primera línea y el inicio de la
     // segunda) — no en el medio de "FILMS" sola.
@@ -889,11 +918,37 @@ class Component extends DCLogic {
     // Espacio bien holgado — nada de rozar las letras.
     const gap = window.matchMedia('(max-width: 640px)').matches ? 34 : 44;
     let left = textRight + gap;
-    // En pantallas medianas/angostas el título casi llena el contenedor —
-    // no dejes que el sello se salga por la derecha, pégalo al borde.
-    const maxLeft = contRect.width - size - 4;
-    if (left > maxLeft) left = maxLeft;
     if (left < textRight + 20) left = textRight + 20;
+    const maxLeft = contRect.width - renderedWidth - 4;
+    // En pantallas muy angostas, el título (ahora grande a propósito) ocupa
+    // casi todo el ancho del contenedor: no queda hueco real para el sello
+    // al lado del texto sin que se salga de la pantalla o lo tape. En ese
+    // caso el sello se despega del texto por completo y pasa a ser un sello
+    // de esquina fijo, debajo de la fila del badge REC/ubicaciones — y como
+    // esa fila más el sello no siempre caben en el hueco que ya existe antes
+    // del título (su alto varía según cuánto texto tenga el tag/ubicación,
+    // editable desde el admin), se empuja el título hacia abajo con un
+    // margin-top calculado en JS, lo justo para que el sello quepa completo
+    // sin tapar ni el texto de arriba ni el título.
+    if (maxLeft < textRight + 20) {
+      const badgeRow = wrap.previousElementSibling;
+      const badgeBottom = badgeRow ? badgeRow.getBoundingClientRect().bottom - contRect.top : 0;
+      const stampTop = Math.max(0, badgeBottom + 10);
+      wrap.style.top = stampTop + 'px';
+      wrap.style.left = Math.max(0, maxLeft) + 'px';
+      const stampBottom = stampTop + renderedHeight;
+      // Se resetea ANTES de medir: si no, en la segunda pasada mediríamos la
+      // posición ya empujada por el margin de la pasada anterior (en vez de
+      // su posición natural), y el cálculo oscilaría entre poner y quitar el
+      // margin en cada llamada sin converger nunca.
+      h1.style.marginTop = '';
+      const h1TopNow = h1.getBoundingClientRect().top - contRect.top;
+      const extra = (stampBottom + 12) - h1TopNow;
+      if (extra > 0) h1.style.marginTop = extra + 'px';
+      return;
+    }
+    h1.style.marginTop = '';
+    if (left > maxLeft) left = maxLeft;
     wrap.style.top = Math.max(0, top) + 'px';
     wrap.style.left = Math.max(0, left) + 'px';
   }
