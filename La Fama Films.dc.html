@@ -154,7 +154,11 @@
   @media (max-width: 1200px) { .lf-stamp-wrap { width: 148px; height: 148px; } }
   @media (max-width: 900px) { .lf-stamp-wrap { width: 128px; height: 128px; } }
   @media (max-width: 640px) { .lf-stamp-wrap { width: 100px; height: 100px; transform: rotate(-6deg); } }
-  @media (max-width: 420px) { .lf-stamp-wrap { width: 78px; height: 78px; } }
+  /* 480 y no 420: con el sello de 100px, en iPhones grandes (428/430) el
+     círculo es más alto que el espacio entre "LA FAMA" y la regla de abajo y
+     terminaba tocando la A o la regla; además saltaba de 78px (414) a 100px
+     (428) sin razón visual. Con 78px hasta 480 cabe limpio. */
+  @media (max-width: 480px) { .lf-stamp-wrap { width: 78px; height: 78px; } }
   /* El título "tiembla" en el mismo instante en que el sello impacta. */
   @keyframes lfHeroImpact {
     0%   { transform: translate(0,0) rotate(0deg); }
@@ -1306,7 +1310,7 @@ class Component extends DCLogic {
     // punto medio entre el final de la primera línea y el inicio de la
     // segunda) — no en el medio de "FILMS" sola.
     const seamY = line1Rect ? (line1Rect.bottom + line2Rect.top) / 2 : (line2Rect.top + line2Rect.height / 2);
-    const top = (seamY - contRect.top) - size / 2;
+    let top = (seamY - contRect.top) - size / 2;
     // El sello es lo bastante alto como para cubrir el final de AMBAS
     // líneas (queda centrado en la costura entre ellas) — así que el borde
     // a despejar es el que quede MÁS a la derecha de las dos, no solo el
@@ -1334,7 +1338,36 @@ class Component extends DCLogic {
     // falta — pero nunca se despega del título ni cambia de fila. Un
     // solape controlado contra el borde del contenedor se ve intencional
     // (como un sello real estampado sobre el papel); saltar de posición no.
-    if (left > maxLeft) left = maxLeft;
+    //
+    // Ese solape, sin embargo, caía justo encima de la última "A" de "LA
+    // FAMA" (visto en un iPhone real): "FILMS" es bastante más corta que
+    // "LA FAMA", así que a la derecha de FILMS queda un hueco libre de sobra
+    // (160px+ en cualquier celular). Si el sello no cabe al lado de las dos
+    // líneas, se acomoda EN ESE HUECO — pegado a "FILMS", justo debajo de la
+    // línea de arriba — en vez de montarse sobre las letras. Sigue en el
+    // mismo bloque del H1 (nunca sube ni cambia de fila); solo elige el lado
+    // libre. Si ni ahí cabe (ancho extremo), cae al comportamiento anterior.
+    let besideLine2 = false;
+    if (left > maxLeft && line1Rect) {
+      const tightGap = window.matchMedia('(max-width: 640px)').matches ? 14 : 26;
+      const besideLeft = line2Right + tightGap;
+      if (besideLeft <= maxLeft) {
+        // El sello es un círculo: su alto visible es `size` (la caja
+        // rotada es más grande solo en las esquinas vacías). Va justo debajo
+        // de las letras de arriba; si el círculo es más alto que el espacio
+        // hasta la regla negra de abajo (celulares grandes, sello de 100px),
+        // el sobrante se reparte parejo arriba y abajo en vez de dejar que
+        // la regla le corte el texto al sello.
+        const ruleEl = h1.nextElementSibling;
+        const ruleTop = ruleEl ? ruleEl.getBoundingClientRect().top : Infinity;
+        const room = ruleTop - seamY - 4;
+        const overflow = Math.max(0, size - room);
+        left = besideLeft;
+        top = (seamY - contRect.top) + 2 - overflow / 2;
+        besideLine2 = true;
+      }
+    }
+    if (!besideLine2 && left > maxLeft) left = maxLeft;
     if (left < 0) left = 0;
     wrap.style.top = Math.max(0, top) + 'px';
     wrap.style.left = left + 'px';
