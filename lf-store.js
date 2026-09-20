@@ -24,7 +24,7 @@
   // un string plano viejo (contenido guardado antes de este cambio), así que
   // nada de lo ya guardado se rompe ni desaparece.
   var DEFAULTS = {
-    accent: '#ec3013',
+    accent: '#e12e12',
     showPricing: true,
     hero: {
       tag: { en: 'REC · PHOTO + VIDEO', es: 'REC · FOTO + VIDEO' },
